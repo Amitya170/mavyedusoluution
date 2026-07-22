@@ -1,0 +1,6 @@
+# Mavy EduSolution - robots.txt
+User-agent: *
+Allow: /
+Disallow: /generate-blogs.js
+
+Sitemap: https://www.mavyedusolution.com/sitemap.xml

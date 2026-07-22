@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ════════════════════════════════════════════════════════════════
+     EDIT ME: Update these 4 fields for every new blog post
+     ════════════════════════════════════════════════════════════════ -->
+<title>Why "good enough" machine translation still needs a human pass | Mavy EduSolution Blog</title>
+<meta name="description" content="MT gets you a fast first draft. Here's where it quietly breaks — idiom, tone, and anything with legal weight — and why a second linguist still has to catch it.">
+<link rel="canonical" href="https://www.mavyedusolution.com/blog/mt-human-pass">
+<meta property="og:title" content="Why 'good enough' machine translation still needs a human pass">
+<meta property="og:description" content="MT gets you a fast first draft. Here's where it quietly breaks — idiom, tone, and anything with legal weight — and why a second linguist still has to catch it.">
+<!-- ════════════════════════════════════════════════════════════════ -->
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.mavyedusolution.com/blog/mt-human-pass">
+<meta property="og:site_name" content="Mavy EduSolution">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23050510'/%3E%3Ctext x='50' y='68' font-size='48' font-family='Georgia,serif' fill='%23a78bfa' text-anchor='middle'%3EME%3C/text%3E%3C/svg%3E">
+
+<!-- EDIT ME: Update article schema for each post -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Why 'good enough' machine translation still needs a human pass",
+  "description": "MT gets you a fast first draft. Here's where it quietly breaks — idiom, tone, and anything with legal weight — and why a second linguist still has to catch it.",
+  "datePublished": "2026-07-01",
+  "author": { "@type": "Organization", "name": "Mavy EduSolution" },
+  "publisher": { "@type": "Organization", "name": "Mavy EduSolution" },
+  "mainEntityOfPage": "https://www.mavyedusolution.com/blog/mt-human-pass"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#050510;
+    --surface:rgba(24,54,49,0.55);
+    --surface-solid:#0e0e1e;
+    --surface-2:rgba(33,70,63,0.65);
+    --text:#f0f0ff;
+    --muted:#9db6ae;
+    --brass:#a78bfa;
+    --brass-soft:rgba(167,139,250,0.16);
+    --coral:#22d3ee;
+    --paper:#f2ede1;
+    --line:rgba(255,255,255,0.09);
+    --shadow:0 20px 60px rgba(0,0,0,0.45);
+    --glass:blur(14px) saturate(160%);
+    --r-lg:22px;
+    --r-md:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--brass); color:#050510; }
+  h1,h2,h3,.serif{ font-family:'Fraunces', serif; font-weight:600; letter-spacing:-0.01em; }
+  a{ color:inherit; text-decoration:none; }
+  img,svg{ display:block; max-width:100%; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:.72rem; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--brass); display:flex; align-items:center; gap:.6rem; margin-bottom:1rem;
+  }
+  .eyebrow::before{ content:''; width:26px; height:1px; background:var(--brass); }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; width:100%; z-index:100;
+    padding:1.1rem 5%; display:flex; justify-content:space-between; align-items:center;
+    background:var(--surface); backdrop-filter:var(--glass); border-bottom:1px solid var(--line);
+  }
+  .logo{ font-size:1.3rem; font-weight:600; display:flex; align-items:center; gap:.5rem; }
+  .logo span{ color:var(--brass); }
+  .nav-links{ display:flex; gap:2.1rem; align-items:center; }
+  .nav-links a{ font-size:.92rem; font-weight:500; position:relative; color:var(--muted); transition:color .2s; }
+  .nav-links a::after{ content:''; position:absolute; bottom:-6px; left:0; width:0; height:1.5px; background:var(--brass); transition:width .3s; }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-links a.active{ color:var(--text); }
+  .nav-links a.active::after{ width:100%; }
+  .icon-btn{ cursor:pointer; padding:.5rem .6rem; border-radius:8px; border:1px solid var(--line); background:transparent; color:var(--text); font-size:1rem; }
+  .icon-btn:hover{ border-color:var(--brass); }
+  #menuToggle{ display:none; }
+  @media (max-width:900px){
+    #menuToggle{ display:inline-flex; }
+    .nav-links a:not(.icon-btn){ display:none; }
+  }
+
+  /* ---------- mobile nav overlay ---------- */
+  .mobile-menu{
+    position:fixed; top:0; left:0; right:0; bottom:0; z-index:99;
+    background:rgba(11,31,28,0.97); backdrop-filter:blur(20px);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.5rem;
+    opacity:0; pointer-events:none; transition:opacity .35s ease;
+  }
+  .mobile-menu.open{ opacity:1; pointer-events:auto; }
+  .mobile-menu a{ padding:1rem 0; font-weight:600; font-size:1.3rem; color:var(--text); transition:color .2s; }
+  .mobile-menu a:hover{ color:var(--brass); }
+  .mobile-menu .mobile-close{ position:absolute; top:1.2rem; right:5%; font-size:1.5rem; color:var(--text); background:none; border:none; cursor:pointer; padding:.5rem; }
+
+  /* ---------- breadcrumbs ---------- */
+  .breadcrumbs{ padding:6rem 5% 0; max-width:900px; margin:auto; }
+  .breadcrumbs ol{ list-style:none; display:flex; gap:.6rem; font-family:'IBM Plex Mono', monospace; font-size:.75rem; color:var(--muted); flex-wrap:wrap; }
+  .breadcrumbs a{ color:var(--brass); }
+  .breadcrumbs a:hover{ text-decoration:underline; }
+  .breadcrumbs li::after{ content:'/'; margin-left:.6rem; color:var(--line); }
+  .breadcrumbs li:last-child::after{ display:none; }
+  .breadcrumbs li:last-child{ color:var(--muted); }
+
+  /* ---------- article ---------- */
+  .article-hero{ max-width:900px; margin:2.4rem auto 0; padding:0 5%; }
+  .article-hero .cat-tag{ font-family:'IBM Plex Mono', monospace; font-size:.72rem; color:var(--brass); text-transform:uppercase; letter-spacing:.08em; margin-bottom:1rem; display:inline-block; }
+  .article-hero h1{ font-size:clamp(2rem, 3.5vw, 2.8rem); line-height:1.12; margin-bottom:1.2rem; }
+  .article-meta{ display:flex; gap:1.6rem; font-family:'IBM Plex Mono', monospace; font-size:.78rem; color:var(--muted); margin-bottom:2rem; flex-wrap:wrap; }
+  .article-meta span{ display:flex; align-items:center; gap:.4rem; }
+
+  .article-body{ max-width:900px; margin:0 auto; padding:0 5% 4rem; }
+  .article-body h2{ font-size:1.6rem; margin:2.4rem 0 1rem; color:var(--text); }
+  .article-body h3{ font-size:1.25rem; margin:2rem 0 .8rem; color:var(--text); }
+  .article-body p{ color:var(--muted); font-size:1.02rem; line-height:1.75; margin-bottom:1.4rem; }
+  .article-body ul, .article-body ol{ color:var(--muted); font-size:1.02rem; line-height:1.75; margin-bottom:1.4rem; padding-left:1.6rem; }
+  .article-body li{ margin-bottom:.5rem; }
+  .article-body blockquote{ border-left:3px solid var(--brass); padding:.8rem 1.4rem; margin:1.6rem 0; background:var(--brass-soft); border-radius:0 var(--r-md) var(--r-md) 0; }
+  .article-body blockquote p{ color:var(--text); margin-bottom:0; }
+  .article-body code{ font-family:'IBM Plex Mono', monospace; background:var(--surface-2); padding:.15rem .4rem; border-radius:4px; font-size:.9rem; }
+  .article-body pre{ background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:1.4rem; overflow-x:auto; margin-bottom:1.6rem; }
+  .article-body pre code{ background:none; padding:0; }
+  .article-body a{ color:var(--brass); text-decoration:underline; text-underline-offset:3px; }
+  .article-body a:hover{ color:var(--coral); }
+  .article-body img{ border-radius:var(--r-md); margin:1.6rem 0; }
+  .article-body hr{ border:none; border-top:1px solid var(--line); margin:2.4rem 0; }
+
+  /* ---------- related posts ---------- */
+  .related-section{ max-width:900px; margin:0 auto 4rem; padding:0 5%; }
+  .related-section h2{ font-size:1.4rem; margin-bottom:1.6rem; }
+  .related-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.2rem; }
+  .related-card{ background:var(--surface); backdrop-filter:var(--glass); border:1px solid var(--line); border-radius:var(--r-lg); padding:1.6rem; transition:border-color .3s, transform .3s; }
+  .related-card:hover{ border-color:var(--brass); transform:translateY(-3px); }
+  .related-card .blog-cat{ font-family:'IBM Plex Mono', monospace; font-size:.68rem; color:var(--brass); text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:.6rem; }
+  .related-card h3{ font-size:1rem; margin-bottom:.5rem; line-height:1.35; }
+  .related-card .blog-read{ font-family:'IBM Plex Mono', monospace; font-size:.72rem; color:var(--brass); }
+
+  /* ---------- footer ---------- */
+  footer{ border-top:1px solid var(--line); padding:3.5rem 5% 2rem; margin-top:2rem; }
+  .footer-grid{ display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:2rem; max-width:1400px; margin:auto auto 2.5rem; }
+  .footer-grid h4{ font-family:'IBM Plex Mono', monospace; font-size:.72rem; color:var(--brass); text-transform:uppercase; letter-spacing:.08em; margin-bottom:1rem; }
+  .footer-grid a, .footer-grid p{ color:var(--muted); font-size:.88rem; display:block; margin-bottom:.6rem; }
+  .footer-grid a:hover{ color:var(--text); }
+  .footer-social{ display:flex; gap:.8rem; margin-top:1rem; }
+  .footer-social a{ display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; border:1px solid var(--line); color:var(--muted); font-size:.9rem; transition:border-color .2s, color .2s; }
+  .footer-social a:hover{ border-color:var(--brass); color:var(--brass); }
+  .footer-bottom{ display:flex; justify-content:space-between; color:var(--muted); font-size:.8rem; max-width:1400px; margin:auto; flex-wrap:wrap; gap:1rem; padding-top:2rem; border-top:1px solid var(--line); }
+  .footer-bottom a{ color:var(--muted); margin-left:1.2rem; }
+  .footer-bottom a:hover{ color:var(--text); }
+
+  /* ---------- scroll to top ---------- */
+  .scroll-top{ position:fixed; bottom:2rem; right:2rem; z-index:90; width:48px; height:48px; border-radius:50%; background:var(--brass); color:#050510; border:none; cursor:pointer; font-size:1.3rem; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(167,139,250,0.35); opacity:0; transform:translateY(20px); transition:opacity .3s, transform .3s; pointer-events:none; }
+  .scroll-top.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+  .scroll-top:hover{ transform:translateY(-3px); box-shadow:0 10px 28px rgba(167,139,250,0.5); }
+
+  @media (max-width:900px){ .footer-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:768px){ .footer-grid{ grid-template-columns:1fr; } .article-hero h1{ font-size:1.8rem; } }
+  :focus-visible{ outline:2px solid var(--brass); outline-offset:2px; }
+</style>
+</head>
+<body>
+
+<!-- ============ NAVIGATION ============ -->
+<nav>
+  <a href="index.html" class="logo">Mavy<span>Edu</span></a>
+  <div class="nav-links">
+    <a href="index.html#services">Services</a>
+    <a href="index.html#ai-data">AI Data</a>
+    <a href="index.html#edu-solutions">EduSolutions</a>
+    <a href="index.html#blog" class="active">Blog</a>
+    <a href="index.html#contact">Contact</a>
+    <button class="icon-btn" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+  <a href="index.html#services">Services</a>
+  <a href="index.html#ai-data">AI Data</a>
+  <a href="index.html#edu-solutions">EduSolutions</a>
+  <a href="index.html#blog">Blog</a>
+  <a href="index.html#contact">Contact</a>
+</div>
+
+<!-- ============ BREADCRUMBS ============ -->
+<div class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#blog">Blog</a></li>
+    <!-- EDIT ME: Update breadcrumb text for each post -->
+    <li>Why "good enough" MT still needs a human pass</li>
+  </ol>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     EDIT ME: Article content starts here.
+     Update the category tag, title, date, read time, and body.
+     ════════════════════════════════════════════════════════════════ -->
+
+<!-- ============ ARTICLE HERO ============ -->
+<div class="article-hero">
+  <span class="cat-tag">Localization</span>
+  <h1>Why "good enough" machine translation still needs a human pass</h1>
+  <div class="article-meta">
+    <span>📅 Jul 2026</span>
+    <span>⏱ 6 min read</span>
+    <span>✍ Mavy EduSolution Team</span>
+  </div>
+</div>
+
+<!-- ============ ARTICLE BODY ============ -->
+<div class="article-body">
+
+  <p>Neural machine translation has improved dramatically. For well-resourced language pairs — English to Spanish, French, or German — the output reads naturally enough that you might be tempted to ship it without a second look. And for internal, low-stakes communication, that's often fine.</p>
+
+  <p>But the moment translated text faces your customers, your regulators, or your brand, "good enough" starts showing its edges. Here's where MT quietly breaks — and why a native linguist still has to catch it.</p>
+
+  <h2>Where MT fails silently</h2>
+
+  <p>The dangerous thing about modern MT isn't that it produces gibberish. It doesn't. The dangerous thing is that it produces text that <em>looks</em> correct but carries the wrong meaning in ways that only a native speaker would notice.</p>
+
+  <h3>1. Idiom and cultural register</h3>
+
+  <p>MT translates the words, not the intent. A marketing tagline like "We've got your back" might render literally in German or Japanese, losing the reassuring connotation entirely. A native linguist recognizes the idiom and finds the cultural equivalent — not a word-for-word mirror.</p>
+
+  <h3>2. Legal and regulatory weight</h3>
+
+  <p>In contracts, terms of service, and compliance documents, word choice isn't creative — it's legally binding. MT doesn't know that "shall" and "will" carry different obligations in English legal prose, or that the equivalent distinction in French contract law uses different formulations entirely.</p>
+
+  <blockquote><p>MT output is never sent as final copy. It's a first draft — and first drafts exist to be edited.</p></blockquote>
+
+  <h3>3. Tone-of-voice consistency</h3>
+
+  <p>Your brand voice is specific. MT doesn't read your style guide. It won't know that your product uses informal "you" in German (du vs. Sie), or that your help center avoids passive voice. A post-editor catches these and aligns every string to your existing tone.</p>
+
+  <h2>The economics of MTPE</h2>
+
+  <p>Machine Translation Post-Editing (MTPE) isn't a compromise — it's a strategy. Here's why it makes sense:</p>
+
+  <ul>
+    <li><strong>Speed:</strong> MT produces a first draft in seconds. The linguist spends time refining, not starting from scratch.</li>
+    <li><strong>Cost:</strong> MTPE typically runs 30–40% less than full human translation for suitable content types.</li>
+    <li><strong>Consistency:</strong> When combined with a translation memory and glossary, MTPE can actually improve consistency across large volumes.</li>
+  </ul>
+
+  <p>The key is knowing which content types are suitable for MTPE (help articles, support tickets, internal documentation) and which need full human translation from the start (marketing, legal, medical).</p>
+
+  <h2>What a good post-editing pass actually checks</h2>
+
+  <p>A trained post-editor does more than proofread. They:</p>
+
+  <ol>
+    <li>Verify meaning accuracy against the source text</li>
+    <li>Correct terminology against the project glossary</li>
+    <li>Fix register and tone to match the style guide</li>
+    <li>Check formatting: placeholders, tags, length constraints</li>
+    <li>Flag segments where MT output should be discarded and rewritten</li>
+  </ol>
+
+  <p>This is why we never ship MT output as final copy. Every string that leaves Mavy EduSolution has been reviewed by a native linguist — whether the first draft came from a human or a machine.</p>
+
+  <hr>
+
+  <p><strong>Need a quote for MTPE or full human translation?</strong> <a href="index.html#contact">Start a project</a> — tell us your content type, word count, and target languages, and we'll recommend the right tier.</p>
+
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     EDIT ME: Related posts — swap titles and links for each article
+     ════════════════════════════════════════════════════════════════ -->
+<div class="related-section">
+  <h2>Related posts</h2>
+  <div class="related-grid">
+    <a href="#" class="related-card">
+      <span class="blog-cat">Localization</span>
+      <h3>A glossary is a contract: keeping terms consistent across 40 languages</h3>
+      <span class="blog-read">5 min read →</span>
+    </a>
+    <a href="#" class="related-card">
+      <span class="blog-cat">AI Data</span>
+      <h3>RLHF data quality: what "high agreement" actually measures</h3>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="#" class="related-card">
+      <span class="blog-cat">Process</span>
+      <h3>What a translation memory actually saves you</h3>
+      <span class="blog-read">4 min read →</span>
+    </a>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <a href="index.html" class="logo">Mavy<span>Edu</span></a>
+      <p style="margin-top:1rem; max-width:280px;">Localization, AI data, and education solutions built like a type foundry: one shared system of terms, tone, and formatting behind every language you ship.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="LinkedIn" title="LinkedIn">in</a>
+        <a href="#" aria-label="Twitter / X" title="Twitter / X">𝕏</a>
+        <a href="#" aria-label="GitHub" title="GitHub">GH</a>
+      </div>
+    </div>
+    <div>
+      <h4>Services</h4>
+      <a href="index.html#services">Localization</a>
+      <a href="index.html#ai-data">AI Data Services</a>
+      <a href="index.html#edu-solutions">Education Solutions</a>
+      <a href="index.html#process">Process</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="index.html#work">Case studies</a>
+      <a href="index.html#languages">Languages</a>
+      <a href="index.html#blog">Blog</a>
+      <a href="index.html#faq">FAQ</a>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <a href="index.html#contact">Start a project</a>
+      <a href="mailto:hello@Mavy EduSolution.example">hello@Mavy EduSolution.example</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Mavy EduSolution.</span>
+    <span>
+      Built for global scale, one string at a time.
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </span>
+  </div>
+</footer>
+
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+<script>
+/* Mobile menu */
+const menuToggle = document.getElementById('menuToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+const mobileClose = document.getElementById('mobileClose');
+menuToggle.addEventListener('click', () => {
+  mobileMenu.classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
+function closeMobile() {
+  mobileMenu.classList.remove('open');
+  document.body.style.overflow = '';
+}
+mobileClose.addEventListener('click', closeMobile);
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobile));
+
+/* Scroll-to-top */
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  scrollTopBtn.classList.toggle('show', window.scrollY > 400);
+}, { passive: true });
+scrollTopBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+<script src="../main.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mavy EduSolution Blog</title>
+    <link>https://www.mavyedusolution.com/blog/</link>
+    <description>Notes on shipping global product — localization, AI data, education solutions, and engineering from the Mavy EduSolution team.</description>
+    <language>en</language>
+    <lastBuildDate>Fri, 18 Jul 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://www.mavyedusolution.com/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Why "good enough" machine translation still needs a human pass</title>
+      <link>https://www.mavyedusolution.com/blog/mt-human-pass.html</link>
+      <description>MT gets you a fast first draft. Here's where it quietly breaks — idiom, tone, and anything with legal weight — and why a second linguist still has to catch it.</description>
+      <category>Localization</category>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/mt-human-pass.html</guid>
+    </item>
+    <item>
+      <title>RLHF data quality: what "high agreement" actually measures</title>
+      <link>https://www.mavyedusolution.com/blog/rlhf-agreement.html</link>
+      <description>Inter-rater agreement is easy to game and easy to misread. What it tells you about your preference data, and what it doesn't.</description>
+      <category>AI Data</category>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/rlhf-agreement.html</guid>
+    </item>
+    <item>
+      <title>Shipping right-to-left layouts without a second sprint</title>
+      <link>https://www.mavyedusolution.com/blog/rtl-layouts.html</link>
+      <description>The layout bugs that only show up in Arabic and Hebrew builds, and how to catch them in QA instead of in a support ticket.</description>
+      <category>Engineering</category>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/rtl-layouts.html</guid>
+    </item>
+    <item>
+      <title>Sourcing wake-word audio across 40 languages without burning your timeline</title>
+      <link>https://www.mavyedusolution.com/blog/wake-word-audio.html</link>
+      <description>What actually slows down multilingual voice data collection — and it usually isn't the recording.</description>
+      <category>AI Data</category>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/wake-word-audio.html</guid>
+    </item>
+    <item>
+      <title>What a translation memory actually saves you</title>
+      <link>https://www.mavyedusolution.com/blog/translation-memory.html</link>
+      <description>Not just money on repeated strings — consistency across releases, and a paper trail when a term changes six months in.</description>
+      <category>Process</category>
+      <pubDate>Thu, 15 May 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/translation-memory.html</guid>
+    </item>
+    <item>
+      <title>A glossary is a contract: keeping terms consistent across 40 languages</title>
+      <link>https://www.mavyedusolution.com/blog/glossary-contract.html</link>
+      <description>How one unreviewed term change turns into forty inconsistent ones, and the review step that stops it.</description>
+      <category>Localization</category>
+      <pubDate>Thu, 15 May 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/glossary-contract.html</guid>
+    </item>
+    <item>
+      <title>Why multilingual SEO is more than translating your keywords</title>
+      <link>https://www.mavyedusolution.com/blog/multilingual-seo.html</link>
+      <description>Hreflang tags, locale-specific search intent, and the gap between "translated" and "discoverable" in 12 markets.</description>
+      <category>Localization</category>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/multilingual-seo.html</guid>
+    </item>
+    <item>
+      <title>Red-teaming your LLM: what annotators actually look for</title>
+      <link>https://www.mavyedusolution.com/blog/red-teaming-llm.html</link>
+      <description>A practical breakdown of the failure modes human raters flag — and why "sounds correct" is the hardest category to evaluate.</description>
+      <category>AI Data</category>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/red-teaming-llm.html</guid>
+    </item>
+    <item>
+      <title>Localizing e-learning for cultural learning styles, not just language</title>
+      <link>https://www.mavyedusolution.com/blog/elearning-cultural.html</link>
+      <description>Why a translated course isn't a localized course — and the structural changes that make assessments work in MENA, LATAM, and APAC markets.</description>
+      <category>EduSolution</category>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/elearning-cultural.html</guid>
+    </item>
+    <item>
+      <title>Why SCORM compliance breaks during translation — and how to prevent it</title>
+      <link>https://www.mavyedusolution.com/blog/scorm-translation.html</link>
+      <description>The packaging failures that only surface after you upload to the LMS, and the QA step that catches them before that.</description>
+      <category>EduSolution</category>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/scorm-translation.html</guid>
+    </item>
+    <item>
+      <title>Building AI tutoring datasets that actually improve student outcomes</title>
+      <link>https://www.mavyedusolution.com/blog/ai-tutoring-data.html</link>
+      <description>What separates useful Q&amp;A training pairs from noise — difficulty calibration, pedagogical intent tagging, and subject-area coverage.</description>
+      <category>EduSolution</category>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/ai-tutoring-data.html</guid>
+    </item>
+    <item>
+      <title>Pseudo-localization: catching layout bugs before your linguists do</title>
+      <link>https://www.mavyedusolution.com/blog/pseudo-localization.html</link>
+      <description>How synthetic placeholder text with accents and extended characters reveals truncation and overflow issues in your UI before real translation begins.</description>
+      <category>Engineering</category>
+      <pubDate>Thu, 15 May 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/pseudo-localization.html</guid>
+    </item>
+    <item>
+      <title>Curating Multimodal Datasets for Vision-Language Models: Image-Text Pairing at Scale</title>
+      <link>https://www.mavyedusolution.com/blog/multimodal-dataset-curation.html</link>
+      <description>High-quality image-text alignment for VLM fine-tuning. How synthetic captioning, bounding box verification, and OCR extraction prevent hallucination.</description>
+      <category>AI Data</category>
+      <pubDate>Wed, 15 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/multimodal-dataset-curation.html</guid>
+    </item>
+    <item>
+      <title>Evaluating LLM Translation Quality: COMET, BLEU, and Human Rating Correlation</title>
+      <link>https://www.mavyedusolution.com/blog/llm-localization-eval.html</link>
+      <description>Why traditional BLEU scores fail to capture semantic nuance in modern LLM translations, and how COMET metrics paired with MQM human evaluation set the gold standard.</description>
+      <category>Localization</category>
+      <pubDate>Wed, 15 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/llm-localization-eval.html</guid>
+    </item>
+    <item>
+      <title>Designing Adaptive Learning Engines: Item Response Theory (IRT) in Modern EdTech</title>
+      <link>https://www.mavyedusolution.com/blog/adaptive-learning-analytics.html</link>
+      <description>How 3PL Item Response Theory and knowledge tracing algorithms dynamically adjust question difficulty for personalized student learning pathways.</description>
+      <category>EduSolution</category>
+      <pubDate>Fri, 10 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/adaptive-learning-analytics.html</guid>
+    </item>
+    <item>
+      <title>Zero-Shot Multilingual Voice Cloning: Dataset Requirements &amp; Phoneme Alignment</title>
+      <link>https://www.mavyedusolution.com/blog/multilingual-voice-cloning.html</link>
+      <description>What makes voice cloning sound natural across language boundaries — IPA phoneme mapping, studio-quality noise floor, and cross-lingual prosody transfer.</description>
+      <category>AI Data</category>
+      <pubDate>Fri, 10 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/multilingual-voice-cloning.html</guid>
+    </item>
+    <item>
+      <title>Chunking Strategies for Multilingual RAG: Retaining Semantic Context Across Languages</title>
+      <link>https://www.mavyedusolution.com/blog/rag-chunking-localization.html</link>
+      <description>Why fixed-length character chunking breaks cross-lingual vector retrieval, and how sentence-boundary awareness and metadata enrichment boost RAG accuracy.</description>
+      <category>Engineering</category>
+      <pubDate>Sun, 05 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/rag-chunking-localization.html</guid>
+    </item>
+    <item>
+      <title>Building an Enterprise LQA Framework: DQF-MQM Error Typology in Practice</title>
+      <link>https://www.mavyedusolution.com/blog/enterprise-lqa-framework.html</link>
+      <description>Standardizing localization quality audit scoring across 40 vendors with DQF-MQM severity weighting and automated quality gates.</description>
+      <category>Localization</category>
+      <pubDate>Sun, 05 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/enterprise-lqa-framework.html</guid>
+    </item>
+  </channel>
+</rss>

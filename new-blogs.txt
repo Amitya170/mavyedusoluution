@@ -1,0 +1,77 @@
+,
+  {
+    slug: 'ai-voice-dubbing-ethics',
+    cat: 'AI Data',
+    title: 'The ethical framework for AI voice cloning and dubbing',
+    description: 'As synthetic voice reaches parity with human actors, how do we handle consent, compensation, and copyright? A look into our voice AI training guidelines.',
+    date: 'Jul 2026',
+    dateISO: '2026-07-20',
+    read: '5 min read',
+    body: `
+  <p>Synthetic voice generation has crossed the uncanny valley. Modern models can replicate breath patterns, emotional cadence, and micro-hesitations. This is incredible for accessibility and rapid content localization, but it introduces massive ethical gray areas.</p>
+  <h2>Consent is more than a signature</h2>
+  <p>When an actor licenses their voice for an AI model, are they licensing it for a specific project, or for perpetuity? At Mavy EduSolution, we enforce <strong>use-case boundaries</strong>. Voice data collected for educational content cannot be legally repurposed for political advertising or automated telemarketing without explicit re-consent.</p>
+  <h3>Compensation models</h3>
+  <p>We've pioneered a royalty-share model for voice actors. Instead of a flat buyout, actors receive fractional compensation every time their synthetic voiceprint is deployed in a new locale. This aligns AI progress with human prosperity.</p>
+  <h2>Watermarking and deepfake prevention</h2>
+  <p>Every synthetic audio file we produce contains a cryptographic audio watermark. It's inaudible to humans but easily detectable by algorithms, ensuring transparency and fighting the spread of misinformation.</p>
+  `,
+    related: ['multilingual-voice-cloning', 'wake-word-audio']
+  },
+  {
+    slug: 'semantic-search-seo',
+    cat: 'Localization',
+    title: 'Beyond keywords: Semantic SEO in global markets',
+    description: 'Why translating your English keyword list is actively harming your international SEO, and how to optimize for semantic search intent instead.',
+    date: 'Aug 2026',
+    dateISO: '2026-08-02',
+    read: '6 min read',
+    body: `
+  <p>The era of exact-match keyword localization is dead. Search engines no longer look for strings of characters; they look for entities, context, and intent. When you enter a new market, translating your English SEO strategy word-for-word is a recipe for irrelevance.</p>
+  <h2>The problem with keyword translation</h2>
+  <p>In English, someone might search for "cheap flights." A literal translation into French might yield "vols bon marché," but actual French users often search for "vols pas chers." If your localization team is just translating your keyword list without local SERP analysis, you are invisible to your target audience.</p>
+  <h3>Optimizing for intent</h3>
+  <p>Semantic SEO requires understanding <em>why</em> someone is searching. In Japan, searches for B2B software often include terms related to "implementation support" or "trust," whereas US searches prioritize "ROI" or "pricing."</p>
+  <h2>How we handle Multilingual SEO</h2>
+  <p>At Mavy EduSolution, we don't translate keywords. We conduct native <strong>in-market keyword research</strong> from scratch. We analyze local search volume, map it to the buyer's journey, and craft metadata that satisfies the local search intent.</p>
+  `,
+    related: ['multilingual-seo', 'enterprise-lqa-framework']
+  },
+  {
+    slug: 'immersive-vr-learning',
+    cat: 'Education',
+    title: 'Localizing VR and AR learning environments',
+    description: 'Text expansion is hard on a screen. It\'s even harder in 3D space. How we adapt immersive spatial learning experiences for global audiences.',
+    date: 'Aug 2026',
+    dateISO: '2026-08-10',
+    read: '8 min read',
+    body: `
+  <p>Virtual Reality (VR) and Augmented Reality (AR) are transforming enterprise training and higher education. But localizing a 3D spatial interface introduces challenges that don't exist in traditional 2D e-learning.</p>
+  <h2>Spatial UI and Text Expansion</h2>
+  <p>When you translate English into German, text typically expands by 30%. On a website, you just let the container grow. In VR, if a text label expands, it might clip through a 3D object or become unreadable due to the user's field of view.</p>
+  <h3>Audio spatialization</h3>
+  <p>In immersive environments, audio doesn't just play; it originates from a location. When we replace English voice-over with localized audio, we must ensure the new audio files are perfectly mapped to the 3D coordinates and match the timing of the visual events.</p>
+  <h2>Cultural adaptation of avatars</h2>
+  <p>Localization isn't just words. In some markets, the body language, attire, and physical proximity of virtual avatars must be adjusted to align with local professional norms. Our cultural consultants review 3D assets just as rigorously as text.</p>
+  `,
+    related: ['elearning-cultural', 'scorm-translation']
+  },
+  {
+    slug: 'llm-jailbreak-red-teaming',
+    cat: 'AI Data',
+    title: 'Multilingual Red Teaming: Finding LLM vulnerabilities across 50 languages',
+    description: 'An LLM might be safe in English, but easily jailbroken in Swahili. Why foundation models need comprehensive multilingual red teaming.',
+    date: 'Aug 2026',
+    dateISO: '2026-08-18',
+    read: '7 min read',
+    body: `
+  <p>Safety alignment is often an English-first endeavor. Foundation models are heavily red-teamed and RLHF-tuned using English prompts, ensuring they refuse harmful instructions. But what happens when you translate that exact same harmful instruction into a low-resource language?</p>
+  <h2>The multilingual safety gap</h2>
+  <p>In many cases, the safety filters fail. A model that refuses to write a phishing email in English might happily oblige when asked in Bengali or Hausa. The model's safety guardrails haven't been generalized across its entire latent space.</p>
+  <h3>Cultural vectors of attack</h3>
+  <p>Furthermore, what constitutes a "harmful" prompt is deeply cultural. Hate speech, political sensitivities, and social taboos vary wildly across borders. A prompt that is benign in one country might violate local laws in another.</p>
+  <h2>Our Red Teaming methodology</h2>
+  <p>At Mavy EduSolution, our adversarial testing teams consist of native speakers who understand local slang, cultural friction points, and linguistic nuances. We probe models using idioms, colloquialisms, and code-switching to ensure safety alignment is globally robust.</p>
+  `,
+    related: ['red-teaming-llm', 'rlhf-agreement']
+  }

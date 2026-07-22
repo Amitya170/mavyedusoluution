@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found | Mavy EduSolution</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23050510'/%3E%3Ctext x='50' y='68' font-size='48' font-family='Georgia,serif' fill='%23a78bfa' text-anchor='middle'%3EME%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#050510;--surface:rgba(24,54,49,0.55);--text:#f0f0ff;--muted:#9db6ae;--brass:#a78bfa;--brass-soft:rgba(167,139,250,0.16);--line:rgba(255,255,255,0.09);--glass:blur(14px) saturate(160%);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--ink);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column;}
+  ::selection{background:var(--brass);color:#050510;}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;}
+  a{color:inherit;text-decoration:none;}
+  .logo{font-size:1.3rem;font-weight:600;display:flex;align-items:center;gap:.5rem;}
+  .logo span{color:var(--brass);}
+  .logo-icon{width:32px;height:32px;flex-shrink:0;}
+  nav{position:fixed;top:0;width:100%;z-index:100;padding:1.1rem 5%;display:flex;justify-content:space-between;align-items:center;background:var(--surface);backdrop-filter:var(--glass);border-bottom:1px solid var(--line);}
+  .nav-links{display:flex;gap:2.1rem;align-items:center;}
+  .nav-links a{font-size:.92rem;font-weight:500;color:var(--muted);transition:color .2s;}
+  .nav-links a:hover{color:var(--text);}
+  .error-page{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem;}
+  .error-code{font-family:'Fraunces',serif;font-size:clamp(6rem,15vw,12rem);font-weight:700;color:var(--brass);opacity:.3;line-height:1;}
+  .error-title{font-size:clamp(1.6rem,3vw,2.4rem);margin:.5rem 0 1rem;}
+  .error-desc{color:var(--muted);font-size:1.05rem;max-width:480px;line-height:1.7;margin-bottom:2rem;}
+  .error-links{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;}
+  .btn{padding:.9rem 1.8rem;border-radius:10px;font-weight:600;font-size:.95rem;cursor:pointer;border:none;transition:transform .25s,box-shadow .25s;}
+  .btn-primary{background:var(--brass);color:#050510;box-shadow:0 6px 20px rgba(167,139,250,0.28);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(167,139,250,0.4);}
+  .btn-outline{background:transparent;border:1px solid var(--line);color:var(--text);}
+  .btn-outline:hover{border-color:var(--text);}
+  .error-glyphs{font-size:2rem;color:var(--brass);opacity:.15;margin-top:3rem;letter-spacing:1rem;}
+  footer{border-top:1px solid var(--line);padding:2rem 5%;text-align:center;color:var(--muted);font-size:.8rem;}
+  footer a{color:var(--brass);}
+
+/* --- Nav/Logo Micro-motion & Magnetic --- */
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.nav-logo {
+  display: inline-block;
+  animation: floatIcon 4s ease-in-out infinite;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-logo { animation: none; }
+}
+.nav-logo:hover {
+  transform: rotateY(360deg) scale(1.1);
+}
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.btn-primary:hover::after {
+  left: 150%;
+}
+.btn-primary:active {
+  transform: scale(0.95);
+}
+
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo"><svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="22" fill="#050510"/><rect x="4" y="4" width="92" height="92" rx="18" stroke="#a78bfa" stroke-width="2" fill="none"/><path d="M25 70V35l15 25 15-25v35" stroke="#a78bfa" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M62 70V35h15M62 52.5h12M62 70h15" stroke="#f0f0ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>Mavy <span>EduSolution</span></a>
+  <div class="nav-links">
+    <a href="index.html#services">Services</a>
+    <a href="index.html#blog">Blog</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</nav>
+<div class="error-page">
+  <div class="error-code">404</div>
+  <h1 class="error-title">This page got lost in translation</h1>
+  <p class="error-desc">The page you're looking for doesn't exist, was moved, or never made it through QA. Let's get you back somewhere useful.</p>
+  <div class="error-links">
+    <a href="index.html" class="btn btn-primary">← Back to homepage</a>
+    <a href="index.html#blog" class="btn btn-outline">Read the blog</a>
+    <a href="index.html#contact" class="btn btn-outline">Contact us</a>
+  </div>
+  <div class="error-glyphs">あ ب 文 ñ Ж 字 漢 ع é</div>
+</div>
+<footer>
+  © 2026 <a href="index.html">Mavy EduSolution</a>. Built for global scale, one string at a time.
+</footer>
+
+<script>
+(() => {
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+  if (!isTouch) {
+    const magneticEls = document.querySelectorAll('.btn-primary, .nav-links a');
+    magneticEls.forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = '';
+      });
+    });
+  }
+})();
+</script>
+
+<script src="main.js"></script>
+</body>
+</html>
