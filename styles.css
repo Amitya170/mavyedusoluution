@@ -774,12 +774,15 @@ body::after {
 
 /* --- Global pulse map --- */
 .pulse-map-wrap { max-width: 900px; margin: 0 auto 2.5rem; padding: 1.5rem 0; }
-.pulse-map-wrap svg { width: 100%; height: auto; display: block; }
+.pulse-map-wrap svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 12px rgba(167,139,250,0.15)); }
 .pulse-dot-glow { animation: pDotGlow 3s ease-in-out infinite; }
-.pulse-dot-ring { fill: none; stroke: var(--brass); stroke-width: 1; animation: pRingExp 3s ease-out infinite; }
-@keyframes pDotGlow { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
-@keyframes pRingExp { 0% { opacity: 0.5; r: 4; } 100% { opacity: 0; r: 20; } }
-.pulse-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; fill: var(--muted); text-anchor: middle; }
+.pulse-dot-ring { fill: none; stroke: var(--brass); stroke-width: 1.5; animation: pRingExp 3s ease-out infinite; }
+@keyframes pDotGlow { 0%,100% { opacity: 0.5; filter: drop-shadow(0 0 4px currentColor); } 50% { opacity: 1; filter: drop-shadow(0 0 10px currentColor); } }
+@keyframes pRingExp { 0% { opacity: 0.8; r: 4; } 100% { opacity: 0; r: 22; } }
+.pulse-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; fill: var(--text); text-anchor: middle; letter-spacing: 0.04em; }
+.map-flow-path { stroke: var(--brass); stroke-width: 2; stroke-opacity: 0.35; fill: none; }
+.map-flow-line { stroke: var(--coral); stroke-width: 2.5; stroke-dasharray: 10 14; stroke-linecap: round; fill: none; animation: flowDash 3.5s linear infinite; filter: drop-shadow(0 0 6px var(--coral)); }
+@keyframes flowDash { to { stroke-dashoffset: -48; } }
 
 /* Reduced motion overrides for elegance features */
 @media (prefers-reduced-motion: reduce) {

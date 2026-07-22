@@ -323,29 +323,44 @@
   </div>
   <div class="pulse-map-wrap" aria-label="Global linguist network">
     <svg viewBox="0 0 900 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M115 170 Q280 90 440 135" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none"/>
-      <path d="M440 135 Q530 165 630 205" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none"/>
-      <path d="M630 205 Q710 178 790 165" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none"/>
-      <path d="M440 135 Q445 132 478 128" stroke="rgba(255,255,255,0.12)" stroke-width="1" fill="none"/>
-      <path d="M115 170 Q215 265 310 315" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none"/>
-      <circle cx="115" cy="170" r="4" class="pulse-dot-glow" fill="#8b5cf6" style="animation-delay:0s"/>
+      <!-- Base connecting lines -->
+      <path d="M115 170 Q280 90 440 135" class="map-flow-path"/>
+      <path d="M440 135 Q530 165 630 205" class="map-flow-path"/>
+      <path d="M630 205 Q710 178 790 165" class="map-flow-path"/>
+      <path d="M440 135 Q445 132 478 128" class="map-flow-path"/>
+      <path d="M115 170 Q215 265 310 315" class="map-flow-path"/>
+
+      <!-- Animated data flow overlays -->
+      <path d="M115 170 Q280 90 440 135" class="map-flow-line"/>
+      <path d="M440 135 Q530 165 630 205" class="map-flow-line"/>
+      <path d="M630 205 Q710 178 790 165" class="map-flow-line"/>
+      <path d="M440 135 Q445 132 478 128" class="map-flow-line"/>
+      <path d="M115 170 Q215 265 310 315" class="map-flow-line"/>
+
+      <!-- Nodes and Labels -->
+      <circle cx="115" cy="170" r="5" class="pulse-dot-glow" fill="var(--brass)" style="animation-delay:0s"/>
       <circle cx="115" cy="170" class="pulse-dot-ring" style="animation-delay:0s"/>
-      <text x="115" y="192" class="pulse-label">San Francisco</text>
-      <circle cx="310" cy="315" r="4" class="pulse-dot-glow" fill="#8b5cf6" style="animation-delay:0.6s"/>
+      <text x="115" y="195" class="pulse-label">San Francisco</text>
+
+      <circle cx="310" cy="315" r="5" class="pulse-dot-glow" fill="var(--coral)" style="animation-delay:0.6s"/>
       <circle cx="310" cy="315" class="pulse-dot-ring" style="animation-delay:0.6s"/>
-      <text x="310" y="337" class="pulse-label">S\u00e3o Paulo</text>
-      <circle cx="440" cy="135" r="4" class="pulse-dot-glow" fill="#8b5cf6" style="animation-delay:1.2s"/>
+      <text x="310" y="340" class="pulse-label">São Paulo</text>
+
+      <circle cx="440" cy="135" r="5" class="pulse-dot-glow" fill="var(--brass)" style="animation-delay:1.2s"/>
       <circle cx="440" cy="135" class="pulse-dot-ring" style="animation-delay:1.2s"/>
-      <text x="440" y="122" class="pulse-label">London</text>
-      <circle cx="478" cy="128" r="4" class="pulse-dot-glow" fill="#06b6d4" style="animation-delay:1.5s"/>
+      <text x="440" y="118" class="pulse-label">London</text>
+
+      <circle cx="478" cy="128" r="5" class="pulse-dot-glow" fill="var(--coral)" style="animation-delay:1.5s"/>
       <circle cx="478" cy="128" class="pulse-dot-ring" style="animation-delay:1.5s"/>
-      <text x="500" y="118" class="pulse-label">Berlin</text>
-      <circle cx="630" cy="205" r="4" class="pulse-dot-glow" fill="#8b5cf6" style="animation-delay:1.8s"/>
+      <text x="502" y="115" class="pulse-label">Berlin</text>
+
+      <circle cx="630" cy="205" r="5" class="pulse-dot-glow" fill="var(--brass)" style="animation-delay:1.8s"/>
       <circle cx="630" cy="205" class="pulse-dot-ring" style="animation-delay:1.8s"/>
-      <text x="630" y="227" class="pulse-label">New Delhi</text>
-      <circle cx="790" cy="165" r="4" class="pulse-dot-glow" fill="#06b6d4" style="animation-delay:2.4s"/>
+      <text x="630" y="230" class="pulse-label">New Delhi</text>
+
+      <circle cx="790" cy="165" r="5" class="pulse-dot-glow" fill="var(--accent-pink)" style="animation-delay:2.4s"/>
       <circle cx="790" cy="165" class="pulse-dot-ring" style="animation-delay:2.4s"/>
-      <text x="790" y="152" class="pulse-label">Tokyo</text>
+      <text x="790" y="148" class="pulse-label">Tokyo</text>
     </svg>
   </div>
   <div class="lang-controls">
