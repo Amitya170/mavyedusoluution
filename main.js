@@ -1,5 +1,5 @@
 window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
+function gtag(){window.dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true });
 
@@ -134,9 +134,12 @@ const CONTENT = {
 
 
 
-/* ============ Render: services, AI data, edu grids ============ */
+
+/* ============ Render helpers (Null-Safe) ============ */
 function renderCardGrid(containerId, items) {
-  document.getElementById(containerId).innerHTML = items.map(s => `
+  const el = document.getElementById(containerId);
+  if (!el || !items) return;
+  el.innerHTML = items.map(s => `
     <div class="service-card">
       <div class="service-num">${s.num}</div>
       <h3>${s.title}</h3>
@@ -144,20 +147,27 @@ function renderCardGrid(containerId, items) {
       <div class="service-tags">${s.tags.map(t => `<span>${t}</span>`).join('')}</div>
     </div>`).join('');
 }
-renderCardGrid('servicesGrid', CONTENT.services);
-// Bento layout for AI Data — first & last cards span 2 columns
-document.getElementById('aiDataGrid').innerHTML = CONTENT.aiData.map((s, i) => `
+if (typeof CONTENT !== 'undefined' && CONTENT.services) renderCardGrid('servicesGrid', CONTENT.services);
+
+// Bento layout for AI Data
+const aiDataEl = document.getElementById('aiDataGrid');
+if (aiDataEl && typeof CONTENT !== 'undefined' && CONTENT.aiData) {
+  aiDataEl.innerHTML = CONTENT.aiData.map((s, i) => `
     <div class="service-card${i === 0 || i === CONTENT.aiData.length - 1 ? ' bento-featured' : ''}">
       <div class="service-num">${s.num}</div>
       <h3>${s.title}</h3>
       <p>${s.body}</p>
       <div class="service-tags">${s.tags.map(t => `<span>${t}</span>`).join('')}</div>
     </div>`).join('');
-renderCardGrid('eduGrid', CONTENT.eduSolutions);
+}
+
+if (typeof CONTENT !== 'undefined' && CONTENT.eduSolutions) renderCardGrid('eduGrid', CONTENT.eduSolutions);
 
 /* ============ Render: industries ============ */
 function renderIndustries() {
-  document.getElementById('industriesGrid').innerHTML = CONTENT.industries.map(ind => `
+  const el = document.getElementById('industriesGrid');
+  if (!el || typeof CONTENT === 'undefined' || !CONTENT.industries) return;
+  el.innerHTML = CONTENT.industries.map(ind => `
     <div class="industry-card">
       <div class="industry-icon">${ind.icon}</div>
       <h3>${ind.name}</h3>
@@ -169,6 +179,7 @@ renderIndustries();
 /* ============ Render: case studies ============ */
 function renderCaseStudies() {
   const grid = document.getElementById('caseGrid');
+  if (!grid || typeof CONTENT === 'undefined' || !CONTENT.caseStudies) return;
   grid.innerHTML = CONTENT.caseStudies.map(c => `
     <div class="case-card" tabindex="0" role="button" aria-expanded="false">
       <span class="case-tag">${c.tag}</span>
@@ -182,11 +193,13 @@ function renderCaseStudies() {
     const wasOpen = card.classList.contains('open');
     grid.querySelectorAll('.case-card').forEach(cc => {
       cc.classList.remove('open'); cc.setAttribute('aria-expanded', 'false');
-      cc.querySelector('.case-toggle').textContent = 'View metrics +';
+      const toggle = cc.querySelector('.case-toggle');
+      if (toggle) toggle.textContent = 'View metrics +';
     });
     if (!wasOpen) {
       card.classList.add('open'); card.setAttribute('aria-expanded', 'true');
-      card.querySelector('.case-toggle').textContent = 'Hide metrics −';
+      const toggle = card.querySelector('.case-toggle');
+      if (toggle) toggle.textContent = 'Hide metrics −';
     }
   }
   grid.querySelectorAll('.case-card').forEach(card => {
@@ -198,7 +211,9 @@ renderCaseStudies();
 
 /* ============ Render: testimonials ============ */
 function renderTestimonials() {
-  document.getElementById('testimonialsGrid').innerHTML = CONTENT.testimonials.map(t => `
+  const el = document.getElementById('testimonialsGrid');
+  if (!el || typeof CONTENT === 'undefined' || !CONTENT.testimonials) return;
+  el.innerHTML = CONTENT.testimonials.map(t => `
     <div class="testimonial-card">
       <p class="testimonial-quote">${t.quote}</p>
       <div class="testimonial-author">
@@ -215,6 +230,7 @@ renderTestimonials();
 /* ============ Render: FAQ ============ */
 function renderFaq() {
   const list = document.getElementById('faqList');
+  if (!list || typeof CONTENT === 'undefined' || !CONTENT.faq) return;
   list.innerHTML = CONTENT.faq.map(f => `
     <div class="faq-item">
       <button class="faq-q" aria-expanded="false"><span>${f.q}</span><span class="plus">+</span></button>
@@ -223,9 +239,14 @@ function renderFaq() {
 
   list.querySelectorAll('.faq-item').forEach(item => {
     const btn = item.querySelector('.faq-q');
+    if (!btn) return;
     btn.addEventListener('click', () => {
       const wasOpen = item.classList.contains('open');
-      list.querySelectorAll('.faq-item').forEach(i => { i.classList.remove('open'); i.querySelector('.faq-q').setAttribute('aria-expanded', 'false'); });
+      list.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        const q = i.querySelector('.faq-q');
+        if (q) q.setAttribute('aria-expanded', 'false');
+      });
       if (!wasOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
     });
   });
@@ -238,12 +259,15 @@ const BLOG_PAGE_SIZE = 6;
 let blogVisibleCount = BLOG_PAGE_SIZE;
 
 function renderBlog() {
+  const blogGrid = document.getElementById('blogGrid');
+  if (!blogGrid || typeof CONTENT === 'undefined' || !CONTENT.blogPosts) return;
+
   const filtered = blogActiveCat === 'all'
     ? CONTENT.blogPosts
     : CONTENT.blogPosts.filter(p => p.cat === blogActiveCat);
 
   const visible = filtered.slice(0, blogVisibleCount);
-  document.getElementById('blogGrid').innerHTML = visible.map(p => `
+  blogGrid.innerHTML = visible.map(p => `
     <a href="blog/${p.slug}.html" class="blog-card">
       <div class="blog-meta"><span class="blog-cat">${p.cat}</span><span>${p.date}</span></div>
       <h3>${p.title}</h3>
@@ -252,56 +276,73 @@ function renderBlog() {
     </a>`).join('');
 
   const loadMore = document.getElementById('blogLoadMore');
-  loadMore.style.display = visible.length < filtered.length ? 'block' : 'none';
+  if (loadMore) {
+    loadMore.style.display = visible.length < filtered.length ? 'block' : 'none';
+  }
 
   // Trigger reveal animations
   requestAnimationFrame(() => {
-    document.querySelectorAll('.blog-card').forEach(c => cardObserver.observe(c));
+    if (typeof cardObserver !== 'undefined') {
+      document.querySelectorAll('.blog-card').forEach(c => cardObserver.observe(c));
+    }
   });
 }
 renderBlog();
 
-document.getElementById('blogLoadMore').addEventListener('click', () => {
-  blogVisibleCount += BLOG_PAGE_SIZE;
-  renderBlog();
-});
-
-document.getElementById('blogFilters').querySelectorAll('.filter-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.getElementById('blogFilters').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    blogActiveCat = chip.dataset.cat;
-    blogVisibleCount = BLOG_PAGE_SIZE;
+const blogLoadMoreBtn = document.getElementById('blogLoadMore');
+if (blogLoadMoreBtn) {
+  blogLoadMoreBtn.addEventListener('click', () => {
+    blogVisibleCount += BLOG_PAGE_SIZE;
     renderBlog();
   });
-});
+}
+
+const blogFiltersEl = document.getElementById('blogFilters');
+if (blogFiltersEl) {
+  blogFiltersEl.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      blogFiltersEl.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      blogActiveCat = chip.dataset.cat;
+      blogVisibleCount = BLOG_PAGE_SIZE;
+      renderBlog();
+    });
+  });
+}
 
 /* ============ Newsletter form ============ */
-document.getElementById('newsletterForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  e.target.reset();
-  setTimeout(() => toast.classList.remove('show'), 3200);
-});
+const newsletterForm = document.getElementById('newsletterForm');
+if (newsletterForm) {
+  newsletterForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const toast = document.getElementById('toast');
+    if (toast) toast.classList.add('show');
+    e.target.reset();
+    if (toast) setTimeout(() => toast.classList.remove('show'), 3200);
+  });
+}
 
 /* ============ Mobile menu ============ */
 const menuToggle = document.getElementById('menuToggle');
 const mobileMenu = document.getElementById('mobileMenu');
 const mobileClose = document.getElementById('mobileClose');
 
-menuToggle.addEventListener('click', () => {
-  mobileMenu.classList.add('open');
-  menuToggle.setAttribute('aria-expanded', 'true');
-  document.body.style.overflow = 'hidden';
-});
+if (menuToggle && mobileMenu) {
+  menuToggle.addEventListener('click', () => {
+    mobileMenu.classList.add('open');
+    menuToggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  });
+}
 function closeMobile() {
-  mobileMenu.classList.remove('open');
-  menuToggle.setAttribute('aria-expanded', 'false');
+  if (mobileMenu && menuToggle) {
+    mobileMenu.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+  }
   document.body.style.overflow = '';
 }
-mobileClose.addEventListener('click', closeMobile);
-mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobile));
+if (mobileClose) mobileClose.addEventListener('click', closeMobile);
+
 
 /* ============ Reduced motion check ============ */
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -320,6 +361,10 @@ let ringX = mouseX, ringY = mouseY;
 let hoveringLens = false;
 
 if (aiCursorDot && aiCursorRing) {
+  // Set initial position at center before mouse movement
+  aiCursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+  aiCursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+
   // Direct instantaneous dot position tracking
   window.addEventListener('pointermove', (e) => {
     mouseX = e.clientX;
@@ -390,15 +435,19 @@ const lensPhrases = [
 ];
 let lensIdx = 0;
 function setLensPhrase(i) {
+  if (!lensTranslated || !lensLangLabel) return;
   const p = lensPhrases[i];
   lensTranslated.textContent = p.text;
   lensLangLabel.textContent = '→ ' + p.code;
   if (p.rtl) lensTranslated.setAttribute('dir', 'rtl'); else lensTranslated.removeAttribute('dir');
 }
-setLensPhrase(0);
-setInterval(() => { lensIdx = (lensIdx + 1) % lensPhrases.length; setLensPhrase(lensIdx); }, 5000);
+if (lensTranslated && lensLangLabel) {
+  setLensPhrase(0);
+  setInterval(() => { lensIdx = (lensIdx + 1) % lensPhrases.length; setLensPhrase(lensIdx); }, 5000);
+}
 
 function animateLens() {
+  if (!lensWrap || !lensTranslated) return;
   const rect = lensWrap.getBoundingClientRect();
   let cx, cy;
   if (hoveringLens && !isCoarsePointer) { cx = mouseX - rect.left; cy = mouseY - rect.top; }
@@ -406,7 +455,9 @@ function animateLens() {
   lensTranslated.style.clipPath = `circle(90px at ${cx}px ${cy}px)`;
   requestAnimationFrame(animateLens);
 }
-animateLens();
+if (lensWrap && lensTranslated) {
+  animateLens();
+}
 
 /* ============ Scroll reveal + counters ============ */
 const statObserver = new IntersectionObserver((entries) => {
@@ -443,12 +494,14 @@ document.querySelectorAll('.service-card, .industry-card, .case-card, .testimoni
 
 /* ============ Trust marquee (with icons) ============ */
 const trustTrack = document.getElementById('trustTrack');
-[...CLIENTS, ...CLIENTS].forEach(c => {
-  const el = document.createElement('div');
-  el.className = 'trust-item';
-  el.innerHTML = `<span class="trust-icon" style="background:${c.color}">${c.icon}</span>${c.name}`;
-  trustTrack.appendChild(el);
-});
+if (trustTrack && typeof CLIENTS !== 'undefined') {
+  [...CLIENTS, ...CLIENTS].forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'trust-item';
+    el.innerHTML = `<span class="trust-icon" style="background:${c.color}">${c.icon}</span>${c.name}`;
+    trustTrack.appendChild(el);
+  });
+}
 
 /* ============ Nav active state on scroll ============ */
 const navSections = document.querySelectorAll('section[id]');
@@ -469,16 +522,19 @@ navSections.forEach(section => navObserver.observe(section));
 
 /* ============ Scroll-to-top button ============ */
 const scrollTopBtn = document.getElementById('scrollTop');
-window.addEventListener('scroll', () => {
-  scrollTopBtn.classList.toggle('show', window.scrollY > 600);
-}, { passive: true });
-scrollTopBtn.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+if (scrollTopBtn) {
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('show', window.scrollY > 600);
+  }, { passive: true });
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
 
 /* ============ Interactive background: drifting script glyphs ============ */
 (function () {
   const canvas = document.getElementById('bgCanvas');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const GLYPHS = ['A','ぁ','文','字','言','ب','ل','ñ','Ж','Я','न','म','ส','€','漢','ㄱ','ع','é','Ω','ü'];
   const BRASS = '167,139,250'; const CORAL = '34,211,238';
@@ -573,38 +629,42 @@ const langSearch = document.getElementById('langSearch');
 const langFilters = document.getElementById('langFilters');
 let activeFilter = 'all';
 
-function renderLangGrid() {
-  const q = langSearch.value.trim().toLowerCase();
-  langGrid.innerHTML = '';
-  languages
-    .filter(l => activeFilter === 'all' || (activeFilter === 'rtl' && l.dir === 'rtl') || (activeFilter === 'complex' && l.complex))
-    .filter(l => !q || l.name.toLowerCase().includes(q) || l.code.toLowerCase().includes(q))
-    .forEach(lang => {
-      const tag = document.createElement('div');
-      tag.className = 'lang-tag';
-      tag.tabIndex = 0; tag.setAttribute('role', 'button');
-      tag.innerHTML = `<div class="code">${lang.code}</div><div class="name">${lang.name}</div><div class="tier">${lang.tier}</div>`;
-      const select = () => {
-        document.querySelectorAll('.lang-tag').forEach(t => t.classList.remove('active'));
-        tag.classList.add('active');
-        langDetail.innerHTML = `<div class="sample" dir="${lang.dir}" lang="${lang.code.toLowerCase()}">${lang.sample}</div><div class="facts"><span><b>${lang.name}</b></span><span>Tier: <b>${lang.tier}</b></span><span>Direction: <b>${lang.dir.toUpperCase()}</b></span></div>`;
-        langDetail.classList.add('show');
-      };
-      tag.addEventListener('click', select);
-      tag.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); } });
-      langGrid.appendChild(tag);
+if (langGrid && langSearch && langFilters) {
+  function renderLangGrid() {
+    const q = langSearch ? langSearch.value.trim().toLowerCase() : '';
+    langGrid.innerHTML = '';
+    languages
+      .filter(l => activeFilter === 'all' || (activeFilter === 'rtl' && l.dir === 'rtl') || (activeFilter === 'complex' && l.complex))
+      .filter(l => !q || l.name.toLowerCase().includes(q) || l.code.toLowerCase().includes(q))
+      .forEach(lang => {
+        const tag = document.createElement('div');
+        tag.className = 'lang-tag';
+        tag.tabIndex = 0; tag.setAttribute('role', 'button');
+        tag.innerHTML = `<div class="code">${lang.code}</div><div class="name">${lang.name}</div><div class="tier">${lang.tier}</div>`;
+        const select = () => {
+          document.querySelectorAll('.lang-tag').forEach(t => t.classList.remove('active'));
+          tag.classList.add('active');
+          if (langDetail) {
+            langDetail.innerHTML = `<div class="sample" dir="${lang.dir}" lang="${lang.code.toLowerCase()}">${lang.sample}</div><div class="facts"><span><b>${lang.name}</b></span><span>Tier: <b>${lang.tier}</b></span><span>Direction: <b>${lang.dir.toUpperCase()}</b></span></div>`;
+            langDetail.classList.add('show');
+          }
+        };
+        tag.addEventListener('click', select);
+        tag.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); } });
+        langGrid.appendChild(tag);
+      });
+  }
+  renderLangGrid();
+  langSearch.addEventListener('input', renderLangGrid);
+  langFilters.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      langFilters.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.filter;
+      renderLangGrid();
     });
-}
-renderLangGrid();
-langSearch.addEventListener('input', renderLangGrid);
-langFilters.querySelectorAll('.filter-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    langFilters.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    activeFilter = chip.dataset.filter;
-    renderLangGrid();
   });
-});
+}
 
 /* ============ Form validation & submission ============ */
 const form = document.getElementById('projectForm');
@@ -629,27 +689,32 @@ function validateEmail(input, errorEl) {
   return ok;
 }
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const name = document.getElementById('name');
-  const email = document.getElementById('email');
-  const service = document.getElementById('service');
-  const message = document.getElementById('message');
+if (form) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const service = document.getElementById('service');
+    const message = document.getElementById('message');
 
-  const nameOk = validateField(name, name.nextElementSibling.nextElementSibling);
-  const emailOk = validateEmail(email, email.nextElementSibling.nextElementSibling);
-  const serviceOk = !!service.value;
-  const messageOk = validateField(message, message.nextElementSibling.nextElementSibling);
+    if (!name || !email || !service || !message) return;
 
-  if (nameOk && emailOk && serviceOk && messageOk) {
-    // GA4 event tracking
-    if (typeof gtag === 'function') gtag('event', 'form_submit', { event_category: 'contact', event_label: service.value });
-    toast.textContent = 'âœ… Project request sent successfully!';
-    toast.classList.add('show');
-    form.reset();
-    setTimeout(() => toast.classList.remove('show'), 3200);
-  }
-});
+    const nameOk = validateField(name, name.nextElementSibling?.nextElementSibling);
+    const emailOk = validateEmail(email, email.nextElementSibling?.nextElementSibling);
+    const serviceOk = !!service.value;
+    const messageOk = validateField(message, message.nextElementSibling?.nextElementSibling);
+
+    if (nameOk && emailOk && serviceOk && messageOk) {
+      if (typeof gtag === 'function') gtag('event', 'form_submit', { event_category: 'contact', event_label: service.value });
+      if (toast) {
+        toast.textContent = '✅ Project request sent successfully!';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3200);
+      }
+      form.reset();
+    }
+  });
+}
 
 /* ============ Section heading reveal on scroll ============ */
 const headingObserver = new IntersectionObserver((entries) => {
@@ -665,28 +730,40 @@ document.querySelectorAll('.section-head').forEach(el => headingObserver.observe
 /* ============ Cookie consent ============ */
 (function() {
   const banner = document.getElementById('cookieBanner');
-  const accepted = localStorage.getItem('cookie-consent');
-  if (!accepted) {
-    setTimeout(() => banner.classList.add('show'), 1500);
+  const acceptBtn = document.getElementById('cookieAccept');
+  const declineBtn = document.getElementById('cookieDecline');
+  if (!banner) return;
+  try {
+    const accepted = typeof localStorage !== 'undefined' ? localStorage.getItem('cookie-consent') : null;
+    if (!accepted) {
+      setTimeout(() => banner.classList.add('show'), 1500);
+    }
+  } catch(e) {}
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', () => {
+      try { if (typeof localStorage !== 'undefined') localStorage.setItem('cookie-consent', 'accepted'); } catch(e) {}
+      banner.classList.remove('show');
+      if (typeof gtag === 'function') gtag('consent', 'update', { analytics_storage: 'granted' });
+    });
   }
-  document.getElementById('cookieAccept').addEventListener('click', () => {
-    localStorage.setItem('cookie-consent', 'accepted');
-    banner.classList.remove('show');
-    if (typeof gtag === 'function') gtag('consent', 'update', { analytics_storage: 'granted' });
-  });
-  document.getElementById('cookieDecline').addEventListener('click', () => {
-    localStorage.setItem('cookie-consent', 'declined');
-    banner.classList.remove('show');
-  });
+  if (declineBtn) {
+    declineBtn.addEventListener('click', () => {
+      try { if (typeof localStorage !== 'undefined') localStorage.setItem('cookie-consent', 'declined'); } catch(e) {}
+      banner.classList.remove('show');
+    });
+  }
 })();
 
 /* ============ GA4 blog click tracking ============ */
-document.getElementById('blogGrid').addEventListener('click', (e) => {
-  const card = e.target.closest('.blog-card');
-  if (card && typeof gtag === 'function') {
-    gtag('event', 'blog_click', { event_label: card.querySelector('h3')?.textContent || '' });
-  }
-});
+const blogGridEl = document.getElementById('blogGrid');
+if (blogGridEl) {
+  blogGridEl.addEventListener('click', (e) => {
+    const card = e.target.closest('.blog-card');
+    if (card && typeof gtag === 'function') {
+      gtag('event', 'blog_click', { event_label: card.querySelector('h3')?.textContent || '' });
+    }
+  });
+}
 
 
 
@@ -1201,15 +1278,22 @@ window.addEventListener('load', () => {
 /* ============ Theme Toggle & LocalStorage ============ */
 (() => {
   const themeToggle = document.getElementById('themeToggle');
-  const savedTheme = localStorage.getItem('mavy_theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', savedTheme);
+  let savedTheme = 'dark';
+  try {
+    if (typeof localStorage !== 'undefined') {
+      savedTheme = localStorage.getItem('mavy_theme') || 'dark';
+    }
+  } catch(e) {}
+  if (document.documentElement) document.documentElement.setAttribute('data-theme', savedTheme);
   if (themeToggle) {
     themeToggle.textContent = savedTheme === 'light' ? '🌙' : '☀️';
     themeToggle.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme') || 'dark';
       const next = current === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('mavy_theme', next);
+      if (document.documentElement) document.documentElement.setAttribute('data-theme', next);
+      try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem('mavy_theme', next);
+      } catch(e) {}
       themeToggle.textContent = next === 'light' ? '🌙' : '☀️';
     });
   }
