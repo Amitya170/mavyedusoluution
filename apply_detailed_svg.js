@@ -1,0 +1,70 @@
+const fs = require('fs');
+
+const NEW_SVG = `<svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="c2Purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#4c1d95" />
+    </linearGradient>
+    <linearGradient id="c2Gold" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fcd34d" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <path d="M50 10 A40 40 0 0 0 50 90 L50 10" stroke="url(#c2Purple)" stroke-width="3" fill="none"/>
+  <path d="M50 10 A20 40 0 0 0 50 90" stroke="url(#c2Purple)" stroke-width="2" fill="none"/>
+  <path d="M50 10 A40 40 0 0 1 50 90 L50 10" stroke="url(#c2Gold)" stroke-width="3" fill="none"/>
+  <path d="M50 10 A20 40 0 0 1 50 90" stroke="url(#c2Gold)" stroke-width="2" fill="none"/>
+  <path d="M18 35 L82 35" stroke="url(#c2Purple)" stroke-width="2" opacity="0.6"/>
+  <path d="M10 50 L90 50" stroke="url(#c2Purple)" stroke-width="2" opacity="0.6"/>
+  <path d="M18 65 L82 65" stroke="url(#c2Purple)" stroke-width="2" opacity="0.6"/>
+  <path d="M30 35 L50 45 L70 35" stroke="url(#c2Purple)" stroke-width="2.5" filter="url(#glow)"/>
+  <path d="M50 45 L40 65 L60 65 Z" stroke="url(#c2Gold)" stroke-width="2" fill="none"/>
+  <circle cx="30" cy="35" r="4" fill="url(#c2Purple)"/>
+  <circle cx="70" cy="35" r="4" fill="url(#c2Gold)"/>
+  <circle cx="50" cy="45" r="5" fill="url(#c2Gold)" filter="url(#glow)"/>
+  <circle cx="40" cy="65" r="3" fill="url(#c2Purple)"/>
+  <circle cx="60" cy="65" r="3" fill="url(#c2Gold)"/>
+  <path d="M20 75 Q10 50 25 20 Q50 5 80 25 Q95 50 80 80 Q65 95 50 90 Q35 95 20 80" stroke="url(#c2Gold)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M50 95 C30 95 20 80 50 75 C80 80 70 95 50 95 Z" fill="url(#c2Purple)"/>
+  <path d="M50 90 C35 90 25 78 50 75 C75 78 65 90 50 90 Z" fill="url(#c2Gold)"/>
+  <path d="M50 75 L50 95" stroke="#050510" stroke-width="2"/>
+</svg>`.replace(/\r?\n\s*/g, '');
+
+// Save to logo.svg
+fs.writeFileSync('logo.svg', NEW_SVG, 'utf8');
+
+function restoreSvg(filePath) {
+    if (!fs.existsSync(filePath)) return;
+    let content = fs.readFileSync(filePath, 'utf8');
+    
+    // The previous regex we need to find is the img tag we injected
+    const imgRegex = /<img src="\.\.?\/logo\.png" class="logo-icon" alt="Mavy EduSolutions Logo" style="[^"]+">/gs;
+    const occurrences = (content.match(imgRegex) || []).length;
+    
+    if (occurrences > 0) {
+        content = content.replace(imgRegex, NEW_SVG);
+        fs.writeFileSync(filePath, content, 'utf8');
+        console.log(`Restored ${occurrences} SVGs in ${filePath}`);
+    } else {
+        // Also check if we have the old simple SVG globe, we might need to replace it
+        // We know we replaced everything with PNG, but just in case
+    }
+}
+
+['index.html', '404.html', 'blog/index.html', 'generate-blogs.js'].forEach(restoreSvg);
+
+// Fix the page-reveal
+let indexHtml = fs.readFileSync('index.html', 'utf8');
+// The page reveal currently looks like:
+// <div id="page-reveal"><div class="reveal-logo" style="display:flex; align-items:center; gap:1.5rem;"><img ...><span>Mavy EduSolutions</span></div></div>
+// Let's replace the whole page-reveal block
+const revealRegex = /<div id="page-reveal">.*?<\/div><\/div>/s;
+const newReveal = `<div id="page-reveal"><div class="reveal-logo" style="display:flex; justify-content:center; align-items:center;">` + NEW_SVG.replace('class="logo-icon"', 'class="logo-icon" style="width: 4em; height: 4em;"') + `</div></div>`;
+indexHtml = indexHtml.replace(revealRegex, newReveal);
+fs.writeFileSync('index.html', indexHtml, 'utf8');
+console.log('Fixed page-reveal in index.html');
