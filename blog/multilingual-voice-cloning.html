@@ -112,11 +112,183 @@
   @media(max-width:768px){.footer-grid{grid-template-columns:1fr;}.article-hero h1{font-size:1.8rem;}}
   :focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
 </style>
+
+<!-- Three.js CDN for WebGL 4D Interactive Engine -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+function init4DLogoEngine() {
+  if (typeof THREE === 'undefined') return;
+
+  const vertices4D = [];
+  for (let i = 0; i < 16; i++) {
+    vertices4D.push([
+      (i & 1) ? 1 : -1,
+      (i & 2) ? 1 : -1,
+      (i & 4) ? 1 : -1,
+      (i & 8) ? 1 : -1
+    ]);
+  }
+
+  const edges = [];
+  for (let i = 0; i < 16; i++) {
+    for (let j = i + 1; j < 16; j++) {
+      let diff = 0;
+      for (let k = 0; k < 4; k++) {
+        if (vertices4D[i][k] !== vertices4D[j][k]) diff++;
+      }
+      if (diff === 1) edges.push([i, j]);
+    }
+  }
+
+  const containers = document.querySelectorAll('#webgl-reveal-container, .webgl-logo-container');
+
+  containers.forEach(container => {
+    if (container.dataset.webglInited) return;
+    container.dataset.webglInited = 'true';
+
+    const isReveal = container.id === 'webgl-reveal-container';
+    const width = isReveal ? 320 : 44;
+    const height = isReveal ? 320 : 44;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+    camera.position.z = isReveal ? 5.5 : 5.0;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    const mainGroup = new THREE.Group();
+    scene.add(mainGroup);
+
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0x67e8f9,
+      transparent: true,
+      opacity: 0.85,
+      linewidth: isReveal ? 2 : 1
+    });
+
+    const lineGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(edges.length * 2 * 3);
+    lineGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    const lineSegments = new THREE.LineSegments(lineGeometry, lineMaterial);
+    mainGroup.add(lineSegments);
+
+    const nodeGeo = new THREE.SphereGeometry(isReveal ? 0.08 : 0.06, 8, 8);
+    const nodeMat = new THREE.MeshBasicMaterial({ color: 0xc084fc });
+    const nodesGroup = new THREE.Group();
+    for (let i = 0; i < 16; i++) {
+      const mesh = new THREE.Mesh(nodeGeo, nodeMat);
+      nodesGroup.add(mesh);
+    }
+    mainGroup.add(nodesGroup);
+
+    const coreGeo = new THREE.IcosahedronGeometry(isReveal ? 0.85 : 0.65, 0);
+    const coreMat = new THREE.MeshBasicMaterial({
+      color: 0xfde68a,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.9
+    });
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    mainGroup.add(coreMesh);
+
+    if (isReveal) {
+      const pCount = 250;
+      const pGeo = new THREE.BufferGeometry();
+      const pPos = new Float32Array(pCount * 3);
+      for (let p = 0; p < pCount * 3; p += 3) {
+        pPos[p] = (Math.random() - 0.5) * 8;
+        pPos[p+1] = (Math.random() - 0.5) * 8;
+        pPos[p+2] = (Math.random() - 0.5) * 8;
+      }
+      pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+      const pMat = new THREE.PointsMaterial({ color: 0x22d3ee, size: 0.04, transparent: true, opacity: 0.7 });
+      const particles = new THREE.Points(pGeo, pMat);
+      scene.add(particles);
+    }
+
+    let mouseX = 0, mouseY = 0;
+    let targetX = 0, targetY = 0;
+    window.addEventListener('mousemove', (e) => {
+      const windowHalfX = window.innerWidth / 2;
+      const windowHalfY = window.innerHeight / 2;
+      mouseX = (e.clientX - windowHalfX) / windowHalfX;
+      mouseY = (e.clientY - windowHalfY) / windowHalfY;
+    });
+
+    let angleZW = 0;
+    let angleXW = 0;
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      angleZW += 0.015;
+      angleXW += 0.01;
+
+      const distance = 2.8;
+      const projected3D = [];
+
+      for (let i = 0; i < 16; i++) {
+        let [x, y, z, w] = vertices4D[i];
+
+        let cosZW = Math.cos(angleZW), sinZW = Math.sin(angleZW);
+        let z1 = z * cosZW - w * sinZW;
+        let w1 = z * sinZW + w * cosZW;
+
+        let cosXW = Math.cos(angleXW), sinXW = Math.sin(angleXW);
+        let x1 = x * cosXW - w1 * sinXW;
+        let w2 = x * sinXW + w1 * cosXW;
+
+        let wPerspective = 1 / (distance - w2);
+        let px = x1 * wPerspective * 1.8;
+        let py = y * wPerspective * 1.8;
+        let pz = z1 * wPerspective * 1.8;
+
+        projected3D.push([px, py, pz]);
+        nodesGroup.children[i].position.set(px, py, pz);
+      }
+
+      const posAttr = lineGeometry.attributes.position;
+      let posIdx = 0;
+      for (let i = 0; i < edges.length; i++) {
+        const p1 = projected3D[edges[i][0]];
+        const p2 = projected3D[edges[i][1]];
+
+        posAttr.array[posIdx++] = p1[0];
+        posAttr.array[posIdx++] = p1[1];
+        posAttr.array[posIdx++] = p1[2];
+
+        posAttr.array[posIdx++] = p2[0];
+        posAttr.array[posIdx++] = p2[1];
+        posAttr.array[posIdx++] = p2[2];
+      }
+      posAttr.needsUpdate = true;
+
+      coreMesh.rotation.x += 0.01;
+      coreMesh.rotation.y += 0.015;
+
+      targetX += (mouseX - targetX) * 0.05;
+      targetY += (mouseY - targetY) * 0.05;
+      mainGroup.rotation.y = targetX * 0.8 + angleZW * 0.2;
+      mainGroup.rotation.x = targetY * 0.8;
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  });
+}
+document.addEventListener('DOMContentLoaded', init4DLogoEngine);
+</script>
+
 </head>
 <body>
 <div class="reading-progress" id="readingProgress"></div>
 <nav>
-  <a href="../index.html" class="logo"><div class="mavy-4d-coded-wrapper logo-icon" style="width: 2.6em; height: 2.6em;">  <div class="q-tumbler">    <div class="q-layer layer-1"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; overflow:visible;">  <defs>    <linearGradient id="qGrad1" x1="0%" y1="0%" x2="100%" y2="100%">      <stop offset="0%" stop-color="#22D3EE" />      <stop offset="50%" stop-color="#C084FC" />      <stop offset="100%" stop-color="#FCD34D" />    </linearGradient>    <linearGradient id="qGrad2" x1="100%" y1="0%" x2="0%" y2="100%">      <stop offset="0%" stop-color="#FCD34D" />      <stop offset="50%" stop-color="#A855F7" />      <stop offset="100%" stop-color="#0284C7" />    </linearGradient>    <radialGradient id="coreGlowRad" cx="50%" cy="50%" r="50%">      <stop offset="0%" stop-color="#C084FC" stop-opacity="0.4" />      <stop offset="100%" stop-color="#000000" stop-opacity="0" />    </radialGradient>    <filter id="qGlowFilter" x="-40%" y="-40%" width="180%" height="180%">      <feGaussianBlur stdDeviation="3" result="blur" />      <feMerge>        <feMergeNode in="blur" />        <feMergeNode in="SourceGraphic" />      </feMerge>    </filter>  </defs>  <circle cx="60" cy="60" r="45" fill="url(#coreGlowRad)" />  <ellipse cx="60" cy="60" rx="52" ry="22" stroke="url(#qGrad1)" stroke-width="2" stroke-dasharray="16 8" class="q-ring-1" filter="url(#qGlowFilter)" />  <ellipse cx="60" cy="60" rx="22" ry="52" stroke="url(#qGrad2)" stroke-width="2" stroke-dasharray="20 10" class="q-ring-2" filter="url(#qGlowFilter)" />  <path d="M 38 38 L 82 38 M 38 60 L 74 60 M 38 82 L 82 82 M 38 38 L 38 82" stroke="url(#qGrad2)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8" />  <path d="M 28 82 L 28 38 L 60 68 L 92 38 L 92 82" stroke="url(#qGrad1)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#qGlowFilter)" />  <circle cx="28" cy="38" r="4" fill="#ffffff" filter="url(#qGlowFilter)" />  <circle cx="60" cy="68" r="4" fill="#FCD34D" filter="url(#qGlowFilter)" />  <circle cx="92" cy="38" r="4" fill="#ffffff" filter="url(#qGlowFilter)" />  <circle cx="38" cy="60" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" />  <circle cx="74" cy="60" r="3.5" fill="#FCD34D" filter="url(#qGlowFilter)" />  <circle cx="82" cy="38" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" />  <circle cx="82" cy="82" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" /></svg></div>    <div class="q-layer layer-2"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; overflow:visible;">  <defs>    <linearGradient id="qGrad1" x1="0%" y1="0%" x2="100%" y2="100%">      <stop offset="0%" stop-color="#22D3EE" />      <stop offset="50%" stop-color="#C084FC" />      <stop offset="100%" stop-color="#FCD34D" />    </linearGradient>    <linearGradient id="qGrad2" x1="100%" y1="0%" x2="0%" y2="100%">      <stop offset="0%" stop-color="#FCD34D" />      <stop offset="50%" stop-color="#A855F7" />      <stop offset="100%" stop-color="#0284C7" />    </linearGradient>    <radialGradient id="coreGlowRad" cx="50%" cy="50%" r="50%">      <stop offset="0%" stop-color="#C084FC" stop-opacity="0.4" />      <stop offset="100%" stop-color="#000000" stop-opacity="0" />    </radialGradient>    <filter id="qGlowFilter" x="-40%" y="-40%" width="180%" height="180%">      <feGaussianBlur stdDeviation="3" result="blur" />      <feMerge>        <feMergeNode in="blur" />        <feMergeNode in="SourceGraphic" />      </feMerge>    </filter>  </defs>  <circle cx="60" cy="60" r="45" fill="url(#coreGlowRad)" />  <ellipse cx="60" cy="60" rx="52" ry="22" stroke="url(#qGrad1)" stroke-width="2" stroke-dasharray="16 8" class="q-ring-1" filter="url(#qGlowFilter)" />  <ellipse cx="60" cy="60" rx="22" ry="52" stroke="url(#qGrad2)" stroke-width="2" stroke-dasharray="20 10" class="q-ring-2" filter="url(#qGlowFilter)" />  <path d="M 38 38 L 82 38 M 38 60 L 74 60 M 38 82 L 82 82 M 38 38 L 38 82" stroke="url(#qGrad2)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8" />  <path d="M 28 82 L 28 38 L 60 68 L 92 38 L 92 82" stroke="url(#qGrad1)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#qGlowFilter)" />  <circle cx="28" cy="38" r="4" fill="#ffffff" filter="url(#qGlowFilter)" />  <circle cx="60" cy="68" r="4" fill="#FCD34D" filter="url(#qGlowFilter)" />  <circle cx="92" cy="38" r="4" fill="#ffffff" filter="url(#qGlowFilter)" />  <circle cx="38" cy="60" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" />  <circle cx="74" cy="60" r="3.5" fill="#FCD34D" filter="url(#qGlowFilter)" />  <circle cx="82" cy="38" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" />  <circle cx="82" cy="82" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" /></svg></div>  </div></div>Mavy <span>EduSolutions</span></a>
+  <a href="../index.html" class="logo"><div class="webgl-logo-container logo-icon" style="width: 44px; height: 44px; display: inline-flex; justify-content: center; align-items: center;"></div>Mavy <span>EduSolutions</span></a>
   <div class="nav-links">
     <a href="../index.html#services">Services</a>
     <a href="../index.html#ai-data">AI Data</a>
@@ -203,7 +375,7 @@
 <footer>
   <div class="footer-grid">
     <div>
-      <a href="../index.html" class="logo"><div class="mavy-4d-coded-wrapper logo-icon" style="width: 2.6em; height: 2.6em;">  <div class="q-tumbler">    <div class="q-layer layer-1"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; overflow:visible;">  <defs>    <linearGradient id="qGrad1" x1="0%" y1="0%" x2="100%" y2="100%">      <stop offset="0%" stop-color="#22D3EE" />      <stop offset="50%" stop-color="#C084FC" />      <stop offset="100%" stop-color="#FCD34D" />    </linearGradient>    <linearGradient id="qGrad2" x1="100%" y1="0%" x2="0%" y2="100%">      <stop offset="0%" stop-color="#FCD34D" />      <stop offset="50%" stop-color="#A855F7" />      <stop offset="100%" stop-color="#0284C7" />    </linearGradient>    <radialGradient id="coreGlowRad" cx="50%" cy="50%" r="50%">      <stop offset="0%" stop-color="#C084FC" stop-opacity="0.4" />      <stop offset="100%" stop-color="#000000" stop-opacity="0" />    </radialGradient>    <filter id="qGlowFilter" x="-40%" y="-40%" width="180%" height="180%">      <feGaussianBlur stdDeviation="3" result="blur" />      <feMerge>        <feMergeNode in="blur" />        <feMergeNode in="SourceGraphic" />      </feMerge>    </filter>  </defs>  <circle cx="60" cy="60" r="45" fill="url(#coreGlowRad)" />  <ellipse cx="60" cy="60" rx="52" ry="22" stroke="url(#qGrad1)" stroke-width="2" stroke-dasharray="16 8" class="q-ring-1" filter="url(#qGlowFilter)" />  <ellipse cx="60" cy="60" rx="22" ry="52" stroke="url(#qGrad2)" stroke-width="2" stroke-dasharray="20 10" class="q-ring-2" filter="url(#qGlowFilter)" />  <path d="M 38 38 L 82 38 M 38 60 L 74 60 M 38 82 L 82 82 M 38 38 L 38 82" stroke="url(#qGrad2)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8" />  <path d="M 28 82 L 28 38 L 60 68 L 92 38 L 92 82" stroke="url(#qGrad1)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#qGlowFilter)" />  <circle cx="28" cy="38" r="4" fill="#ffffff" filter="url(#qGlowFilter)" />  <circle cx="60" cy="68" r="4" fill="#FCD34D" filter="url(#qGlowFilter)" />  <circle cx="92" cy="38" r="4" fill="#ffffff" filter="url(#qGlowFilter)" />  <circle cx="38" cy="60" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" />  <circle cx="74" cy="60" r="3.5" fill="#FCD34D" filter="url(#qGlowFilter)" />  <circle cx="82" cy="38" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" />  <circle cx="82" cy="82" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" /></svg></div>    <div class="q-layer layer-2"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; overflow:visible;">  <defs>    <linearGradient id="qGrad1" x1="0%" y1="0%" x2="100%" y2="100%">      <stop offset="0%" stop-color="#22D3EE" />      <stop offset="50%" stop-color="#C084FC" />      <stop offset="100%" stop-color="#FCD34D" />    </linearGradient>    <linearGradient id="qGrad2" x1="100%" y1="0%" x2="0%" y2="100%">      <stop offset="0%" stop-color="#FCD34D" />      <stop offset="50%" stop-color="#A855F7" />      <stop offset="100%" stop-color="#0284C7" />    </linearGradient>    <radialGradient id="coreGlowRad" cx="50%" cy="50%" r="50%">      <stop offset="0%" stop-color="#C084FC" stop-opacity="0.4" />      <stop offset="100%" stop-color="#000000" stop-opacity="0" />    </radialGradient>    <filter id="qGlowFilter" x="-40%" y="-40%" width="180%" height="180%">      <feGaussianBlur stdDeviation="3" result="blur" />      <feMerge>        <feMergeNode in="blur" />        <feMergeNode in="SourceGraphic" />      </feMerge>    </filter>  </defs>  <circle cx="60" cy="60" r="45" fill="url(#coreGlowRad)" />  <ellipse cx="60" cy="60" rx="52" ry="22" stroke="url(#qGrad1)" stroke-width="2" stroke-dasharray="16 8" class="q-ring-1" filter="url(#qGlowFilter)" />  <ellipse cx="60" cy="60" rx="22" ry="52" stroke="url(#qGrad2)" stroke-width="2" stroke-dasharray="20 10" class="q-ring-2" filter="url(#qGlowFilter)" />  <path d="M 38 38 L 82 38 M 38 60 L 74 60 M 38 82 L 82 82 M 38 38 L 38 82" stroke="url(#qGrad2)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8" />  <path d="M 28 82 L 28 38 L 60 68 L 92 38 L 92 82" stroke="url(#qGrad1)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#qGlowFilter)" />  <circle cx="28" cy="38" r="4" fill="#ffffff" filter="url(#qGlowFilter)" />  <circle cx="60" cy="68" r="4" fill="#FCD34D" filter="url(#qGlowFilter)" />  <circle cx="92" cy="38" r="4" fill="#ffffff" filter="url(#qGlowFilter)" />  <circle cx="38" cy="60" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" />  <circle cx="74" cy="60" r="3.5" fill="#FCD34D" filter="url(#qGlowFilter)" />  <circle cx="82" cy="38" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" />  <circle cx="82" cy="82" r="3.5" fill="#22D3EE" filter="url(#qGlowFilter)" /></svg></div>  </div></div>Mavy <span>EduSolutions</span></a>
+      <a href="../index.html" class="logo"><div class="webgl-logo-container logo-icon" style="width: 44px; height: 44px; display: inline-flex; justify-content: center; align-items: center;"></div>Mavy <span>EduSolutions</span></a>
       <p style="margin-top:1rem;max-width:280px;">Localization, AI data, and education solutions built like a type foundry: one shared system of terms, tone, and formatting behind every language you ship.</p>
       <div class="footer-social">
         <a href="https://www.linkedin.com/company/mavyedusolutions/posts/?feedView=all" aria-label="LinkedIn" title="LinkedIn" target="_blank">in</a>
