@@ -1078,9 +1078,8 @@ ${post.body}
       <a href="../index.html" class="logo">${LOGO_SVG}Mavy <span>EduSolutions</span></a>
       <p style="margin-top:1rem;max-width:280px;">Localization, AI data, and education solutions built like a type foundry: one shared system of terms, tone, and formatting behind every language you ship.</p>
       <div class="footer-social">
-        <a href="#" aria-label="LinkedIn" title="LinkedIn">in</a>
+        <a href="https://www.linkedin.com/company/mavyedusolutions/posts/?feedView=all" aria-label="LinkedIn" title="LinkedIn" target="_blank">in</a>
         <a href="#" aria-label="Twitter / X" title="Twitter / X">\ud835\udd4f</a>
-        <a href="#" aria-label="GitHub" title="GitHub">GH</a>
       </div>
     </div>
     <div><h4>Services</h4><a href="../index.html#services">Localization</a><a href="../index.html#ai-data">AI Data Services</a><a href="../index.html#edu-solutions">Education Solutions</a><a href="../index.html#process">Process</a></div>
