@@ -911,12 +911,7 @@ function generateHTML(post) {
     <div class="core"></div>
   </div>
   <div class="logo-4d-text">M</div>
-</div>`;    <div class="orbit orbit-2"></div>
-    <div class="orbit orbit-3"></div>
-    <div class="core"></div>
-  </div>
-  <div class="logo-4d-text">M</div>
-</div>;
+</div>`;
 
   return `<!DOCTYPE html>
 <html lang="en" data-theme="dark">
