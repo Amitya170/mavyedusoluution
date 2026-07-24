@@ -903,7 +903,7 @@ function generateHTML(post) {
     </a>`;
   }).join('');
 
-  const LOGO_SVG = '<img src="../logo.png" class="logo-icon" alt="Mavy EduSolutions Logo" style="height: 1.5em; width: auto; object-fit: contain; vertical-align: middle; border-radius: 4px;">';
+  const LOGO_SVG = '<svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="opt1Purp" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6d28d9" /><stop offset="100%" stop-color="#a855f7" /></linearGradient><linearGradient id="opt1Gold" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fbbf24" /><stop offset="100%" stop-color="#d97706" /></linearGradient><filter id="glow1" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter></defs><path d="M25 80 L25 30 L45 50 L55 50 L75 30 L75 80" stroke="url(#opt1Purp)" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/><path d="M50 20 L55 35 L70 40 L55 45 L50 60 L45 45 L30 40 L45 35 Z" fill="url(#opt1Gold)" filter="url(#glow1)"/></svg>';
 
   return `<!DOCTYPE html>
 <html lang="en" data-theme="dark">
