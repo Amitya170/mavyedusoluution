@@ -1,0 +1,83 @@
+const fs = require('fs');
+
+const NEW_INNER_SVG = `<defs>
+    <linearGradient id="c3BgLine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6b21a8" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#d97706" stop-opacity="0.6" />
+    </linearGradient>
+    <linearGradient id="c3Purp1" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9333ea" />
+      <stop offset="100%" stop-color="#c084fc" />
+    </linearGradient>
+    <linearGradient id="c3Purp2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#581c87" />
+      <stop offset="100%" stop-color="#9333ea" />
+    </linearGradient>
+    <linearGradient id="c3Purp3" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7e22ce" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+    <linearGradient id="c3Gold1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#78350f" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <linearGradient id="c3Gold2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+    <linearGradient id="c3Gold3" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#fef3c7" />
+    </linearGradient>
+    <filter id="c3Shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+  <g stroke="url(#c3BgLine)" stroke-width="1.5">
+    <path d="M25 35 L50 20 L75 35 L75 65 L50 80 L25 65 Z" />
+    <path d="M25 35 L50 50 L75 35" />
+    <path d="M50 50 L50 80" />
+    <path d="M25 65 L40 55" />
+    <path d="M75 65 L60 55" />
+    <path d="M50 20 L40 35 L50 50" />
+  </g>
+  <g stroke="#ffffff" stroke-width="0.5">
+    <circle cx="25" cy="35" r="2.5" fill="#9333ea"/>
+    <circle cx="50" cy="20" r="2.5" fill="#d97706"/>
+    <circle cx="75" cy="35" r="2.5" fill="#d97706"/>
+    <circle cx="75" cy="65" r="2.5" fill="#9333ea"/>
+    <circle cx="50" cy="80" r="2.5" fill="#9333ea"/>
+    <circle cx="25" cy="65" r="2.5" fill="#d97706"/>
+    <circle cx="50" cy="50" r="2" fill="#d97706"/>
+    <circle cx="40" cy="55" r="2" fill="#d97706"/>
+    <circle cx="60" cy="55" r="2" fill="#9333ea"/>
+    <circle cx="40" cy="35" r="2" fill="#d97706"/>
+  </g>
+  <polygon points="60,60 75,25 88,30 73,65" fill="url(#c3Purp3)" filter="url(#c3Shadow)"/>
+  <polygon points="35,20 60,60 73,65 48,25" fill="url(#c3Purp2)" filter="url(#c3Shadow)"/>
+  <polygon points="15,65 35,20 48,25 28,70" fill="url(#c3Purp1)" filter="url(#c3Shadow)"/>
+  <polygon points="25,50 50,85 63,85 38,50" fill="url(#c3Gold1)" filter="url(#c3Shadow)"/>
+  <polygon points="50,85 75,40 88,40 63,85" fill="url(#c3Gold2)" filter="url(#c3Shadow)"/>
+  <polygon points="65,45 85,12 100,32" fill="url(#c3Gold3)" filter="url(#c3Shadow)"/>`.replace(/\r?\n\s*/g, '');
+
+const FULL_SVG = `<svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">${NEW_INNER_SVG}</svg>`;
+
+// Save to logo.svg
+fs.writeFileSync('logo.svg', FULL_SVG, 'utf8');
+
+function updateSvgInFile(filePath) {
+    if (!fs.existsSync(filePath)) return;
+    let content = fs.readFileSync(filePath, 'utf8');
+    
+    // Replace the inner contents of any <svg class="logo-icon"...>...</svg>
+    const svgRegex = /(<svg class="logo-icon"[^>]*>).*?<\/svg>/gs;
+    const occurrences = (content.match(svgRegex) || []).length;
+    
+    if (occurrences > 0) {
+        content = content.replace(svgRegex, `$1${NEW_INNER_SVG}</svg>`);
+        fs.writeFileSync(filePath, content, 'utf8');
+        console.log(`Replaced ${occurrences} SVGs in ${filePath}`);
+    }
+}
+
+['index.html', '404.html', 'blog/index.html', 'generate-blogs.js'].forEach(updateSvgInFile);
