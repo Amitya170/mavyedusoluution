@@ -1249,3 +1249,90 @@ section {
   0% { transform: rotateX(-20deg) rotateY(360deg) rotateZ(15deg); }
   100% { transform: rotateX(-20deg) rotateY(0deg) rotateZ(15deg); }
 }
+
+
+/* 3D GLASSMORPHISM TESSERACT LOGO */
+.mavy-glass-tesseract {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  vertical-align: middle;
+}
+.tesseract-scene {
+  width: 100%;
+  height: 100%;
+  perspective: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.tesseract-cube {
+  width: 65%;
+  height: 65%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: spin-tesseract 12s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+}
+.cube-face {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1.5px solid rgba(216, 180, 254, 0.6);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.35), inset 0 0 12px rgba(168, 85, 247, 0.2);
+  backdrop-filter: blur(4px);
+  border-radius: 4px;
+}
+
+.cube-front  { transform: rotateY(  0deg) translateZ(0.85em); }
+.cube-back   { transform: rotateY(180deg) translateZ(0.85em); }
+.cube-right  { transform: rotateY( 90deg) translateZ(0.85em); }
+.cube-left   { transform: rotateY(-90deg) translateZ(0.85em); }
+.cube-top    { transform: rotateX( 90deg) translateZ(0.85em); }
+.cube-bottom { transform: rotateX(-90deg) translateZ(0.85em); }
+
+.cube-node {
+  position: absolute;
+  width: 0.35em;
+  height: 0.35em;
+  margin-top: -0.175em;
+  margin-left: -0.175em;
+  background: #67e8f9;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #22d3ee, 0 0 15px #67e8f9;
+  transform-style: preserve-3d;
+}
+.node-1 { transform: translate3d(0, 0, 0.85em); }
+.node-2 { transform: translate3d(100%, 0, 0.85em); }
+.node-3 { transform: translate3d(0, 100%, 0.85em); }
+.node-4 { transform: translate3d(100%, 100%, 0.85em); }
+.node-5 { transform: translate3d(0, 0, -0.85em); }
+.node-6 { transform: translate3d(100%, 0, -0.85em); }
+.node-7 { transform: translate3d(0, 100%, -0.85em); }
+.node-8 { transform: translate3d(100%, 100%, -0.85em); }
+
+.cube-core {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 1.3em;
+  color: #ffffff;
+  text-shadow: 0 0 10px #fde68a, 0 0 20px #d97706, 0 0 35px #fcd34d;
+  animation: counter-spin-core 12s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin-tesseract {
+  0% { transform: rotateX(-25deg) rotateY(0deg) rotateZ(0deg); }
+  50% { transform: rotateX(45deg) rotateY(180deg) rotateZ(15deg); }
+  100% { transform: rotateX(335deg) rotateY(360deg) rotateZ(-10deg); }
+}
+@keyframes counter-spin-core {
+  0% { transform: translate(-50%, -50%) rotateY(0deg) rotateX(0deg); }
+  100% { transform: translate(-50%, -50%) rotateY(-360deg) rotateX(-360deg); }
+}
