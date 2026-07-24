@@ -903,10 +903,15 @@ function generateHTML(post) {
     </a>`;
   }).join('');
 
-  const LOGO_SVG = <div class="logo-4d-wrapper logo-icon" style="width: 2em; height: 2em;">
+  const LOGO_SVG = `<div class="logo-4d-wrapper logo-icon" style="width: 2em; height: 2em;">
   <div class="logo-4d">
     <div class="orbit orbit-1"></div>
     <div class="orbit orbit-2"></div>
+    <div class="orbit orbit-3"></div>
+    <div class="core"></div>
+  </div>
+  <div class="logo-4d-text">M</div>
+</div>`;    <div class="orbit orbit-2"></div>
     <div class="orbit orbit-3"></div>
     <div class="core"></div>
   </div>
