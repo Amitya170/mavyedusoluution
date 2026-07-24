@@ -903,14 +903,19 @@ function generateHTML(post) {
     </a>`;
   }).join('');
 
-  const LOGO_SVG = `<div class="logo-4d-wrapper logo-icon" style="width: 2em; height: 2em;">
-  <div class="logo-4d">
-    <div class="orbit orbit-1"></div>
-    <div class="orbit orbit-2"></div>
-    <div class="orbit orbit-3"></div>
-    <div class="core"></div>
+  const LOGO_SVG = `<div class="logo-edu-4d-wrapper logo-icon" style="width: 2.2em; height: 2.2em;">
+  <div class="logo-edu-4d">
+    <div class="edu-orbit edu-orbit-1"></div>
+    <div class="edu-orbit edu-orbit-2"></div>
+    <div class="edu-orbit edu-orbit-3"></div>
+    <div class="edu-book">
+      <div class="edu-page edu-page-left"></div>
+      <div class="edu-page edu-page-right"></div>
+    </div>
+    <div class="edu-hologram">
+      <span>M</span><span>M</span><span>M</span><span>M</span><span>M</span><span>M</span>
+    </div>
   </div>
-  <div class="logo-4d-text">M</div>
 </div>`;
 
   return `<!DOCTYPE html>
