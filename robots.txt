@@ -1,4 +1,4 @@
-# Mavy EduSolution - robots.txt
+# Mavy EduSolutions - robots.txt
 User-agent: *
 Allow: /
 Disallow: /generate-blogs.js

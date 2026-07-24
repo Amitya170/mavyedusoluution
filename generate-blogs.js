@@ -1,11 +1,11 @@
-// Blog article page generator for Mavy EduSolution
+// Blog article page generator for Mavy EduSolutions
 // Run: node generate-blogs.js
 // This creates all 12 blog HTML files in ./blog/
 
 const fs = require('fs');
 const path = require('path');
 
-const BRAND = 'Mavy EduSolution';
+const BRAND = 'Mavy EduSolutions';
 const DOMAIN = 'https://www.mavyedusolution.com';
 const EMAIL = 'collab@mavyedusolutions.co.in';
 
@@ -430,7 +430,7 @@ const posts = [
   },
   {
     slug: 'elearning-cultural',
-    cat: 'EduSolution',
+    cat: 'EduSolutions',
     title: 'Localizing e-learning for cultural learning styles, not just language',
     description: 'Why a translated course isn\'t a localized course — and the structural changes that make assessments work in MENA, LATAM, and APAC markets.',
     date: 'Jul 2026',
@@ -472,7 +472,7 @@ const posts = [
   },
   {
     slug: 'scorm-translation',
-    cat: 'EduSolution',
+    cat: 'EduSolutions',
     title: 'Why SCORM compliance breaks during translation — and how to prevent it',
     description: 'The packaging failures that only surface after you upload to the LMS, and the QA step that catches them before that.',
     date: 'Jun 2026',
@@ -517,7 +517,7 @@ const posts = [
   },
   {
     slug: 'ai-tutoring-data',
-    cat: 'EduSolution',
+    cat: 'EduSolutions',
     title: 'Building AI tutoring datasets that actually improve student outcomes',
     description: 'What separates useful Q&A training pairs from noise — difficulty calibration, pedagogical intent tagging, and subject-area coverage.',
     date: 'Jun 2026',
@@ -675,7 +675,7 @@ const posts = [
   },
   {
     slug: 'adaptive-learning-analytics',
-    cat: 'EduSolution',
+    cat: 'EduSolutions',
     title: 'Designing Adaptive Learning Engines: Item Response Theory (IRT) in Modern EdTech',
     description: 'How 3PL Item Response Theory and knowledge tracing algorithms dynamically adjust question difficulty for personalized student learning pathways.',
     date: 'Jul 2026',
@@ -814,7 +814,7 @@ const posts = [
     body: `
   <p>Synthetic voice generation has crossed the uncanny valley. Modern models can replicate breath patterns, emotional cadence, and micro-hesitations. This is incredible for accessibility and rapid content localization, but it introduces massive ethical gray areas.</p>
   <h2>Consent is more than a signature</h2>
-  <p>When an actor licenses their voice for an AI model, are they licensing it for a specific project, or for perpetuity? At Mavy EduSolution, we enforce <strong>use-case boundaries</strong>. Voice data collected for educational content cannot be legally repurposed for political advertising or automated telemarketing without explicit re-consent.</p>
+  <p>When an actor licenses their voice for an AI model, are they licensing it for a specific project, or for perpetuity? At Mavy EduSolutions, we enforce <strong>use-case boundaries</strong>. Voice data collected for educational content cannot be legally repurposed for political advertising or automated telemarketing without explicit re-consent.</p>
   <h3>Compensation models</h3>
   <p>We've pioneered a royalty-share model for voice actors. Instead of a flat buyout, actors receive fractional compensation every time their synthetic voiceprint is deployed in a new locale. This aligns AI progress with human prosperity.</p>
   <h2>Watermarking and deepfake prevention</h2>
@@ -837,7 +837,7 @@ const posts = [
   <h3>Optimizing for intent</h3>
   <p>Semantic SEO requires understanding <em>why</em> someone is searching. In Japan, searches for B2B software often include terms related to "implementation support" or "trust," whereas US searches prioritize "ROI" or "pricing."</p>
   <h2>How we handle Multilingual SEO</h2>
-  <p>At Mavy EduSolution, we don't translate keywords. We conduct native <strong>in-market keyword research</strong> from scratch. We analyze local search volume, map it to the buyer's journey, and craft metadata that satisfies the local search intent.</p>
+  <p>At Mavy EduSolutions, we don't translate keywords. We conduct native <strong>in-market keyword research</strong> from scratch. We analyze local search volume, map it to the buyer's journey, and craft metadata that satisfies the local search intent.</p>
   `,
     related: ['multilingual-seo', 'enterprise-lqa-framework']
   },
@@ -875,7 +875,7 @@ const posts = [
   <h3>Cultural vectors of attack</h3>
   <p>Furthermore, what constitutes a "harmful" prompt is deeply cultural. Hate speech, political sensitivities, and social taboos vary wildly across borders. A prompt that is benign in one country might violate local laws in another.</p>
   <h2>Our Red Teaming methodology</h2>
-  <p>At Mavy EduSolution, our adversarial testing teams consist of native speakers who understand local slang, cultural friction points, and linguistic nuances. We probe models using idioms, colloquialisms, and code-switching to ensure safety alignment is globally robust.</p>
+  <p>At Mavy EduSolutions, our adversarial testing teams consist of native speakers who understand local slang, cultural friction points, and linguistic nuances. We probe models using idioms, colloquialisms, and code-switching to ensure safety alignment is globally robust.</p>
   `,
     related: ['red-teaming-llm', 'rlhf-agreement']
   }
@@ -1023,7 +1023,7 @@ function generateHTML(post) {
 <body>
 <div class="reading-progress" id="readingProgress"></div>
 <nav>
-  <a href="../index.html" class="logo">${LOGO_SVG}Mavy <span>EduSolution</span></a>
+  <a href="../index.html" class="logo">${LOGO_SVG}Mavy <span>EduSolutions</span></a>
   <div class="nav-links">
     <a href="../index.html#services">Services</a>
     <a href="../index.html#ai-data">AI Data</a>
@@ -1075,7 +1075,7 @@ ${post.body}
 <footer>
   <div class="footer-grid">
     <div>
-      <a href="../index.html" class="logo">${LOGO_SVG}Mavy <span>EduSolution</span></a>
+      <a href="../index.html" class="logo">${LOGO_SVG}Mavy <span>EduSolutions</span></a>
       <p style="margin-top:1rem;max-width:280px;">Localization, AI data, and education solutions built like a type foundry: one shared system of terms, tone, and formatting behind every language you ship.</p>
       <div class="footer-social">
         <a href="#" aria-label="LinkedIn" title="LinkedIn">in</a>

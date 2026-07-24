@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mavy EduSolution Blog</title>
+    <title>Mavy EduSolutions Blog</title>
     <link>https://www.mavyedusolution.com/blog/</link>
-    <description>Notes on shipping global product — localization, AI data, education solutions, and engineering from the Mavy EduSolution team.</description>
+    <description>Notes on shipping global product — localization, AI data, education solutions, and engineering from the Mavy EduSolutions team.</description>
     <language>en</language>
     <lastBuildDate>Fri, 18 Jul 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://www.mavyedusolution.com/rss.xml" rel="self" type="application/rss+xml"/>
@@ -75,7 +75,7 @@
       <title>Localizing e-learning for cultural learning styles, not just language</title>
       <link>https://www.mavyedusolution.com/blog/elearning-cultural.html</link>
       <description>Why a translated course isn't a localized course — and the structural changes that make assessments work in MENA, LATAM, and APAC markets.</description>
-      <category>EduSolution</category>
+      <category>EduSolutions</category>
       <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/elearning-cultural.html</guid>
     </item>
@@ -83,7 +83,7 @@
       <title>Why SCORM compliance breaks during translation — and how to prevent it</title>
       <link>https://www.mavyedusolution.com/blog/scorm-translation.html</link>
       <description>The packaging failures that only surface after you upload to the LMS, and the QA step that catches them before that.</description>
-      <category>EduSolution</category>
+      <category>EduSolutions</category>
       <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/scorm-translation.html</guid>
     </item>
@@ -91,7 +91,7 @@
       <title>Building AI tutoring datasets that actually improve student outcomes</title>
       <link>https://www.mavyedusolution.com/blog/ai-tutoring-data.html</link>
       <description>What separates useful Q&amp;A training pairs from noise — difficulty calibration, pedagogical intent tagging, and subject-area coverage.</description>
-      <category>EduSolution</category>
+      <category>EduSolutions</category>
       <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/ai-tutoring-data.html</guid>
     </item>
@@ -123,7 +123,7 @@
       <title>Designing Adaptive Learning Engines: Item Response Theory (IRT) in Modern EdTech</title>
       <link>https://www.mavyedusolution.com/blog/adaptive-learning-analytics.html</link>
       <description>How 3PL Item Response Theory and knowledge tracing algorithms dynamically adjust question difficulty for personalized student learning pathways.</description>
-      <category>EduSolution</category>
+      <category>EduSolutions</category>
       <pubDate>Fri, 10 Jul 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/adaptive-learning-analytics.html</guid>
     </item>

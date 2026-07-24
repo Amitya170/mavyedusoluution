@@ -16,7 +16,7 @@ gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true });
 
 /* — EDIT ME: Brand & config ———————————————————————————————————— */
 const SITE = {
-  brand: 'Mavy EduSolution',
+  brand: 'Mavy EduSolutions',
   tagline: 'Localization · AI Data · Education',
   email: 'collab@mavyedusolutions.co.in',
   domain: 'https://www.mavyedusolution.com',
@@ -89,9 +89,9 @@ const CONTENT = {
 
   /* — EDIT ME: Testimonials ————————————————————————————————————— */
   testimonials: [
-    { quote:'Mavy EduSolution shipped our mobile game into 22 languages on the same launch date. Their in-context review caught layout bugs our internal QA missed entirely. We\'ve renewed for every release since.', name:'Priya Sharma', role:'Head of Localization, Cobalt Games', initials:'PS' },
+    { quote:'Mavy EduSolutions shipped our mobile game into 22 languages on the same launch date. Their in-context review caught layout bugs our internal QA missed entirely. We\'ve renewed for every release since.', name:'Priya Sharma', role:'Head of Localization, Cobalt Games', initials:'PS' },
     { quote:'The RLHF annotation team understood our evaluation rubric faster than any vendor we\'ve worked with. The preference data quality was night-and-day compared to our previous provider — our reward model improved on the first fine-tuning round.', name:'Daniel Reeves', role:'ML Engineering Lead, Fathom Analytics', initials:'DR' },
-    { quote:'We needed our entire LMS localized for 5 MENA markets with full SCORM compliance — Mavy EduSolution delivered on time with zero packaging failures. Their cultural adaptation of assessment questions was exceptional.', name:'Amira Hassan', role:'VP of Product, Solace EdTech', initials:'AH' },
+    { quote:'We needed our entire LMS localized for 5 MENA markets with full SCORM compliance — Mavy EduSolutions delivered on time with zero packaging failures. Their cultural adaptation of assessment questions was exceptional.', name:'Amira Hassan', role:'VP of Product, Solace EdTech', initials:'AH' },
   ],
 
   /* — EDIT ME: FAQ ————————————————————————————————————————————— */
@@ -120,9 +120,9 @@ const CONTENT = {
     { slug:'glossary-contract', cat:'Localization', title:'A glossary is a contract: keeping terms consistent across 40 languages', excerpt:'How one unreviewed term change turns into forty inconsistent ones, and the review step that stops it.', read:'5 min read', date:'May 2026' },
     { slug:'multilingual-seo', cat:'Localization', title:'Why multilingual SEO is more than translating your keywords', excerpt:'Hreflang tags, locale-specific search intent, and the gap between "translated" and "discoverable" in 12 markets.', read:'6 min read', date:'Jul 2026' },
     { slug:'red-teaming-llm', cat:'AI Data', title:'Red-teaming your LLM: what annotators actually look for', excerpt:'A practical breakdown of the failure modes human raters flag — and why "sounds correct" is the hardest category to evaluate.', read:'7 min read', date:'Jul 2026' },
-    { slug:'elearning-cultural', cat:'EduSolution', title:'Localizing e-learning for cultural learning styles, not just language', excerpt:'Why a translated course isn\'t a localized course — and the structural changes that make assessments work in MENA, LATAM, and APAC markets.', read:'6 min read', date:'Jul 2026' },
-    { slug:'scorm-translation', cat:'EduSolution', title:'Why SCORM compliance breaks during translation — and how to prevent it', excerpt:'The packaging failures that only surface after you upload to the LMS, and the QA step that catches them before that.', read:'5 min read', date:'Jun 2026' },
-    { slug:'ai-tutoring-data', cat:'EduSolution', title:'Building AI tutoring datasets that actually improve student outcomes', excerpt:'What separates useful Q&A training pairs from noise — difficulty calibration, pedagogical intent tagging, and subject-area coverage.', read:'7 min read', date:'Jun 2026' },
+    { slug:'elearning-cultural', cat:'EduSolutions', title:'Localizing e-learning for cultural learning styles, not just language', excerpt:'Why a translated course isn\'t a localized course — and the structural changes that make assessments work in MENA, LATAM, and APAC markets.', read:'6 min read', date:'Jul 2026' },
+    { slug:'scorm-translation', cat:'EduSolutions', title:'Why SCORM compliance breaks during translation — and how to prevent it', excerpt:'The packaging failures that only surface after you upload to the LMS, and the QA step that catches them before that.', read:'5 min read', date:'Jun 2026' },
+    { slug:'ai-tutoring-data', cat:'EduSolutions', title:'Building AI tutoring datasets that actually improve student outcomes', excerpt:'What separates useful Q&A training pairs from noise — difficulty calibration, pedagogical intent tagging, and subject-area coverage.', read:'7 min read', date:'Jun 2026' },
     { slug:'pseudo-localization', cat:'Engineering', title:'Pseudo-localization: catching layout bugs before your linguists do', excerpt:'How synthetic placeholder text with accents and extended characters reveals truncation and overflow issues in your UI before real translation begins.', read:'5 min read', date:'May 2026' },
   ],
 };

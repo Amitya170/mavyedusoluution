@@ -10,7 +10,7 @@
     body: `
   <p>Synthetic voice generation has crossed the uncanny valley. Modern models can replicate breath patterns, emotional cadence, and micro-hesitations. This is incredible for accessibility and rapid content localization, but it introduces massive ethical gray areas.</p>
   <h2>Consent is more than a signature</h2>
-  <p>When an actor licenses their voice for an AI model, are they licensing it for a specific project, or for perpetuity? At Mavy EduSolution, we enforce <strong>use-case boundaries</strong>. Voice data collected for educational content cannot be legally repurposed for political advertising or automated telemarketing without explicit re-consent.</p>
+  <p>When an actor licenses their voice for an AI model, are they licensing it for a specific project, or for perpetuity? At Mavy EduSolutions, we enforce <strong>use-case boundaries</strong>. Voice data collected for educational content cannot be legally repurposed for political advertising or automated telemarketing without explicit re-consent.</p>
   <h3>Compensation models</h3>
   <p>We've pioneered a royalty-share model for voice actors. Instead of a flat buyout, actors receive fractional compensation every time their synthetic voiceprint is deployed in a new locale. This aligns AI progress with human prosperity.</p>
   <h2>Watermarking and deepfake prevention</h2>
@@ -33,7 +33,7 @@
   <h3>Optimizing for intent</h3>
   <p>Semantic SEO requires understanding <em>why</em> someone is searching. In Japan, searches for B2B software often include terms related to "implementation support" or "trust," whereas US searches prioritize "ROI" or "pricing."</p>
   <h2>How we handle Multilingual SEO</h2>
-  <p>At Mavy EduSolution, we don't translate keywords. We conduct native <strong>in-market keyword research</strong> from scratch. We analyze local search volume, map it to the buyer's journey, and craft metadata that satisfies the local search intent.</p>
+  <p>At Mavy EduSolutions, we don't translate keywords. We conduct native <strong>in-market keyword research</strong> from scratch. We analyze local search volume, map it to the buyer's journey, and craft metadata that satisfies the local search intent.</p>
   `,
     related: ['multilingual-seo', 'enterprise-lqa-framework']
   },
@@ -71,7 +71,7 @@
   <h3>Cultural vectors of attack</h3>
   <p>Furthermore, what constitutes a "harmful" prompt is deeply cultural. Hate speech, political sensitivities, and social taboos vary wildly across borders. A prompt that is benign in one country might violate local laws in another.</p>
   <h2>Our Red Teaming methodology</h2>
-  <p>At Mavy EduSolution, our adversarial testing teams consist of native speakers who understand local slang, cultural friction points, and linguistic nuances. We probe models using idioms, colloquialisms, and code-switching to ensure safety alignment is globally robust.</p>
+  <p>At Mavy EduSolutions, our adversarial testing teams consist of native speakers who understand local slang, cultural friction points, and linguistic nuances. We probe models using idioms, colloquialisms, and code-switching to ensure safety alignment is globally robust.</p>
   `,
     related: ['red-teaming-llm', 'rlhf-agreement']
   }
