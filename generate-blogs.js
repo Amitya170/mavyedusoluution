@@ -7,7 +7,7 @@ const path = require('path');
 
 const BRAND = 'Mavy EduSolution';
 const DOMAIN = 'https://www.mavyedusolution.com';
-const EMAIL = 'hello@mavyedusolution.com';
+const EMAIL = 'collab@mavyedusolutions.co.in';
 
 const posts = [
   {

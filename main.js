@@ -18,7 +18,7 @@ gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true });
 const SITE = {
   brand: 'Mavy EduSolution',
   tagline: 'Localization · AI Data · Education',
-  email: 'hello@mavyedusolution.com',
+  email: 'collab@mavyedusolutions.co.in',
   domain: 'https://www.mavyedusolution.com',
 };
 
