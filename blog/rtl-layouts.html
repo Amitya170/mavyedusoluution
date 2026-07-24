@@ -152,17 +152,17 @@
 </div>
 <div class="article-body" id="articleBody">
 
-  <p>You've localized your strings into Arabic. The translation is accurate, the glossary was reviewed, the files are merged. Then someone opens the app and the layout is broken â€” text overflows, icons point the wrong way, and the navigation feels backwards. Welcome to RTL layout bugs.</p>
+  <p>You've localized your strings into Arabic. The translation is accurate, the glossary was reviewed, the files are merged. Then someone opens the app and the layout is broken — text overflows, icons point the wrong way, and the navigation feels backwards. Welcome to RTL layout bugs.</p>
 
   <h2>Why RTL isn't just "flip the layout"</h2>
 
-  <p>Right-to-left languages like Arabic, Hebrew, and Urdu don't just reverse text direction â€” they reverse the entire spatial logic of your UI. What was on the left is now on the right. Progress bars fill from right to left. Back arrows point right.</p>
+  <p>Right-to-left languages like Arabic, Hebrew, and Urdu don't just reverse text direction — they reverse the entire spatial logic of your UI. What was on the left is now on the right. Progress bars fill from right to left. Back arrows point right.</p>
 
   <h3>The bugs that only show up in RTL</h3>
 
   <ul>
     <li><strong>Hardcoded margins and padding:</strong> <code>margin-left: 16px</code> should be <code>margin-inline-start: 16px</code>. Every hardcoded directional property is a potential bug.</li>
-    <li><strong>Icon mirroring:</strong> Back arrows, chevrons, and progress indicators need to flip. But not all icons should â€” a phone handset icon or a checkmark stays the same regardless of direction.</li>
+    <li><strong>Icon mirroring:</strong> Back arrows, chevrons, and progress indicators need to flip. But not all icons should — a phone handset icon or a checkmark stays the same regardless of direction.</li>
     <li><strong>Text truncation:</strong> Arabic text is often 20â€“30% longer than English. Combined with RTL flow, truncation happens in different places and can cut words mid-morpheme.</li>
     <li><strong>Bidirectional text (Bidi):</strong> When Arabic text contains English brand names, numbers, or URLs, the browser's Bidi algorithm can produce unexpected word order without explicit direction markers.</li>
   </ul>
@@ -175,11 +175,11 @@
 
   <h3>2. Pseudo-localization with RTL</h3>
 
-  <p>Run your pseudo-localization pass with the <code>dir="rtl"</code> attribute set on <code>&lt;html&gt;</code>. This surfaces layout breaks before any real translation begins â€” you'll see mirroring issues, overflow, and alignment problems immediately.</p>
+  <p>Run your pseudo-localization pass with the <code>dir="rtl"</code> attribute set on <code>&lt;html&gt;</code>. This surfaces layout breaks before any real translation begins — you'll see mirroring issues, overflow, and alignment problems immediately.</p>
 
   <h3>3. Screenshot-based review</h3>
 
-  <p>Generate screenshots of every screen in both LTR and RTL modes. Have a native RTL speaker review not just the text, but the visual hierarchy â€” does the layout feel natural, or does it feel like a flipped English UI?</p>
+  <p>Generate screenshots of every screen in both LTR and RTL modes. Have a native RTL speaker review not just the text, but the visual hierarchy — does the layout feel natural, or does it feel like a flipped English UI?</p>
 
   <h2>The QA checklist we use</h2>
 
@@ -193,7 +193,7 @@
 
   <hr>
 
-  <p><strong>Shipping to RTL markets?</strong> <a href="../index.html#contact">Start a project</a> â€” we handle the translation, the layout QA, and the Bidi edge cases so your Arabic and Hebrew builds ship without a second sprint.</p>
+  <p><strong>Shipping to RTL markets?</strong> <a href="../index.html#contact">Start a project</a> — we handle the translation, the layout QA, and the Bidi edge cases so your Arabic and Hebrew builds ship without a second sprint.</p>
 </div>
 <div class="share-bar">
   <span>Share</span>

@@ -152,21 +152,21 @@
 </div>
 <div class="article-body" id="articleBody">
 
-  <p>Pseudo-localization is a testing technique where you replace your English UI strings with synthetic text that simulates the characteristics of translated text â€” extended length, accented characters, and altered word boundaries â€” without waiting for actual translation.</p>
+  <p>Pseudo-localization is a testing technique where you replace your English UI strings with synthetic text that simulates the characteristics of translated text — extended length, accented characters, and altered word boundaries — without waiting for actual translation.</p>
 
   <h2>What pseudo-localization reveals</h2>
 
   <h3>1. String truncation</h3>
 
-  <p>German text is typically 30% longer than English. Finnish can be 40% longer. If your button says "Submit" and only has room for 8 characters, the German "Absenden" fits â€” but "Abonnement kÃ¼ndigen" (Cancel subscription) definitely doesn't. Pseudo-localization pads every string to 130â€“150% of its English length, surfacing every truncation point before you spend money on real translation.</p>
+  <p>German text is typically 30% longer than English. Finnish can be 40% longer. If your button says "Submit" and only has room for 8 characters, the German "Absenden" fits — but "Abonnement kÃ¼ndigen" (Cancel subscription) definitely doesn't. Pseudo-localization pads every string to 130â€“150% of its English length, surfacing every truncation point before you spend money on real translation.</p>
 
   <h3>2. Hardcoded strings</h3>
 
-  <p>If a string shows up in English while everything else is pseudo-localized, it's hardcoded. These are the strings your i18n extraction missed â€” and they'll show up as untranslated in your shipped product.</p>
+  <p>If a string shows up in English while everything else is pseudo-localized, it's hardcoded. These are the strings your i18n extraction missed — and they'll show up as untranslated in your shipped product.</p>
 
   <h3>3. Character encoding issues</h3>
 
-  <p>Pseudo-localization replaces ASCII characters with accented Unicode equivalents (a â†’ Ã¥, e â†’ Ã«). If these render as boxes or question marks anywhere in your UI, you have an encoding issue that will break real translations â€” especially for languages like Arabic, Chinese, or Thai.</p>
+  <p>Pseudo-localization replaces ASCII characters with accented Unicode equivalents (a â†’ Ã¥, e â†’ Ã«). If these render as boxes or question marks anywhere in your UI, you have an encoding issue that will break real translations — especially for languages like Arabic, Chinese, or Thai.</p>
 
   <h3>4. Concatenation bugs</h3>
 
@@ -183,11 +183,11 @@
 
   <h2>When to run it</h2>
 
-  <p>Run pseudo-localization as part of your CI pipeline. Every new screen, every new string, every layout change â€” test with pseudo strings before requesting real translation. The cost is near-zero. The savings on rework are significant.</p>
+  <p>Run pseudo-localization as part of your CI pipeline. Every new screen, every new string, every layout change — test with pseudo strings before requesting real translation. The cost is near-zero. The savings on rework are significant.</p>
 
   <hr>
 
-  <p><strong>Want help setting up pseudo-localization in your pipeline?</strong> <a href="../index.html#contact">Start a project</a> â€” we can integrate pseudo-loc testing into your CI/CD workflow and catch layout issues before they reach your linguists.</p>
+  <p><strong>Want help setting up pseudo-localization in your pipeline?</strong> <a href="../index.html#contact">Start a project</a> — we can integrate pseudo-loc testing into your CI/CD workflow and catch layout issues before they reach your linguists.</p>
 </div>
 <div class="share-bar">
   <span>Share</span>

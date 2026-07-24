@@ -14,14 +14,14 @@ const posts = [
     slug: 'mt-human-pass',
     cat: 'Localization',
     title: 'Why "good enough" machine translation still needs a human pass',
-    description: 'MT gets you a fast first draft. Here\'s where it quietly breaks â€” idiom, tone, and anything with legal weight â€” and why a second linguist still has to catch it.',
+    description: 'MT gets you a fast first draft. Here\'s where it quietly breaks — idiom, tone, and anything with legal weight — and why a second linguist still has to catch it.',
     date: 'Jul 2026',
     dateISO: '2026-07-01',
     read: '6 min read',
     body: `
-  <p>Neural machine translation has improved dramatically. For well-resourced language pairs â€” English to Spanish, French, or German â€” the output reads naturally enough that you might be tempted to ship it without a second look. And for internal, low-stakes communication, that's often fine.</p>
+  <p>Neural machine translation has improved dramatically. For well-resourced language pairs — English to Spanish, French, or German — the output reads naturally enough that you might be tempted to ship it without a second look. And for internal, low-stakes communication, that's often fine.</p>
 
-  <p>But the moment translated text faces your customers, your regulators, or your brand, "good enough" starts showing its edges. Here's where MT quietly breaks â€” and why a native linguist still has to catch it.</p>
+  <p>But the moment translated text faces your customers, your regulators, or your brand, "good enough" starts showing its edges. Here's where MT quietly breaks — and why a native linguist still has to catch it.</p>
 
   <h2>Where MT fails silently</h2>
 
@@ -29,13 +29,13 @@ const posts = [
 
   <h3>1. Idiom and cultural register</h3>
 
-  <p>MT translates the words, not the intent. A marketing tagline like "We've got your back" might render literally in German or Japanese, losing the reassuring connotation entirely. A native linguist recognizes the idiom and finds the cultural equivalent â€” not a word-for-word mirror.</p>
+  <p>MT translates the words, not the intent. A marketing tagline like "We've got your back" might render literally in German or Japanese, losing the reassuring connotation entirely. A native linguist recognizes the idiom and finds the cultural equivalent — not a word-for-word mirror.</p>
 
   <h3>2. Legal and regulatory weight</h3>
 
-  <p>In contracts, terms of service, and compliance documents, word choice isn't creative â€” it's legally binding. MT doesn't know that "shall" and "will" carry different obligations in English legal prose, or that the equivalent distinction in French contract law uses different formulations entirely.</p>
+  <p>In contracts, terms of service, and compliance documents, word choice isn't creative — it's legally binding. MT doesn't know that "shall" and "will" carry different obligations in English legal prose, or that the equivalent distinction in French contract law uses different formulations entirely.</p>
 
-  <blockquote><p>MT output is never sent as final copy. It's a first draft â€” and first drafts exist to be edited.</p></blockquote>
+  <blockquote><p>MT output is never sent as final copy. It's a first draft — and first drafts exist to be edited.</p></blockquote>
 
   <h3>3. Tone-of-voice consistency</h3>
 
@@ -43,7 +43,7 @@ const posts = [
 
   <h2>The economics of MTPE</h2>
 
-  <p>Machine Translation Post-Editing (MTPE) isn't a compromise â€” it's a strategy. Here's why it makes sense:</p>
+  <p>Machine Translation Post-Editing (MTPE) isn't a compromise — it's a strategy. Here's why it makes sense:</p>
 
   <ul>
     <li><strong>Speed:</strong> MT produces a first draft in seconds. The linguist spends time refining, not starting from scratch.</li>
@@ -65,11 +65,11 @@ const posts = [
     <li>Flag segments where MT output should be discarded and rewritten</li>
   </ol>
 
-  <p>This is why we never ship MT output as final copy. Every string that leaves ${BRAND} has been reviewed by a native linguist â€” whether the first draft came from a human or a machine.</p>
+  <p>This is why we never ship MT output as final copy. Every string that leaves ${BRAND} has been reviewed by a native linguist — whether the first draft came from a human or a machine.</p>
 
   <hr>
 
-  <p><strong>Need a quote for MTPE or full human translation?</strong> <a href="../index.html#contact">Start a project</a> â€” tell us your content type, word count, and target languages, and we'll recommend the right tier.</p>`,
+  <p><strong>Need a quote for MTPE or full human translation?</strong> <a href="../index.html#contact">Start a project</a> — tell us your content type, word count, and target languages, and we'll recommend the right tier.</p>`,
     related: ['glossary-contract', 'rlhf-agreement', 'translation-memory']
   },
   {
@@ -81,7 +81,7 @@ const posts = [
     dateISO: '2026-07-01',
     read: '7 min read',
     body: `
-  <p>When you're buying preference data for RLHF, the first metric anyone quotes you is inter-rater agreement â€” usually presented as a percentage. "Our annotators agree 87% of the time." That sounds reassuring. But it hides more than it reveals.</p>
+  <p>When you're buying preference data for RLHF, the first metric anyone quotes you is inter-rater agreement — usually presented as a percentage. "Our annotators agree 87% of the time." That sounds reassuring. But it hides more than it reveals.</p>
 
   <h2>What agreement actually tells you</h2>
 
@@ -89,7 +89,7 @@ const posts = [
 
   <h3>The consistency vs. accuracy gap</h3>
 
-  <p>Five annotators can consistently agree that Response A is better than Response B â€” and all five can be wrong, because they share the same blind spot. This happens frequently in domains where the annotators lack subject-matter expertise.</p>
+  <p>Five annotators can consistently agree that Response A is better than Response B — and all five can be wrong, because they share the same blind spot. This happens frequently in domains where the annotators lack subject-matter expertise.</p>
 
   <blockquote><p>High agreement without domain expertise is just consistent noise. It trains your model to be confidently wrong.</p></blockquote>
 
@@ -111,7 +111,7 @@ const posts = [
   <ol>
     <li><strong>Gold standard injection:</strong> Seed your annotation queue with items where the correct answer is known. Measure accuracy, not just agreement.</li>
     <li><strong>Disagreement analysis:</strong> Pull the bottom 10% by agreement and review them manually. These edge cases often reveal rubric ambiguity.</li>
-    <li><strong>Annotator stratification:</strong> Group by annotator and look for outliers â€” both consistently fast annotators and those whose preferences systematically diverge from the group.</li>
+    <li><strong>Annotator stratification:</strong> Group by annotator and look for outliers — both consistently fast annotators and those whose preferences systematically diverge from the group.</li>
     <li><strong>Cross-domain validation:</strong> If your raters handle both coding and creative writing tasks, check if their performance is domain-consistent.</li>
   </ol>
 
@@ -128,7 +128,7 @@ const posts = [
 
   <hr>
 
-  <p><strong>Need RLHF data you can trust?</strong> <a href="../index.html#contact">Start a project</a> â€” tell us your model, your rubric, and your domain, and we'll match annotators with the right expertise.</p>`,
+  <p><strong>Need RLHF data you can trust?</strong> <a href="../index.html#contact">Start a project</a> — tell us your model, your rubric, and your domain, and we'll match annotators with the right expertise.</p>`,
     related: ['red-teaming-llm', 'wake-word-audio', 'mt-human-pass']
   },
   {
@@ -140,17 +140,17 @@ const posts = [
     dateISO: '2026-06-15',
     read: '5 min read',
     body: `
-  <p>You've localized your strings into Arabic. The translation is accurate, the glossary was reviewed, the files are merged. Then someone opens the app and the layout is broken â€” text overflows, icons point the wrong way, and the navigation feels backwards. Welcome to RTL layout bugs.</p>
+  <p>You've localized your strings into Arabic. The translation is accurate, the glossary was reviewed, the files are merged. Then someone opens the app and the layout is broken — text overflows, icons point the wrong way, and the navigation feels backwards. Welcome to RTL layout bugs.</p>
 
   <h2>Why RTL isn't just "flip the layout"</h2>
 
-  <p>Right-to-left languages like Arabic, Hebrew, and Urdu don't just reverse text direction â€” they reverse the entire spatial logic of your UI. What was on the left is now on the right. Progress bars fill from right to left. Back arrows point right.</p>
+  <p>Right-to-left languages like Arabic, Hebrew, and Urdu don't just reverse text direction — they reverse the entire spatial logic of your UI. What was on the left is now on the right. Progress bars fill from right to left. Back arrows point right.</p>
 
   <h3>The bugs that only show up in RTL</h3>
 
   <ul>
     <li><strong>Hardcoded margins and padding:</strong> <code>margin-left: 16px</code> should be <code>margin-inline-start: 16px</code>. Every hardcoded directional property is a potential bug.</li>
-    <li><strong>Icon mirroring:</strong> Back arrows, chevrons, and progress indicators need to flip. But not all icons should â€” a phone handset icon or a checkmark stays the same regardless of direction.</li>
+    <li><strong>Icon mirroring:</strong> Back arrows, chevrons, and progress indicators need to flip. But not all icons should — a phone handset icon or a checkmark stays the same regardless of direction.</li>
     <li><strong>Text truncation:</strong> Arabic text is often 20â€“30% longer than English. Combined with RTL flow, truncation happens in different places and can cut words mid-morpheme.</li>
     <li><strong>Bidirectional text (Bidi):</strong> When Arabic text contains English brand names, numbers, or URLs, the browser's Bidi algorithm can produce unexpected word order without explicit direction markers.</li>
   </ul>
@@ -163,11 +163,11 @@ const posts = [
 
   <h3>2. Pseudo-localization with RTL</h3>
 
-  <p>Run your pseudo-localization pass with the <code>dir="rtl"</code> attribute set on <code>&lt;html&gt;</code>. This surfaces layout breaks before any real translation begins â€” you'll see mirroring issues, overflow, and alignment problems immediately.</p>
+  <p>Run your pseudo-localization pass with the <code>dir="rtl"</code> attribute set on <code>&lt;html&gt;</code>. This surfaces layout breaks before any real translation begins — you'll see mirroring issues, overflow, and alignment problems immediately.</p>
 
   <h3>3. Screenshot-based review</h3>
 
-  <p>Generate screenshots of every screen in both LTR and RTL modes. Have a native RTL speaker review not just the text, but the visual hierarchy â€” does the layout feel natural, or does it feel like a flipped English UI?</p>
+  <p>Generate screenshots of every screen in both LTR and RTL modes. Have a native RTL speaker review not just the text, but the visual hierarchy — does the layout feel natural, or does it feel like a flipped English UI?</p>
 
   <h2>The QA checklist we use</h2>
 
@@ -181,19 +181,19 @@ const posts = [
 
   <hr>
 
-  <p><strong>Shipping to RTL markets?</strong> <a href="../index.html#contact">Start a project</a> â€” we handle the translation, the layout QA, and the Bidi edge cases so your Arabic and Hebrew builds ship without a second sprint.</p>`,
+  <p><strong>Shipping to RTL markets?</strong> <a href="../index.html#contact">Start a project</a> — we handle the translation, the layout QA, and the Bidi edge cases so your Arabic and Hebrew builds ship without a second sprint.</p>`,
     related: ['pseudo-localization', 'multilingual-seo', 'glossary-contract']
   },
   {
     slug: 'wake-word-audio',
     cat: 'AI Data',
     title: 'Sourcing wake-word audio across 40 languages without burning your timeline',
-    description: 'What actually slows down multilingual voice data collection â€” and it usually isn\'t the recording.',
+    description: 'What actually slows down multilingual voice data collection — and it usually isn\'t the recording.',
     date: 'Jun 2026',
     dateISO: '2026-06-15',
     read: '6 min read',
     body: `
-  <p>Collecting wake-word audio in one language is straightforward. Collecting it in 40 â€” with demographic balance, background noise variation, and consistent recording quality â€” is where timelines break.</p>
+  <p>Collecting wake-word audio in one language is straightforward. Collecting it in 40 — with demographic balance, background noise variation, and consistent recording quality — is where timelines break.</p>
 
   <h2>What actually slows you down</h2>
 
@@ -209,15 +209,15 @@ const posts = [
 
   <h3>3. Quality control at scale</h3>
 
-  <p>When you're processing 20,000 audio clips per language, manual QC doesn't scale. But automated QC (SNR checks, duration validation, wake-word detection) only catches technical issues â€” it doesn't catch accent mismatch, mumbled pronunciations, or environmental noise that passes the SNR threshold but degrades model performance.</p>
+  <p>When you're processing 20,000 audio clips per language, manual QC doesn't scale. But automated QC (SNR checks, duration validation, wake-word detection) only catches technical issues — it doesn't catch accent mismatch, mumbled pronunciations, or environmental noise that passes the SNR threshold but degrades model performance.</p>
 
-  <blockquote><p>The hardest part of multilingual audio collection isn't technical â€” it's operational. Finding the right speakers, in the right markets, with the right consent, on the right timeline.</p></blockquote>
+  <blockquote><p>The hardest part of multilingual audio collection isn't technical — it's operational. Finding the right speakers, in the right markets, with the right consent, on the right timeline.</p></blockquote>
 
   <h2>How we structure a 40-language collection</h2>
 
   <ol>
     <li><strong>Parallel recruitment:</strong> We start recruitment in all 40 markets simultaneously, not sequentially. Languages with smaller speaker pools get a head start.</li>
-    <li><strong>Standardized recording kit:</strong> Every speaker gets the same recording environment spec â€” device type, distance from mic, ambient noise ceiling â€” regardless of whether they're in SÃ£o Paulo or Seoul.</li>
+    <li><strong>Standardized recording kit:</strong> Every speaker gets the same recording environment spec — device type, distance from mic, ambient noise ceiling — regardless of whether they're in SÃ£o Paulo or Seoul.</li>
     <li><strong>Tiered QC:</strong> Automated checks catch technical failures (SNR, duration, format). Native-speaker reviewers handle pronunciation accuracy and accent classification. Both stages run in parallel with recording.</li>
     <li><strong>Consent as infrastructure:</strong> Consent forms are localized, reviewed by local counsel, and managed through a single platform so you have one rights ledger across all 40 markets.</li>
   </ol>
@@ -233,21 +233,21 @@ const posts = [
 
   <hr>
 
-  <p><strong>Planning a multilingual voice data collection?</strong> <a href="../index.html#contact">Start a project</a> â€” tell us the languages, the wake words, and the demographic requirements, and we'll build the collection plan.</p>`,
+  <p><strong>Planning a multilingual voice data collection?</strong> <a href="../index.html#contact">Start a project</a> — tell us the languages, the wake words, and the demographic requirements, and we'll build the collection plan.</p>`,
     related: ['rlhf-agreement', 'red-teaming-llm', 'ai-tutoring-data']
   },
   {
     slug: 'translation-memory',
     cat: 'Process',
     title: 'What a translation memory actually saves you',
-    description: 'Not just money on repeated strings â€” consistency across releases, and a paper trail when a term changes six months in.',
+    description: 'Not just money on repeated strings — consistency across releases, and a paper trail when a term changes six months in.',
     date: 'May 2026',
     dateISO: '2026-05-15',
     read: '4 min read',
     body: `
-  <p>A translation memory (TM) is a database that stores every sentence you've ever translated, paired with its source. When the same sentence â€” or a similar one â€” appears in a future project, the TM surfaces the existing translation so the linguist doesn't start from zero.</p>
+  <p>A translation memory (TM) is a database that stores every sentence you've ever translated, paired with its source. When the same sentence — or a similar one — appears in a future project, the TM surfaces the existing translation so the linguist doesn't start from zero.</p>
 
-  <p>Most people think of TM as a cost-saving tool. It is â€” but that's the least interesting thing it does.</p>
+  <p>Most people think of TM as a cost-saving tool. It is — but that's the least interesting thing it does.</p>
 
   <h2>What TM actually saves</h2>
 
@@ -255,7 +255,7 @@ const posts = [
 
   <p>Without a TM, every release is a fresh start. The linguist who translates "Cancel subscription" in v2.1 might use a different term than the linguist who translated the same phrase in v1.8. Over 20 releases and 15 languages, those inconsistencies compound into a fragmented user experience.</p>
 
-  <p>A TM enforces consistency automatically. When the same string appears again, the linguist sees the approved translation and either reuses it or consciously decides to update it â€” with a record of why.</p>
+  <p>A TM enforces consistency automatically. When the same string appears again, the linguist sees the approved translation and either reuses it or consciously decides to update it — with a record of why.</p>
 
   <h3>2. A paper trail for term changes</h3>
 
@@ -270,16 +270,16 @@ const posts = [
   <ol>
     <li><strong>New project:</strong> Source strings are run against the TM. Exact matches are auto-populated. Fuzzy matches (70%+ similarity) are surfaced as suggestions.</li>
     <li><strong>Linguist review:</strong> The linguist accepts, modifies, or rejects each suggestion. New translations are added to the TM.</li>
-    <li><strong>Next release:</strong> Only new or changed strings need translation. The TM handles the rest â€” with consistency guaranteed.</li>
+    <li><strong>Next release:</strong> Only new or changed strings need translation. The TM handles the rest — with consistency guaranteed.</li>
   </ol>
 
   <h2>When TM doesn't help</h2>
 
-  <p>TM works best for repetitive, structured content: UI strings, help articles, product documentation. It's less useful for creative content like marketing copy, where tone and context change between campaigns. For those, transcreation is the right approach â€” and the TM stays out of the way.</p>
+  <p>TM works best for repetitive, structured content: UI strings, help articles, product documentation. It's less useful for creative content like marketing copy, where tone and context change between campaigns. For those, transcreation is the right approach — and the TM stays out of the way.</p>
 
   <hr>
 
-  <p><strong>Want to set up a translation memory for your product?</strong> <a href="../index.html#contact">Start a project</a> â€” we'll build the TM from your existing translations and use it from day one.</p>`,
+  <p><strong>Want to set up a translation memory for your product?</strong> <a href="../index.html#contact">Start a project</a> — we'll build the TM from your existing translations and use it from day one.</p>`,
     related: ['glossary-contract', 'mt-human-pass', 'pseudo-localization']
   },
   {
@@ -291,14 +291,14 @@ const posts = [
     dateISO: '2026-05-15',
     read: '5 min read',
     body: `
-  <p>A glossary isn't a nice-to-have. It's a contract between your product team and your linguists. It says: "This term means this, always, in every language." When the glossary is wrong or out of date, the translations are wrong in exactly the same way â€” times forty.</p>
+  <p>A glossary isn't a nice-to-have. It's a contract between your product team and your linguists. It says: "This term means this, always, in every language." When the glossary is wrong or out of date, the translations are wrong in exactly the same way — times forty.</p>
 
   <h2>The compound error problem</h2>
 
   <p>When someone on your team changes "workspace" to "project" in the English UI but doesn't update the glossary, here's what happens:</p>
 
   <ul>
-    <li>The German linguist translates the new string using "Projekt" â€” which is correct for this string.</li>
+    <li>The German linguist translates the new string using "Projekt" — which is correct for this string.</li>
     <li>But 47 other strings still say "Arbeitsbereich" (the old term for "workspace").</li>
     <li>Your German users now see both "Projekt" and "Arbeitsbereich" in the same product, referring to the same thing.</li>
     <li>Multiply this by 39 other languages.</li>
@@ -311,21 +311,21 @@ const posts = [
   <p>A glossary that actually prevents this has four properties:</p>
 
   <ol>
-    <li><strong>Source term + definition:</strong> Not just the English word, but what it means in your product context. "Workspace" is ambiguous â€” "the container where a user's projects, files, and settings are stored" is not.</li>
-    <li><strong>Approved translations per language:</strong> The linguist doesn't guess â€” they see the pre-approved term and use it.</li>
+    <li><strong>Source term + definition:</strong> Not just the English word, but what it means in your product context. "Workspace" is ambiguous — "the container where a user's projects, files, and settings are stored" is not.</li>
+    <li><strong>Approved translations per language:</strong> The linguist doesn't guess — they see the pre-approved term and use it.</li>
     <li><strong>Change log:</strong> When a term changes, the glossary records who changed it, when, and why. This creates accountability.</li>
     <li><strong>Review gate:</strong> No glossary change goes live without review by the lead linguist in at least the top-5 volume languages.</li>
   </ol>
 
   <h2>How we manage glossaries</h2>
 
-  <p>At ${BRAND}, every project starts with a glossary review â€” or a glossary build, if one doesn't exist. We extract key terms from your source content, define them in context, and get sign-off from your product team before the first string is translated.</p>
+  <p>At ${BRAND}, every project starts with a glossary review — or a glossary build, if one doesn't exist. We extract key terms from your source content, define them in context, and get sign-off from your product team before the first string is translated.</p>
 
   <p>When terms change mid-project, we flag the change, propagate it across all active languages, and send you a diff report showing every string that was updated.</p>
 
   <hr>
 
-  <p><strong>Need help building or auditing your glossary?</strong> <a href="../index.html#contact">Start a project</a> â€” we'll extract terms from your existing content and build a glossary that works across all your target languages.</p>`,
+  <p><strong>Need help building or auditing your glossary?</strong> <a href="../index.html#contact">Start a project</a> — we'll extract terms from your existing content and build a glossary that works across all your target languages.</p>`,
     related: ['translation-memory', 'mt-human-pass', 'multilingual-seo']
   },
   {
@@ -337,7 +337,7 @@ const posts = [
     dateISO: '2026-07-01',
     read: '6 min read',
     body: `
-  <p>You've translated your website into 12 languages. Your content is accurate, your design adapts to RTL, your images are culturally appropriate. But organic traffic from those markets is flat. The problem isn't translation â€” it's discoverability.</p>
+  <p>You've translated your website into 12 languages. Your content is accurate, your design adapts to RTL, your images are culturally appropriate. But organic traffic from those markets is flat. The problem isn't translation — it's discoverability.</p>
 
   <h2>The gap between translated and discoverable</h2>
 
@@ -361,38 +361,38 @@ const posts = [
 
   <h3>3. Meta content needs localization, not translation</h3>
 
-  <p>Title tags and meta descriptions are marketing copy â€” they need to be compelling in each language, within character limits, and optimized for local search terms. A literal translation of your English meta description will be grammatically correct and search-invisible.</p>
+  <p>Title tags and meta descriptions are marketing copy — they need to be compelling in each language, within character limits, and optimized for local search terms. A literal translation of your English meta description will be grammatically correct and search-invisible.</p>
 
   <h2>What a multilingual SEO engagement includes</h2>
 
   <ol>
     <li><strong>Keyword research per locale:</strong> Native speakers research how users actually search in each market. This produces a localized keyword map, not a translated one.</li>
     <li><strong>Hreflang implementation:</strong> Full audit and implementation of hreflang tags, including regional variants (en-US vs. en-GB, pt-BR vs. pt-PT).</li>
-    <li><strong>Meta content localization:</strong> Title tags and meta descriptions written for search performance in each locale â€” not translated from English.</li>
+    <li><strong>Meta content localization:</strong> Title tags and meta descriptions written for search performance in each locale — not translated from English.</li>
     <li><strong>URL structure review:</strong> Subdirectory vs. subdomain vs. ccTLD analysis based on your domain authority and market priorities.</li>
   </ol>
 
   <hr>
 
-  <p><strong>Ready to make your localized content discoverable?</strong> <a href="../index.html#contact">Start a project</a> â€” tell us your target markets and we'll build a multilingual SEO strategy that drives organic traffic in every locale.</p>`,
+  <p><strong>Ready to make your localized content discoverable?</strong> <a href="../index.html#contact">Start a project</a> — tell us your target markets and we'll build a multilingual SEO strategy that drives organic traffic in every locale.</p>`,
     related: ['glossary-contract', 'rtl-layouts', 'mt-human-pass']
   },
   {
     slug: 'red-teaming-llm',
     cat: 'AI Data',
     title: 'Red-teaming your LLM: what annotators actually look for',
-    description: 'A practical breakdown of the failure modes human raters flag â€” and why "sounds correct" is the hardest category to evaluate.',
+    description: 'A practical breakdown of the failure modes human raters flag — and why "sounds correct" is the hardest category to evaluate.',
     date: 'Jul 2026',
     dateISO: '2026-07-01',
     read: '7 min read',
     body: `
-  <p>Red-teaming an LLM isn't about trying to make it say something offensive (though that's part of it). It's about systematically probing the model's failure modes â€” the places where it produces output that looks right but isn't, or where it confidently answers questions it shouldn't.</p>
+  <p>Red-teaming an LLM isn't about trying to make it say something offensive (though that's part of it). It's about systematically probing the model's failure modes — the places where it produces output that looks right but isn't, or where it confidently answers questions it shouldn't.</p>
 
   <h2>The failure modes annotators flag</h2>
 
   <h3>1. Plausible but wrong</h3>
 
-  <p>The model generates a response that reads fluently, uses appropriate technical vocabulary, and cites something that sounds like a real source â€” but the information is fabricated. This is the hardest category to evaluate because it requires domain knowledge to catch.</p>
+  <p>The model generates a response that reads fluently, uses appropriate technical vocabulary, and cites something that sounds like a real source — but the information is fabricated. This is the hardest category to evaluate because it requires domain knowledge to catch.</p>
 
   <h3>2. Instruction non-compliance</h3>
 
@@ -410,7 +410,7 @@ const posts = [
 
   <ul>
     <li><strong>Domain expertise:</strong> A medical red-teamer needs to know when a dosage recommendation is plausible but wrong. A legal red-teamer needs to catch when the model cites a statute that doesn't exist.</li>
-    <li><strong>Adversarial creativity:</strong> Good red-teamers think in attack vectors. They don't just test the obvious â€” they test the subtle.</li>
+    <li><strong>Adversarial creativity:</strong> Good red-teamers think in attack vectors. They don't just test the obvious — they test the subtle.</li>
     <li><strong>Rubric discipline:</strong> Every flag needs to map to a specific failure category in your rubric. "This feels off" isn't actionable. "Plausible hallucination in medical context, severity: high" is.</li>
   </ul>
 
@@ -425,14 +425,14 @@ const posts = [
 
   <hr>
 
-  <p><strong>Need to red-team your model before launch?</strong> <a href="../index.html#contact">Start a project</a> â€” tell us your model, your risk profile, and your domain, and we'll build a red-teaming protocol.</p>`,
+  <p><strong>Need to red-team your model before launch?</strong> <a href="../index.html#contact">Start a project</a> — tell us your model, your risk profile, and your domain, and we'll build a red-teaming protocol.</p>`,
     related: ['rlhf-agreement', 'wake-word-audio', 'ai-tutoring-data']
   },
   {
     slug: 'elearning-cultural',
     cat: 'EduSolution',
     title: 'Localizing e-learning for cultural learning styles, not just language',
-    description: 'Why a translated course isn\'t a localized course â€” and the structural changes that make assessments work in MENA, LATAM, and APAC markets.',
+    description: 'Why a translated course isn\'t a localized course — and the structural changes that make assessments work in MENA, LATAM, and APAC markets.',
     date: 'Jul 2026',
     dateISO: '2026-07-01',
     read: '6 min read',
@@ -443,7 +443,7 @@ const posts = [
 
   <h3>1. Examples and scenarios</h3>
 
-  <p>A case study about American healthcare regulations is meaningless to a learner in Saudi Arabia. A scenario about driving on the right side of the road doesn't work in the UK or Japan. These aren't translation problems â€” they're relevance problems.</p>
+  <p>A case study about American healthcare regulations is meaningless to a learner in Saudi Arabia. A scenario about driving on the right side of the road doesn't work in the UK or Japan. These aren't translation problems — they're relevance problems.</p>
 
   <h3>2. Assessment design</h3>
 
@@ -453,7 +453,7 @@ const posts = [
 
   <p>Color associations vary by culture. Red means "stop" or "error" in Western contexts, but it means luck and prosperity in Chinese culture. Drag-and-drop interactions may not be intuitive on the touch devices most commonly used in certain markets.</p>
 
-  <blockquote><p>A localized course doesn't just speak the learner's language â€” it reflects their learning culture, their visual expectations, and their assessment norms.</p></blockquote>
+  <blockquote><p>A localized course doesn't just speak the learner's language — it reflects their learning culture, their visual expectations, and their assessment norms.</p></blockquote>
 
   <h2>What cultural localization involves</h2>
 
@@ -467,13 +467,13 @@ const posts = [
 
   <hr>
 
-  <p><strong>Localizing a course for new markets?</strong> <a href="../index.html#contact">Start a project</a> â€” tell us the course, the target markets, and the learning platform, and we'll scope the cultural adaptation.</p>`,
+  <p><strong>Localizing a course for new markets?</strong> <a href="../index.html#contact">Start a project</a> — tell us the course, the target markets, and the learning platform, and we'll scope the cultural adaptation.</p>`,
     related: ['scorm-translation', 'ai-tutoring-data', 'rtl-layouts']
   },
   {
     slug: 'scorm-translation',
     cat: 'EduSolution',
-    title: 'Why SCORM compliance breaks during translation â€” and how to prevent it',
+    title: 'Why SCORM compliance breaks during translation — and how to prevent it',
     description: 'The packaging failures that only surface after you upload to the LMS, and the QA step that catches them before that.',
     date: 'Jun 2026',
     dateISO: '2026-06-15',
@@ -481,13 +481,13 @@ const posts = [
     body: `
   <p>You localize your e-learning course. The translations are accurate. You package it as a SCORM file and upload it to your LMS. It doesn't load. Or it loads but doesn't track completions. Or the navigation is broken in three out of five languages.</p>
 
-  <p>SCORM compliance breaks during translation more often than most teams expect â€” and the failures only surface at the last step, when the package hits the LMS.</p>
+  <p>SCORM compliance breaks during translation more often than most teams expect — and the failures only surface at the last step, when the package hits the LMS.</p>
 
   <h2>Why SCORM breaks</h2>
 
   <h3>1. Manifest file corruption</h3>
 
-  <p>SCORM packages include an <code>imsmanifest.xml</code> file that defines the course structure, resource paths, and sequencing rules. When content is extracted for translation and repackaged, manifest references can break â€” especially when file names contain characters that were transliterated during localization.</p>
+  <p>SCORM packages include an <code>imsmanifest.xml</code> file that defines the course structure, resource paths, and sequencing rules. When content is extracted for translation and repackaged, manifest references can break — especially when file names contain characters that were transliterated during localization.</p>
 
   <h3>2. Character encoding mismatches</h3>
 
@@ -495,11 +495,11 @@ const posts = [
 
   <h3>3. JavaScript tracking breaks</h3>
 
-  <p>SCORM uses JavaScript API calls to communicate completion status, quiz scores, and bookmarking data to the LMS. If the localization process touches any of the JavaScript (even accidentally, through a global find-and-replace), these API calls can break silently â€” the course loads fine, but progress isn't tracked.</p>
+  <p>SCORM uses JavaScript API calls to communicate completion status, quiz scores, and bookmarking data to the LMS. If the localization process touches any of the JavaScript (even accidentally, through a global find-and-replace), these API calls can break silently — the course loads fine, but progress isn't tracked.</p>
 
   <h3>4. Text expansion breaks layout</h3>
 
-  <p>German text is typically 30% longer than English. When localized text overflows fixed-width containers inside the SCORM content, navigation buttons can become hidden, quiz options can overlap, and the course becomes unusable â€” but only in certain languages.</p>
+  <p>German text is typically 30% longer than English. When localized text overflows fixed-width containers inside the SCORM content, navigation buttons can become hidden, quiz options can overlap, and the course becomes unusable — but only in certain languages.</p>
 
   <h2>How we prevent SCORM failures</h2>
 
@@ -512,29 +512,29 @@ const posts = [
 
   <hr>
 
-  <p><strong>Localizing SCORM content?</strong> <a href="../index.html#contact">Start a project</a> â€” we handle the translation, repackaging, and LMS validation so your localized courses work on first upload.</p>`,
+  <p><strong>Localizing SCORM content?</strong> <a href="../index.html#contact">Start a project</a> — we handle the translation, repackaging, and LMS validation so your localized courses work on first upload.</p>`,
     related: ['elearning-cultural', 'ai-tutoring-data', 'rtl-layouts']
   },
   {
     slug: 'ai-tutoring-data',
     cat: 'EduSolution',
     title: 'Building AI tutoring datasets that actually improve student outcomes',
-    description: 'What separates useful Q&A training pairs from noise â€” difficulty calibration, pedagogical intent tagging, and subject-area coverage.',
+    description: 'What separates useful Q&A training pairs from noise — difficulty calibration, pedagogical intent tagging, and subject-area coverage.',
     date: 'Jun 2026',
     dateISO: '2026-06-15',
     read: '7 min read',
     body: `
-  <p>AI tutoring systems are only as good as their training data. A model trained on generic Q&A pairs will produce generic answers â€” technically correct, pedagogically useless. Building training data that actually improves student outcomes requires a different approach.</p>
+  <p>AI tutoring systems are only as good as their training data. A model trained on generic Q&A pairs will produce generic answers — technically correct, pedagogically useless. Building training data that actually improves student outcomes requires a different approach.</p>
 
   <h2>What makes tutoring data different from general Q&A</h2>
 
   <h3>1. Pedagogical intent matters</h3>
 
-  <p>A good tutor doesn't just answer the question â€” they guide the student toward understanding. Training data needs to encode not just "what's the right answer" but "how should the tutor lead the student to discover the right answer." This means tagging each training pair with pedagogical intent: explain, scaffold, correct misconception, encourage, or assess.</p>
+  <p>A good tutor doesn't just answer the question — they guide the student toward understanding. Training data needs to encode not just "what's the right answer" but "how should the tutor lead the student to discover the right answer." This means tagging each training pair with pedagogical intent: explain, scaffold, correct misconception, encourage, or assess.</p>
 
   <h3>2. Difficulty calibration is non-trivial</h3>
 
-  <p>A question that's easy for a university student is impossible for a middle schooler. Training data needs difficulty labels that are calibrated against the target learner population â€” not against the annotator's own expertise. This requires annotators who understand grade-level expectations and curriculum standards.</p>
+  <p>A question that's easy for a university student is impossible for a middle schooler. Training data needs difficulty labels that are calibrated against the target learner population — not against the annotator's own expertise. This requires annotators who understand grade-level expectations and curriculum standards.</p>
 
   <h3>3. Subject-area coverage isn't uniform</h3>
 
@@ -549,12 +549,12 @@ const posts = [
     <li><strong>Q&A pair generation:</strong> Subject-matter experts generate question-answer pairs tagged with: topic, subtopic, difficulty level, grade level, pedagogical intent, and expected misconceptions.</li>
     <li><strong>Multi-turn dialog creation:</strong> Beyond single Q&A pairs, we create multi-turn tutoring dialogs that model how a tutor guides a struggling student through a problem step by step.</li>
     <li><strong>Difficulty calibration:</strong> A separate panel of educators reviews difficulty labels against actual student performance data (where available) to ensure labels reflect real learner difficulty, not expert perception.</li>
-    <li><strong>Quality scoring:</strong> Every training pair is scored on pedagogical quality â€” does the response teach, or does it just tell? Pairs that score below threshold are revised or removed.</li>
+    <li><strong>Quality scoring:</strong> Every training pair is scored on pedagogical quality — does the response teach, or does it just tell? Pairs that score below threshold are revised or removed.</li>
   </ol>
 
   <hr>
 
-  <p><strong>Building an AI tutor?</strong> <a href="../index.html#contact">Start a project</a> â€” tell us the subject area, the target learner population, and the curriculum standard, and we'll build the training dataset.</p>`,
+  <p><strong>Building an AI tutor?</strong> <a href="../index.html#contact">Start a project</a> — tell us the subject area, the target learner population, and the curriculum standard, and we'll build the training dataset.</p>`,
     related: ['elearning-cultural', 'scorm-translation', 'rlhf-agreement']
   },
   {
@@ -566,21 +566,21 @@ const posts = [
     dateISO: '2026-05-15',
     read: '5 min read',
     body: `
-  <p>Pseudo-localization is a testing technique where you replace your English UI strings with synthetic text that simulates the characteristics of translated text â€” extended length, accented characters, and altered word boundaries â€” without waiting for actual translation.</p>
+  <p>Pseudo-localization is a testing technique where you replace your English UI strings with synthetic text that simulates the characteristics of translated text — extended length, accented characters, and altered word boundaries — without waiting for actual translation.</p>
 
   <h2>What pseudo-localization reveals</h2>
 
   <h3>1. String truncation</h3>
 
-  <p>German text is typically 30% longer than English. Finnish can be 40% longer. If your button says "Submit" and only has room for 8 characters, the German "Absenden" fits â€” but "Abonnement kÃ¼ndigen" (Cancel subscription) definitely doesn't. Pseudo-localization pads every string to 130â€“150% of its English length, surfacing every truncation point before you spend money on real translation.</p>
+  <p>German text is typically 30% longer than English. Finnish can be 40% longer. If your button says "Submit" and only has room for 8 characters, the German "Absenden" fits — but "Abonnement kÃ¼ndigen" (Cancel subscription) definitely doesn't. Pseudo-localization pads every string to 130â€“150% of its English length, surfacing every truncation point before you spend money on real translation.</p>
 
   <h3>2. Hardcoded strings</h3>
 
-  <p>If a string shows up in English while everything else is pseudo-localized, it's hardcoded. These are the strings your i18n extraction missed â€” and they'll show up as untranslated in your shipped product.</p>
+  <p>If a string shows up in English while everything else is pseudo-localized, it's hardcoded. These are the strings your i18n extraction missed — and they'll show up as untranslated in your shipped product.</p>
 
   <h3>3. Character encoding issues</h3>
 
-  <p>Pseudo-localization replaces ASCII characters with accented Unicode equivalents (a â†’ Ã¥, e â†’ Ã«). If these render as boxes or question marks anywhere in your UI, you have an encoding issue that will break real translations â€” especially for languages like Arabic, Chinese, or Thai.</p>
+  <p>Pseudo-localization replaces ASCII characters with accented Unicode equivalents (a â†’ Ã¥, e â†’ Ã«). If these render as boxes or question marks anywhere in your UI, you have an encoding issue that will break real translations — especially for languages like Arabic, Chinese, or Thai.</p>
 
   <h3>4. Concatenation bugs</h3>
 
@@ -597,11 +597,11 @@ const posts = [
 
   <h2>When to run it</h2>
 
-  <p>Run pseudo-localization as part of your CI pipeline. Every new screen, every new string, every layout change â€” test with pseudo strings before requesting real translation. The cost is near-zero. The savings on rework are significant.</p>
+  <p>Run pseudo-localization as part of your CI pipeline. Every new screen, every new string, every layout change — test with pseudo strings before requesting real translation. The cost is near-zero. The savings on rework are significant.</p>
 
   <hr>
 
-  <p><strong>Want help setting up pseudo-localization in your pipeline?</strong> <a href="../index.html#contact">Start a project</a> â€” we can integrate pseudo-loc testing into your CI/CD workflow and catch layout issues before they reach your linguists.</p>`,
+  <p><strong>Want help setting up pseudo-localization in your pipeline?</strong> <a href="../index.html#contact">Start a project</a> — we can integrate pseudo-loc testing into your CI/CD workflow and catch layout issues before they reach your linguists.</p>`,
     related: ['rtl-layouts', 'translation-memory', 'glossary-contract']
   },
   {
