@@ -1055,124 +1055,36 @@ function init4DLogoEngine() {
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
 
-    // --- 1. HOLOGRAPHIC GLITCH CORE (Custom GLSL) ---
-    const vertexShader = 
-      "uniform float time;\\n" +
-      "varying vec2 vUv;\\n" +
-      "varying vec3 vNormal;\\n" +
-      "varying vec3 vPosition;\\n" +
-      "\\n" +
-      "// Simplex 3D Noise\\n" +
-      "vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}\\n" +
-      "vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}\\n" +
-      "float snoise(vec3 v){ \\n" +
-      "  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;\\n" +
-      "  const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);\\n" +
-      "  vec3 i  = floor(v + dot(v, C.yyy) );\\n" +
-      "  vec3 x0 = v - i + dot(i, C.xxx) ;\\n" +
-      "  vec3 g = step(x0.yzx, x0.xyz);\\n" +
-      "  vec3 l = 1.0 - g;\\n" +
-      "  vec3 i1 = min( g.xyz, l.zxy );\\n" +
-      "  vec3 i2 = max( g.xyz, l.zxy );\\n" +
-      "  vec3 x1 = x0 - i1 + 1.0 * C.xxx;\\n" +
-      "  vec3 x2 = x0 - i2 + 2.0 * C.xxx;\\n" +
-      "  vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;\\n" +
-      "  i = mod(i, 289.0 ); \\n" +
-      "  vec4 p = permute( permute( permute( \\n" +
-      "             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))\\n" +
-      "           + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) \\n" +
-      "           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));\\n" +
-      "  float n_ = 1.0/7.0;\\n" +
-      "  vec3  ns = n_ * D.wyz - D.xzx;\\n" +
-      "  vec4 j = p - 49.0 * floor(p * ns.z *ns.z);\\n" +
-      "  vec4 x_ = floor(j * ns.z);\\n" +
-      "  vec4 y_ = floor(j - 7.0 * x_ );\\n" +
-      "  vec4 x = x_ *ns.x + ns.yyyy;\\n" +
-      "  vec4 y = y_ *ns.x + ns.yyyy;\\n" +
-      "  vec4 h = 1.0 - abs(x) - abs(y);\\n" +
-      "  vec4 b0 = vec4( x.xy, y.xy );\\n" +
-      "  vec4 b1 = vec4( x.zw, y.zw );\\n" +
-      "  vec4 s0 = floor(b0)*2.0 + 1.0;\\n" +
-      "  vec4 s1 = floor(b1)*2.0 + 1.0;\\n" +
-      "  vec4 sh = -step(h, vec4(0.0));\\n" +
-      "  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;\\n" +
-      "  vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;\\n" +
-      "  vec3 p0 = vec3(a0.xy,h.x);\\n" +
-      "  vec3 p1 = vec3(a0.zw,h.y);\\n" +
-      "  vec3 p2 = vec3(a1.xy,h.z);\\n" +
-      "  vec3 p3 = vec3(a1.zw,h.w);\\n" +
-      "  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));\\n" +
-      "  p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;\\n" +
-      "  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);\\n" +
-      "  m = m * m;\\n" +
-      "  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );\\n" +
-      "}\\n" +
-      "void main() {\\n" +
-      "  vUv = uv;\\n" +
-      "  vNormal = normal;\\n" +
-      "  vec3 pos = position;\\n" +
-      "  // Liquid metal displacement\\n" +
-      "  float noise = snoise(vec3(pos.x * 2.0, pos.y * 2.0, pos.z * 2.0 + time * 0.8));\\n" +
-      "  pos += normal * noise * 0.15;\\n" +
-      "  vPosition = pos;\\n" +
-      "  gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);\\n" +
-      "}\\n";
 
-    const fragmentShader = 
-      "uniform float time;\\n" +
-      "varying vec2 vUv;\\n" +
-      "varying vec3 vNormal;\\n" +
-      "varying vec3 vPosition;\\n" +
-      "void main() {\\n" +
-      "  // Holographic scanlines\\n" +
-      "  float scanline = sin(vUv.y * 80.0 - time * 10.0) * 0.5 + 0.5;\\n" +
-      "  // RGB glitch\\n" +
-      "  float glitch = step(0.98, fract(sin(dot(vUv.xy, vec2(12.9898,78.233))) * 43758.5453 + time));\\n" +
-      "  \\n" +
-      "  vec3 baseColor = vec3(0.133, 0.827, 0.933); // Cyan\\n" +
-      "  vec3 accentColor = vec3(0.753, 0.518, 0.988); // Purple\\n" +
-      "  \\n" +
-      "  vec3 color = mix(baseColor, accentColor, vUv.y + scanline*0.2);\\n" +
-      "  color += vec3(glitch * 0.8, 0.0, glitch * 0.8); // Glitch color flash\\n" +
-      "  \\n" +
-      "  // Fresnel edge glow\\n" +
-      "  vec3 viewDirection = normalize(cameraPosition - vPosition);\\n" +
-      "  float fresnel = dot(viewDirection, vNormal);\\n" +
-      "  fresnel = clamp(1.0 - fresnel, 0.0, 1.0);\\n" +
-      "  fresnel = pow(fresnel, 3.0);\\n" +
-      "  \\n" +
-      "  color += fresnel * vec3(0.8, 0.8, 1.0);\\n" +
-      "  float alpha = 0.4 + scanline * 0.2 + fresnel * 0.5;\\n" +
-      "  gl_FragColor = vec4(color, alpha);\\n" +
-      "}\\n";
+    // --- 2. THE RIGID "ME" SKELETON ---
+    const shapeM = new THREE.Shape();
+    shapeM.moveTo(-1, -1);
+    shapeM.lineTo(-1, 1);
+    shapeM.lineTo(-0.2, 0.2);
+    shapeM.lineTo(0.2, 0.2); 
+    shapeM.lineTo(1, 1);
+    shapeM.lineTo(1, -1);
+    shapeM.lineTo(0.5, -1);
+    shapeM.lineTo(0.5, 0.5);
+    shapeM.lineTo(0, 0);
+    shapeM.lineTo(-0.5, 0.5);
+    shapeM.lineTo(-0.5, -1);
+    shapeM.lineTo(-1, -1);
 
-    const coreUniforms = { time: { value: 0 }, cameraPosition: { value: camera.position } };
-    const coreGeo = new THREE.SphereGeometry(isReveal ? 0.7 : 0.5, 64, 64);
-    const coreMat = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader,
-      uniforms: coreUniforms,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      side: THREE.DoubleSide
-    });
-    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    mainGroup.add(coreMesh);
-
-    // --- 2. THE RIGID "M" SKELETON ---
-    const shape = new THREE.Shape();
-    shape.moveTo(-1, -1);
-    shape.lineTo(-1, 1);
-    shape.lineTo(-0.2, 0.2);
-    shape.lineTo(0.2, 0.2); 
-    shape.lineTo(1, 1);
-    shape.lineTo(1, -1);
-    shape.lineTo(0.5, -1);
-    shape.lineTo(0.5, 0.5);
-    shape.lineTo(0, 0);
-    shape.lineTo(-0.5, 0.5);
-    shape.lineTo(-0.5, -1);
-    shape.lineTo(-1, -1);
+    const shapeE = new THREE.Shape();
+    shapeE.moveTo(1.4, -1);
+    shapeE.lineTo(2.8, -1);
+    shapeE.lineTo(2.8, -0.5);
+    shapeE.lineTo(1.9, -0.5);
+    shapeE.lineTo(1.9, -0.2);
+    shapeE.lineTo(2.5, -0.2);
+    shapeE.lineTo(2.5, 0.2);
+    shapeE.lineTo(1.9, 0.2);
+    shapeE.lineTo(1.9, 0.5);
+    shapeE.lineTo(2.8, 0.5);
+    shapeE.lineTo(2.8, 1);
+    shapeE.lineTo(1.4, 1);
+    shapeE.lineTo(1.4, -1);
 
     const extrudeSettings = {
       depth: 0.4,
@@ -1182,15 +1094,15 @@ function init4DLogoEngine() {
       bevelThickness: 0.05,
       bevelSize: 0.05
     };
-    const mGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    const mGeo = new THREE.ExtrudeGeometry([shapeM, shapeE], extrudeSettings);
     mGeo.computeBoundingBox();
     const offset = mGeo.boundingBox.getCenter(new THREE.Vector3());
     mGeo.translate(-offset.x, -offset.y, -offset.z);
     
     if(!isReveal) {
-        mGeo.scale(1.5, 1.5, 1.5);
+        mGeo.scale(1.0, 1.0, 1.0); // Nav bar needs to fit 44x44
     } else {
-        mGeo.scale(1.2, 1.2, 1.2);
+        mGeo.scale(1.8, 1.8, 1.8); // Hero section needs to be large around the 0.7 core
     }
 
     // Extract precise edges for the swarm to outline
@@ -1199,7 +1111,7 @@ function init4DLogoEngine() {
     const edgeCount = edgePositions.length / 6; // 2 vertices per edge
 
     // --- 3. DYNAMIC FLUID PARTICLE SWARM ---
-    const pCount = isReveal ? 6000 : 1500;
+    const pCount = isReveal ? 7500 : 2000;
     const pGeo = new THREE.BufferGeometry();
     const pPos = new Float32Array(pCount * 3);
     const pEdgesArr = new Int32Array(pCount); 
@@ -1214,7 +1126,7 @@ function init4DLogoEngine() {
     }
     pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
     const pMat = new THREE.PointsMaterial({
-      color: 0xc084fc,
+      color: 0xc084fc, // Purple (Left Swarm)
       size: isReveal ? 0.04 : 0.02,
       transparent: true,
       opacity: 0.9,
@@ -1228,8 +1140,8 @@ function init4DLogoEngine() {
     const swarm2Pos = new Float32Array(pPos); // Copy initial positions
     swarm2Geo.setAttribute('position', new THREE.BufferAttribute(swarm2Pos, 3));
     const swarm2Mat = new THREE.PointsMaterial({
-      color: 0x22d3ee,
-      size: isReveal ? 0.025 : 0.015,
+      color: 0x22d3ee, // Cyan (Right Swarm)
+      size: isReveal ? 0.03 : 0.015,
       transparent: true,
       opacity: 0.9,
       blending: THREE.AdditiveBlending
@@ -1250,14 +1162,27 @@ function init4DLogoEngine() {
     }
 
     const clock = new THREE.Clock();
+    const introDuration = 2.5;
 
     function animate() {
       requestAnimationFrame(animate);
       const time = clock.getElapsedTime();
-      coreUniforms.time.value = time;
-      coreUniforms.cameraPosition.value.copy(camera.position);
 
-      // Update Swarm 1 (Purple)
+      // Animation Timeline logic
+      let animProgress = 1.0;
+      if (isReveal) {
+        animProgress = Math.min(time / introDuration, 1.0);
+      }
+      
+      const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+      const ease = easeOutCubic(animProgress);
+      
+      const chaos = Math.sin(animProgress * Math.PI) * (isReveal ? 5.0 : 0.0); // Spikes at middle of animation
+
+      const leftOffset = -15.0 * (1.0 - ease);
+      const rightOffset = 15.0 * (1.0 - ease);
+
+      // Update Swarm 1 (Purple - from Left)
       const positions = swarm.geometry.attributes.position.array;
       for(let i=0; i<pCount; i++) {
         const edgeIdx = pEdgesArr[i];
@@ -1278,14 +1203,18 @@ function init4DLogoEngine() {
         const distort1Z = Math.sin(time * 2.0 + p1x) * 0.1;
         const distort2Z = Math.sin(time * 2.0 + p2x) * 0.1;
 
-        const targetX = p1x + (p2x - p1x) * flowLerp;
-        const targetY = p1y + (p2y - p1y) * flowLerp;
-        const targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
+        let targetX = p1x + (p2x - p1x) * flowLerp;
+        let targetY = p1y + (p2y - p1y) * flowLerp;
+        let targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
         
-        // Tight Swarm turbulence for sharp M edges
-        const noiseX = Math.sin(time * 8.0 + i) * 0.02;
-        const noiseY = Math.cos(time * 7.0 + i) * 0.02;
-        const noiseZ = Math.sin(time * 6.0 + i) * 0.02;
+        // Apply Intro Offset
+        targetX += leftOffset;
+        
+        // Tight Swarm turbulence for sharp ME edges + chaos on collision
+        const noiseMulti = 0.02 + chaos;
+        const noiseX = Math.sin(time * 8.0 + i) * noiseMulti;
+        const noiseY = Math.cos(time * 7.0 + i) * noiseMulti;
+        const noiseZ = Math.sin(time * 6.0 + i) * noiseMulti;
         
         positions[i*3] += (targetX + noiseX - positions[i*3]) * 0.2;
         positions[i*3+1] += (targetY + noiseY - positions[i*3+1]) * 0.2;
@@ -1293,7 +1222,7 @@ function init4DLogoEngine() {
       }
       swarm.geometry.attributes.position.needsUpdate = true;
       
-      // Update Swarm 2 (Cyan) with offset flow
+      // Update Swarm 2 (Cyan - from Right)
       const pos2 = swarm2.geometry.attributes.position.array;
       for(let i=0; i<pCount; i++) {
         const edgeIdx = pEdgesArr[i];
@@ -1310,13 +1239,21 @@ function init4DLogoEngine() {
         const distort1Z = Math.sin(time * 2.0 + p1x) * 0.1;
         const distort2Z = Math.sin(time * 2.0 + p2x) * 0.1;
 
-        const targetX = p1x + (p2x - p1x) * flowLerp;
-        const targetY = p1y + (p2y - p1y) * flowLerp;
-        const targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
+        let targetX = p1x + (p2x - p1x) * flowLerp;
+        let targetY = p1y + (p2y - p1y) * flowLerp;
+        let targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
 
-        pos2[i*3] += (targetX - pos2[i*3]) * 0.25;
-        pos2[i*3+1] += (targetY - pos2[i*3+1]) * 0.25;
-        pos2[i*3+2] += (targetZ - pos2[i*3+2]) * 0.25;
+        // Apply Intro Offset
+        targetX += rightOffset;
+
+        const noiseMulti = 0.02 + chaos;
+        const noiseX = Math.sin(time * 7.0 + i) * noiseMulti;
+        const noiseY = Math.cos(time * 6.0 + i) * noiseMulti;
+        const noiseZ = Math.sin(time * 8.0 + i) * noiseMulti;
+
+        pos2[i*3] += (targetX + noiseX - pos2[i*3]) * 0.25;
+        pos2[i*3+1] += (targetY + noiseY - pos2[i*3+1]) * 0.25;
+        pos2[i*3+2] += (targetZ + noiseZ - pos2[i*3+2]) * 0.25;
       }
       swarm2.geometry.attributes.position.needsUpdate = true;
 
