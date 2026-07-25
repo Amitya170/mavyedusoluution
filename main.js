@@ -1272,7 +1272,7 @@ window.addEventListener('load', () => {
     document.body.classList.add('loaded');
     const reveal = document.getElementById('page-reveal');
     if (reveal) reveal.classList.add('hidden');
-  }, 2200);
+  }, 4800);
 });
 
 /* ============ Theme Toggle & LocalStorage ============ */

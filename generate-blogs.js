@@ -1162,7 +1162,7 @@ function init4DLogoEngine() {
     }
 
     const clock = new THREE.Clock();
-    const introDuration = 2.5;
+    const introDuration = 4.5;
 
     function animate() {
       requestAnimationFrame(animate);
