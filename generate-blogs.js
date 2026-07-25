@@ -1159,24 +1159,47 @@ function init4DLogoEngine() {
     const coreMesh = new THREE.Mesh(coreGeo, coreMat);
     mainGroup.add(coreMesh);
 
-    // --- 2. 4D HYPER-M POINTS ---
-    const vertices4D = [
-      [-1.0, -1.0, 1.0, 1.0], [ -1.0,  0.0, 1.0, 1.0], [ -1.0,  1.0, 1.0, 1.0],
-      [-0.5,  0.5, 1.2, 1.0], [  0.0,  0.0, 1.4, 1.0], [  0.5,  0.5, 1.2, 1.0],
-      [ 1.0,  1.0, 1.0, 1.0], [  1.0,  0.0, 1.0, 1.0], [  1.0, -1.0, 1.0, 1.0],
-      // W=-1 copy
-      [-1.0, -1.0, 1.0,-1.0], [ -1.0,  0.0, 1.0,-1.0], [ -1.0,  1.0, 1.0,-1.0],
-      [-0.5,  0.5, 1.2,-1.0], [  0.0,  0.0, 1.4,-1.0], [  0.5,  0.5, 1.2,-1.0],
-      [ 1.0,  1.0, 1.0,-1.0], [  1.0,  0.0, 1.0,-1.0], [  1.0, -1.0, 1.0,-1.0]
-    ];
-    const mEdges = [
-      [0,1], [1,2], [2,3], [3,4], [4,5], [5,6], [6,7], [7,8], // front
-      [9,10],[10,11],[11,12],[12,13],[13,14],[14,15],[15,16],[16,17], // back
-      [0,9],[1,10],[2,11],[3,12],[4,13],[5,14],[6,15],[7,16],[8,17] // W links
-    ];
+    // --- 2. THE RIGID "M" SKELETON ---
+    const shape = new THREE.Shape();
+    shape.moveTo(-1, -1);
+    shape.lineTo(-1, 1);
+    shape.lineTo(-0.2, 0.2);
+    shape.lineTo(0.2, 0.2); 
+    shape.lineTo(1, 1);
+    shape.lineTo(1, -1);
+    shape.lineTo(0.5, -1);
+    shape.lineTo(0.5, 0.5);
+    shape.lineTo(0, 0);
+    shape.lineTo(-0.5, 0.5);
+    shape.lineTo(-0.5, -1);
+    shape.lineTo(-1, -1);
+
+    const extrudeSettings = {
+      depth: 0.4,
+      bevelEnabled: true,
+      bevelSegments: 2, 
+      bevelSteps: 2,
+      bevelThickness: 0.05,
+      bevelSize: 0.05
+    };
+    const mGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    mGeo.computeBoundingBox();
+    const offset = mGeo.boundingBox.getCenter(new THREE.Vector3());
+    mGeo.translate(-offset.x, -offset.y, -offset.z);
+    
+    if(!isReveal) {
+        mGeo.scale(1.5, 1.5, 1.5);
+    } else {
+        mGeo.scale(1.2, 1.2, 1.2);
+    }
+
+    // Extract precise edges for the swarm to outline
+    const edgesGeo = new THREE.EdgesGeometry(mGeo);
+    const edgePositions = edgesGeo.attributes.position.array;
+    const edgeCount = edgePositions.length / 6; // 2 vertices per edge
 
     // --- 3. DYNAMIC FLUID PARTICLE SWARM ---
-    const pCount = isReveal ? 5000 : 1000;
+    const pCount = isReveal ? 6000 : 1500;
     const pGeo = new THREE.BufferGeometry();
     const pPos = new Float32Array(pCount * 3);
     const pEdgesArr = new Int32Array(pCount); 
@@ -1186,13 +1209,13 @@ function init4DLogoEngine() {
       pPos[i*3] = (Math.random() - 0.5) * 5;
       pPos[i*3+1] = (Math.random() - 0.5) * 5;
       pPos[i*3+2] = (Math.random() - 0.5) * 5;
-      pEdgesArr[i] = Math.floor(Math.random() * mEdges.length);
+      pEdgesArr[i] = Math.floor(Math.random() * edgeCount);
       pLerps[i] = Math.random();
     }
     pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
     const pMat = new THREE.PointsMaterial({
       color: 0xc084fc,
-      size: isReveal ? 0.05 : 0.03,
+      size: isReveal ? 0.04 : 0.02,
       transparent: true,
       opacity: 0.9,
       blending: THREE.AdditiveBlending
@@ -1206,7 +1229,7 @@ function init4DLogoEngine() {
     swarm2Geo.setAttribute('position', new THREE.BufferAttribute(swarm2Pos, 3));
     const swarm2Mat = new THREE.PointsMaterial({
       color: 0x22d3ee,
-      size: isReveal ? 0.03 : 0.015,
+      size: isReveal ? 0.025 : 0.015,
       transparent: true,
       opacity: 0.9,
       blending: THREE.AdditiveBlending
@@ -1234,50 +1257,39 @@ function init4DLogoEngine() {
       coreUniforms.time.value = time;
       coreUniforms.cameraPosition.value.copy(camera.position);
 
-      // Rotate 4D Engine
-      let angleZW = time * 0.5;
-      let angleXW = time * 0.3;
-      const projected3D = [];
-
-      for(let i=0; i<vertices4D.length; i++) {
-        let [x, y, z, w] = vertices4D[i];
-        let cosZW = Math.cos(angleZW), sinZW = Math.sin(angleZW);
-        let z1 = z * cosZW - w * sinZW;
-        let w1 = z * sinZW + w * cosZW;
-        let cosXW = Math.cos(angleXW), sinXW = Math.sin(angleXW);
-        let x1 = x * cosXW - w1 * sinXW;
-        let w2 = x * sinXW + w1 * cosXW;
-        let distance = 3.0;
-        let wPersp = 1 / (distance - w2);
-        projected3D.push([
-          x1 * wPersp * 1.5,
-          y * wPersp * 1.5,
-          z1 * wPersp * 1.5
-        ]);
-      }
-
       // Update Swarm 1 (Purple)
       const positions = swarm.geometry.attributes.position.array;
       for(let i=0; i<pCount; i++) {
         const edgeIdx = pEdgesArr[i];
-        const p1 = projected3D[mEdges[edgeIdx][0]];
-        const p2 = projected3D[mEdges[edgeIdx][1]];
+        
+        const p1x = edgePositions[edgeIdx*6];
+        const p1y = edgePositions[edgeIdx*6 + 1];
+        const p1z = edgePositions[edgeIdx*6 + 2];
+        const p2x = edgePositions[edgeIdx*6 + 3];
+        const p2y = edgePositions[edgeIdx*6 + 4];
+        const p2z = edgePositions[edgeIdx*6 + 5];
+
         const lerp = pLerps[i];
         
         // Liquid flow along edges
-        const flowLerp = (Math.sin(time * 2.0 + i) * 0.5 + 0.5 + lerp) % 1.0;
-        const targetX = p1[0] + (p2[0] - p1[0]) * flowLerp;
-        const targetY = p1[1] + (p2[1] - p1[1]) * flowLerp;
-        const targetZ = p1[2] + (p2[2] - p1[2]) * flowLerp;
+        const flowLerp = (Math.sin(time * 3.0 + i) * 0.5 + 0.5 + lerp) % 1.0;
         
-        // Swarm turbulence
-        const noiseX = Math.sin(time * 5.0 + i) * 0.1;
-        const noiseY = Math.cos(time * 4.0 + i) * 0.1;
-        const noiseZ = Math.sin(time * 3.0 + i) * 0.1;
+        // Slight 4D-style spatial distortion
+        const distort1Z = Math.sin(time * 2.0 + p1x) * 0.1;
+        const distort2Z = Math.sin(time * 2.0 + p2x) * 0.1;
+
+        const targetX = p1x + (p2x - p1x) * flowLerp;
+        const targetY = p1y + (p2y - p1y) * flowLerp;
+        const targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
         
-        positions[i*3] += (targetX + noiseX - positions[i*3]) * 0.1;
-        positions[i*3+1] += (targetY + noiseY - positions[i*3+1]) * 0.1;
-        positions[i*3+2] += (targetZ + noiseZ - positions[i*3+2]) * 0.1;
+        // Tight Swarm turbulence for sharp M edges
+        const noiseX = Math.sin(time * 8.0 + i) * 0.02;
+        const noiseY = Math.cos(time * 7.0 + i) * 0.02;
+        const noiseZ = Math.sin(time * 6.0 + i) * 0.02;
+        
+        positions[i*3] += (targetX + noiseX - positions[i*3]) * 0.2;
+        positions[i*3+1] += (targetY + noiseY - positions[i*3+1]) * 0.2;
+        positions[i*3+2] += (targetZ + noiseZ - positions[i*3+2]) * 0.2;
       }
       swarm.geometry.attributes.position.needsUpdate = true;
       
@@ -1285,15 +1297,26 @@ function init4DLogoEngine() {
       const pos2 = swarm2.geometry.attributes.position.array;
       for(let i=0; i<pCount; i++) {
         const edgeIdx = pEdgesArr[i];
-        const p1 = projected3D[mEdges[edgeIdx][0]];
-        const p2 = projected3D[mEdges[edgeIdx][1]];
-        const flowLerp = (Math.cos(time * 1.5 + i) * 0.5 + 0.5 + pLerps[i]) % 1.0;
-        const targetX = p1[0] + (p2[0] - p1[0]) * flowLerp;
-        const targetY = p1[1] + (p2[1] - p1[1]) * flowLerp;
-        const targetZ = p1[2] + (p2[2] - p1[2]) * flowLerp;
-        pos2[i*3] += (targetX - pos2[i*3]) * 0.15;
-        pos2[i*3+1] += (targetY - pos2[i*3+1]) * 0.15;
-        pos2[i*3+2] += (targetZ - pos2[i*3+2]) * 0.15;
+        
+        const p1x = edgePositions[edgeIdx*6];
+        const p1y = edgePositions[edgeIdx*6 + 1];
+        const p1z = edgePositions[edgeIdx*6 + 2];
+        const p2x = edgePositions[edgeIdx*6 + 3];
+        const p2y = edgePositions[edgeIdx*6 + 4];
+        const p2z = edgePositions[edgeIdx*6 + 5];
+
+        const flowLerp = (Math.cos(time * 2.5 + i) * 0.5 + 0.5 + pLerps[i]) % 1.0;
+        
+        const distort1Z = Math.sin(time * 2.0 + p1x) * 0.1;
+        const distort2Z = Math.sin(time * 2.0 + p2x) * 0.1;
+
+        const targetX = p1x + (p2x - p1x) * flowLerp;
+        const targetY = p1y + (p2y - p1y) * flowLerp;
+        const targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
+
+        pos2[i*3] += (targetX - pos2[i*3]) * 0.25;
+        pos2[i*3+1] += (targetY - pos2[i*3+1]) * 0.25;
+        pos2[i*3+2] += (targetZ - pos2[i*3+2]) * 0.25;
       }
       swarm2.geometry.attributes.position.needsUpdate = true;
 
