@@ -21,6 +21,21 @@
     --accent-emerald:#34d399;
   }
 
+  #page-reveal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: var(--ink);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.8s ease, visibility 0.8s;
+  }
+  #page-reveal.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
   [data-theme="light"] {
     --ink: #f8fafc;
     --surface: rgba(0, 0, 0, 0.04);

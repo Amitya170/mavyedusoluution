@@ -123,102 +123,62 @@ function init4DLogoEngine() {
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
 
-    // Advanced Custom Shader for Particles
-    const vertexShader = `
-      uniform float time;
-      attribute vec3 customColor;
-      varying vec3 vColor;
-      void main() {
-        vColor = customColor;
-        vec3 p = position;
-        
-        // 4D Rotation emulation and flow
-        float s = sin(time * 0.5 + p.x * 2.0);
-        float c = cos(time * 0.5 + p.y * 2.0);
-        
-        p.x += sin(time + p.z) * 0.5;
-        p.y += cos(time + p.x) * 0.5;
-        p.z += sin(time + p.y) * 0.5;
-        
-        vec4 mvPosition = modelViewMatrix * vec4(p, 1.0);
-        gl_PointSize = (20.0 / -mvPosition.z);
-        gl_Position = projectionMatrix * mvPosition;
+    // 4D Vertices
+    const vertices4D = [];
+    for (let i = 0; i < 16; i++) {
+      vertices4D.push([(i & 1) ? 1 : -1, (i & 2) ? 1 : -1, (i & 4) ? 1 : -1, (i & 8) ? 1 : -1]);
+    }
+    const edges = [];
+    for (let i = 0; i < 16; i++) {
+      for (let j = i + 1; j < 16; j++) {
+        let diff = 0;
+        for (let k = 0; k < 4; k++) {
+          if (vertices4D[i][k] !== vertices4D[j][k]) diff++;
+        }
+        if (diff === 1) edges.push([i, j]);
       }
-    `;
-
-    const fragmentShader = `
-      varying vec3 vColor;
-      void main() {
-        // Create soft circular particles
-        vec2 xy = gl_PointCoord.xy - vec2(0.5);
-        float ll = length(xy);
-        if(ll > 0.5) discard;
-        
-        // Glow effect inside particle
-        float alpha = (0.5 - ll) * 2.0;
-        gl_FragColor = vec4(vColor, alpha * 0.8);
-      }
-    `;
-
-    const particleCount = isReveal ? 8000 : 1500;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
-
-    const color1 = new THREE.Color(0x22d3ee); // Cyan
-    const color2 = new THREE.Color(0xc084fc); // Purple
-    const color3 = new THREE.Color(0x3b82f6); // Blue
-
-    for (let i = 0; i < particleCount; i++) {
-      // Golden ratio spherical distribution for complex organic shape
-      const phi = Math.acos(-1 + (2 * i) / particleCount);
-      const theta = Math.sqrt(particleCount * Math.PI) * phi;
-      
-      const r = 1.5 + (Math.random() - 0.5) * 1.5;
-      
-      positions[i * 3] = r * Math.cos(theta) * Math.sin(phi);
-      positions[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
-      positions[i * 3 + 2] = r * Math.cos(phi);
-
-      const mixedColor = color1.clone().lerp(
-        Math.random() > 0.5 ? color2 : color3, 
-        Math.random()
-      );
-
-      colors[i * 3] = mixedColor.r;
-      colors[i * 3 + 1] = mixedColor.g;
-      colors[i * 3 + 2] = mixedColor.b;
     }
 
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('customColor', new THREE.BufferAttribute(colors, 3));
-
-    const material = new THREE.ShaderMaterial({
-      uniforms: {
-        time: { value: 0.0 }
-      },
-      vertexShader: vertexShader,
-      fragmentShader: fragmentShader,
-      blending: THREE.AdditiveBlending,
-      depthTest: false,
+    // High-End Materials
+    const innerCoreMat = new THREE.MeshPhysicalMaterial({
+      color: 0xc084fc, // Deep Purple
+      emissive: 0x4c1d95,
+      metalness: 0.8,
+      roughness: 0.2,
+      transmission: 0.5,
+      thickness: 1.5,
       transparent: true
     });
 
-    const particles = new THREE.Points(geometry, material);
-    mainGroup.add(particles);
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0x22d3ee, // Ice Cyan
+      transparent: true,
+      opacity: 0.9,
+      linewidth: 2
+    });
+    
+    const lineGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(edges.length * 2 * 3);
+    lineGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const lineSegments = new THREE.LineSegments(lineGeometry, lineMaterial);
+    mainGroup.add(lineSegments);
 
-    // Inner core
-    if (isReveal) {
-      const coreGeo = new THREE.OctahedronGeometry(0.8, 1);
-      const coreMat = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.15
-      });
-      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-      mainGroup.add(coreMesh);
+    const nodeGeo = new THREE.SphereGeometry(isReveal ? 0.12 : 0.05, 16, 16);
+    const nodesGroup = new THREE.Group();
+    for (let i = 0; i < 16; i++) {
+      const mesh = new THREE.Mesh(nodeGeo, innerCoreMat);
+      nodesGroup.add(mesh);
     }
+    mainGroup.add(nodesGroup);
+
+    // Inner glowing core
+    const coreMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(isReveal ? 0.8 : 0.4, 1), innerCoreMat);
+    mainGroup.add(coreMesh);
+    
+    // Add point light inside
+    const pointLight = new THREE.PointLight(0x22d3ee, 2, 10);
+    scene.add(pointLight);
+    scene.add(new THREE.AmbientLight(0x404040));
 
     let mouseX = 0, mouseY = 0;
     let targetX = 0, targetY = 0;
@@ -233,14 +193,60 @@ function init4DLogoEngine() {
     }
 
     const clock = new THREE.Clock();
+    let angleZW = 0, angleXW = 0;
 
     function animate() {
       requestAnimationFrame(animate);
-
       const delta = clock.getDelta();
-      const time = clock.getElapsedTime();
+      
+      angleZW += delta * 0.5;
+      angleXW += delta * 0.3;
 
-      material.uniforms.time.value = time * 0.5;
+      const distance = 2.5;
+      const projected3D = [];
+
+      // 4D -> 3D Projection Math
+      for (let i = 0; i < 16; i++) {
+        let [x, y, z, w] = vertices4D[i];
+
+        // Rotate in ZW plane
+        let cosZW = Math.cos(angleZW), sinZW = Math.sin(angleZW);
+        let z1 = z * cosZW - w * sinZW;
+        let w1 = z * sinZW + w * cosZW;
+
+        // Rotate in XW plane
+        let cosXW = Math.cos(angleXW), sinXW = Math.sin(angleXW);
+        let x1 = x * cosXW - w1 * sinXW;
+        let w2 = x * sinXW + w1 * cosXW;
+
+        // Stereographic projection
+        let wPerspective = 1 / (distance - w2);
+        let px = x1 * wPerspective * 1.5;
+        let py = y * wPerspective * 1.5;
+        let pz = z1 * wPerspective * 1.5;
+
+        projected3D.push([px, py, pz]);
+        nodesGroup.children[i].position.set(px, py, pz);
+      }
+
+      const posAttr = lineGeometry.attributes.position;
+      let posIdx = 0;
+      for (let i = 0; i < edges.length; i++) {
+        const p1 = projected3D[edges[i][0]];
+        const p2 = projected3D[edges[i][1]];
+
+        posAttr.array[posIdx++] = p1[0];
+        posAttr.array[posIdx++] = p1[1];
+        posAttr.array[posIdx++] = p1[2];
+
+        posAttr.array[posIdx++] = p2[0];
+        posAttr.array[posIdx++] = p2[1];
+        posAttr.array[posIdx++] = p2[2];
+      }
+      posAttr.needsUpdate = true;
+
+      coreMesh.rotation.x += delta * 0.5;
+      coreMesh.rotation.y += delta * 0.3;
 
       targetX += (mouseX - targetX) * 0.05;
       targetY += (mouseY - targetY) * 0.05;
@@ -249,8 +255,8 @@ function init4DLogoEngine() {
       mainGroup.rotation.x += delta * 0.15;
       
       if (isReveal) {
-        mainGroup.rotation.y += targetX * 0.05;
-        mainGroup.rotation.x += targetY * 0.05;
+        mainGroup.rotation.y += targetX * 0.1;
+        mainGroup.rotation.x += targetY * 0.1;
       }
 
       composer.render();
