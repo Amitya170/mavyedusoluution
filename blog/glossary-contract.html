@@ -139,12 +139,31 @@ function init4DLogoEngine() {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.z = isReveal ? 5.5 : 4.5;
 
-    // Use alpha: true and no EffectComposer to perfectly match the website CSS background!
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0); // Fully transparent
+    renderer.setClearColor(0x000000, 0); 
     container.appendChild(renderer.domElement);
+
+    // --- PRO ENHANCEMENT: Dynamic Environment Map for Realistic Glass Reflections ---
+    const envCanvas = document.createElement('canvas');
+    envCanvas.width = 512;
+    envCanvas.height = 512;
+    const ctx = envCanvas.getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, 512, 512);
+    grad.addColorStop(0, '#020617'); // Dark slate
+    grad.addColorStop(0.3, '#22d3ee'); // Cyan reflection
+    grad.addColorStop(0.7, '#c084fc'); // Purple reflection
+    grad.addColorStop(1, '#020617');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 512, 512);
+    ctx.fillStyle = '#ffffff'; // Bright light sources for sharp specular hits
+    ctx.beginPath(); ctx.arc(128, 128, 40, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(384, 384, 60, 0, Math.PI*2); ctx.fill();
+    
+    const envTexture = new THREE.CanvasTexture(envCanvas);
+    envTexture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = envTexture; 
 
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
@@ -153,8 +172,8 @@ function init4DLogoEngine() {
     const shape = new THREE.Shape();
     shape.moveTo(-1, -1);
     shape.lineTo(-1, 1);
-    shape.lineTo(-0.2, 0.2); // inner left dip
-    shape.lineTo(0.2, 0.2);  // inner right dip
+    shape.lineTo(-0.2, 0.2);
+    shape.lineTo(0.2, 0.2); 
     shape.lineTo(1, 1);
     shape.lineTo(1, -1);
     shape.lineTo(0.5, -1);
@@ -167,57 +186,75 @@ function init4DLogoEngine() {
     const extrudeSettings = {
       depth: 0.4,
       bevelEnabled: true,
-      bevelSegments: 4,
+      bevelSegments: 8, // Pro: Smoother bevels
       bevelSteps: 4,
       bevelThickness: 0.08,
       bevelSize: 0.08
     };
     const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    // Center the geometry
     geometry.computeBoundingBox();
     const offset = geometry.boundingBox.getCenter(new THREE.Vector3());
     geometry.translate(-offset.x, -offset.y, -offset.z);
 
-    // 2. High-End Glass Material (MeshPhysicalMaterial)
+    // 2. Pro Glass Material (MeshPhysicalMaterial with Attenuation)
     const glassMaterial = new THREE.MeshPhysicalMaterial({
       color: 0xffffff,
-      metalness: 0.2,
-      roughness: 0.05,
-      transmission: 1.0, // Flawless glass
-      ior: 1.5,
+      metalness: 0.1,
+      roughness: 0.02, // Flawless surface
+      transmission: 1.0, // Fully glass
+      ior: 1.65, // High index of refraction for heavy distortion
       thickness: 1.5,
+      attenuationColor: new THREE.Color(0xc084fc), // Absorbs light, giving thick parts a deep purple tint
+      attenuationDistance: 1.5,
       clearcoat: 1.0,
-      clearcoatRoughness: 0.1,
-      transparent: true
+      clearcoatRoughness: 0.05,
+      transparent: true,
+      envMapIntensity: 2.0 // Boosts reflections
     });
     
     const mMesh = new THREE.Mesh(geometry, glassMaterial);
     
+    // --- PRO ENHANCEMENT: Inner Metallic Core ---
+    // A dark metallic core sitting inside the glass makes it look incredibly sophisticated
+    const coreMaterial = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      metalness: 1.0,
+      roughness: 0.2,
+      envMapIntensity: 1.5
+    });
+    const coreMesh = new THREE.Mesh(geometry, coreMaterial);
+    coreMesh.scale.set(0.85, 0.85, 0.6); // Scale down to fit inside the glass casing
+    mMesh.add(coreMesh);
+    
     if(!isReveal){
         mMesh.scale.set(1.5, 1.5, 1.5);
     }
-    
     mainGroup.add(mMesh);
 
-    // 3. Orbiting AI Data Orbs
+    // 3. Orbiting AI Data Orbs with Faux Glow
     const orbGroup = new THREE.Group();
-    const orbGeo = new THREE.SphereGeometry(isReveal ? 0.2 : 0.4, 32, 32);
+    const orbGeo = new THREE.SphereGeometry(isReveal ? 0.15 : 0.3, 32, 32);
+    const glowGeo = new THREE.SphereGeometry(isReveal ? 0.3 : 0.6, 32, 32);
     
     // Cyan Orb
     const orbMat1 = new THREE.MeshBasicMaterial({ color: 0x22d3ee }); 
     const orb1 = new THREE.Mesh(orbGeo, orbMat1);
-    orb1.position.set(1.5, 0, 0);
+    orb1.position.set(1.6, 0.4, 0);
+    const glowMat1 = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
+    orb1.add(new THREE.Mesh(glowGeo, glowMat1)); // Additive glow
     orbGroup.add(orb1);
     
     // Purple Orb
     const orbMat2 = new THREE.MeshBasicMaterial({ color: 0xc084fc }); 
     const orb2 = new THREE.Mesh(orbGeo, orbMat2);
-    orb2.position.set(-1.5, 0, 0);
+    orb2.position.set(-1.6, -0.4, 0);
+    const glowMat2 = new THREE.MeshBasicMaterial({ color: 0xc084fc, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
+    orb2.add(new THREE.Mesh(glowGeo, glowMat2)); // Additive glow
     orbGroup.add(orb2);
     
     mainGroup.add(orbGroup);
 
-    // 4. Lighting setup for beautiful glass reflections
+    // 4. Lighting setup
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
 
@@ -252,12 +289,13 @@ function init4DLogoEngine() {
       const delta = clock.getDelta();
       const time = clock.getElapsedTime();
 
-      // Rotate the orbiting data orbs around the glass M
+      // Dynamic cinematic orbiting
       orbGroup.rotation.y += delta * 1.5;
-      orbGroup.rotation.z += delta * 0.5;
+      orbGroup.rotation.z += delta * 0.8;
+      orbGroup.rotation.x += delta * 0.4;
 
       // Pulse the orbs slightly
-      const scale = 1.0 + Math.sin(time * 3) * 0.15;
+      const scale = 1.0 + Math.sin(time * 4) * 0.15;
       orb1.scale.set(scale, scale, scale);
       orb2.scale.set(scale, scale, scale);
 
