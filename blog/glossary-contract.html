@@ -115,30 +115,15 @@
 
 <!-- Three.js CDN for WebGL 4D Interactive Engine -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <script>
 function init4DLogoEngine() {
   if (typeof THREE === 'undefined') return;
-
-  const vertices4D = [];
-  for (let i = 0; i < 16; i++) {
-    vertices4D.push([
-      (i & 1) ? 1 : -1,
-      (i & 2) ? 1 : -1,
-      (i & 4) ? 1 : -1,
-      (i & 8) ? 1 : -1
-    ]);
-  }
-
-  const edges = [];
-  for (let i = 0; i < 16; i++) {
-    for (let j = i + 1; j < 16; j++) {
-      let diff = 0;
-      for (let k = 0; k < 4; k++) {
-        if (vertices4D[i][k] !== vertices4D[j][k]) diff++;
-      }
-      if (diff === 1) edges.push([i, j]);
-    }
-  }
 
   const containers = document.querySelectorAll('#webgl-reveal-container, .webgl-logo-container');
 
@@ -147,135 +132,191 @@ function init4DLogoEngine() {
     container.dataset.webglInited = 'true';
 
     const isReveal = container.id === 'webgl-reveal-container';
-    const width = isReveal ? 320 : 44;
-    const height = isReveal ? 320 : 44;
+    const width = isReveal ? 400 : 44;
+    const height = isReveal ? 400 : 44;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.z = isReveal ? 5.5 : 5.0;
+    camera.position.z = isReveal ? 6.0 : 4.0;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ReinhardToneMapping;
     container.appendChild(renderer.domElement);
+
+    const renderScene = new THREE.RenderPass(scene, camera);
+    renderScene.clearColor = new THREE.Color(0, 0, 0);
+    renderScene.clearAlpha = 0;
+
+    const bloomPass = new THREE.UnrealBloomPass(
+      new THREE.Vector2(width, height),
+      1.5, // strength
+      0.4, // radius
+      0.85 // threshold
+    );
+    bloomPass.exposure = 1.0;
+
+    const composer = new THREE.EffectComposer(renderer);
+    composer.addPass(renderScene);
+    composer.addPass(bloomPass);
 
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
 
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x67e8f9,
+    // 1. Background Globe Network (Particles)
+    const particleCount = isReveal ? 1000 : 300;
+    const bgGeometry = new THREE.BufferGeometry();
+    const bgPositions = new Float32Array(particleCount * 3);
+    const radius = 2.0;
+
+    for (let i = 0; i < particleCount; i++) {
+      const phi = Math.acos(-1 + (2 * i) / particleCount);
+      const theta = Math.sqrt(particleCount * Math.PI) * phi;
+      bgPositions[i * 3] = radius * Math.cos(theta) * Math.sin(phi);
+      bgPositions[i * 3 + 1] = radius * Math.sin(theta) * Math.sin(phi);
+      bgPositions[i * 3 + 2] = radius * Math.cos(phi);
+    }
+    bgGeometry.setAttribute('position', new THREE.BufferAttribute(bgPositions, 3));
+    
+    // Shader material for glowing points
+    const bgMaterial = new THREE.PointsMaterial({
+      color: 0x3b82f6,
+      size: isReveal ? 0.05 : 0.02,
       transparent: true,
-      opacity: 0.85,
-      linewidth: isReveal ? 2 : 1
+      opacity: 0.4,
+      blending: THREE.AdditiveBlending
+    });
+    const bgPoints = new THREE.Points(bgGeometry, bgMaterial);
+    mainGroup.add(bgPoints);
+
+    // 2. The Neural "M" points
+    const mRadius = 2.1;
+    // Points forming an 'M'
+    const mNodes = [
+      new THREE.Vector3(-1.0, -1.0, 1.0), // 0: Bottom left
+      new THREE.Vector3(-1.0, 0.0, 1.0),  // 1: Mid left
+      new THREE.Vector3(-1.0, 1.0, 1.0),  // 2: Top left
+      new THREE.Vector3(-0.5, 0.5, 1.2),  // 3: Inner left diag
+      new THREE.Vector3(0.0, 0.0, 1.4),   // 4: Center bottom
+      new THREE.Vector3(0.5, 0.5, 1.2),   // 5: Inner right diag
+      new THREE.Vector3(1.0, 1.0, 1.0),   // 6: Top right
+      new THREE.Vector3(1.0, 0.0, 1.0),   // 7: Mid right
+      new THREE.Vector3(1.0, -1.0, 1.0)   // 8: Bottom right
+    ];
+    
+    // Normalize and project onto sphere
+    mNodes.forEach(p => {
+      p.normalize().multiplyScalar(mRadius);
     });
 
-    const lineGeometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(edges.length * 2 * 3);
-    lineGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const mGroup = new THREE.Group();
+    
+    // Create glowing nodes for the 'M'
+    const mNodeGeo = new THREE.SphereGeometry(isReveal ? 0.1 : 0.05, 16, 16);
+    const mNodeMat = new THREE.MeshBasicMaterial({
+      color: 0x22d3ee, // Cyan
+      transparent: true,
+      opacity: 0.9,
+    });
+    
+    mNodes.forEach(p => {
+      const mesh = new THREE.Mesh(mNodeGeo, mNodeMat);
+      mesh.position.copy(p);
+      mGroup.add(mesh);
+    });
 
-    const lineSegments = new THREE.LineSegments(lineGeometry, lineMaterial);
-    mainGroup.add(lineSegments);
-
-    const nodeGeo = new THREE.SphereGeometry(isReveal ? 0.08 : 0.06, 8, 8);
-    const nodeMat = new THREE.MeshBasicMaterial({ color: 0xc084fc });
-    const nodesGroup = new THREE.Group();
-    for (let i = 0; i < 16; i++) {
-      const mesh = new THREE.Mesh(nodeGeo, nodeMat);
-      nodesGroup.add(mesh);
-    }
-    mainGroup.add(nodesGroup);
-
-    const coreGeo = new THREE.IcosahedronGeometry(isReveal ? 0.85 : 0.65, 0);
-    const coreMat = new THREE.MeshBasicMaterial({
-      color: 0xfde68a,
-      wireframe: true,
+    // Create connections (Neural Links) for the 'M'
+    const edges = [
+      [0,1], [1,2], // Left leg
+      [2,3], [3,4], // Left diag
+      [4,5], [5,6], // Right diag
+      [6,7], [7,8], // Right leg
+    ];
+    
+    const mLineGeo = new THREE.BufferGeometry();
+    const mLinePos = new Float32Array(edges.length * 6);
+    let lIdx = 0;
+    edges.forEach(edge => {
+      const p1 = mNodes[edge[0]];
+      const p2 = mNodes[edge[1]];
+      mLinePos[lIdx++] = p1.x; mLinePos[lIdx++] = p1.y; mLinePos[lIdx++] = p1.z;
+      mLinePos[lIdx++] = p2.x; mLinePos[lIdx++] = p2.y; mLinePos[lIdx++] = p2.z;
+    });
+    mLineGeo.setAttribute('position', new THREE.BufferAttribute(mLinePos, 3));
+    
+    const mLineMat = new THREE.LineBasicMaterial({
+      color: 0xc084fc, // Purple
+      linewidth: 3,
       transparent: true,
       opacity: 0.9
     });
-    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    mainGroup.add(coreMesh);
+    const mLines = new THREE.LineSegments(mLineGeo, mLineMat);
+    mGroup.add(mLines);
 
-    if (isReveal) {
-      const pCount = 250;
-      const pGeo = new THREE.BufferGeometry();
-      const pPos = new Float32Array(pCount * 3);
-      for (let p = 0; p < pCount * 3; p += 3) {
-        pPos[p] = (Math.random() - 0.5) * 8;
-        pPos[p+1] = (Math.random() - 0.5) * 8;
-        pPos[p+2] = (Math.random() - 0.5) * 8;
-      }
-      pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-      const pMat = new THREE.PointsMaterial({ color: 0x22d3ee, size: 0.04, transparent: true, opacity: 0.7 });
-      const particles = new THREE.Points(pGeo, pMat);
-      scene.add(particles);
+    mainGroup.add(mGroup);
+
+    // Subtle background lines linking random nodes on the globe
+    const bgEdgesCount = isReveal ? 300 : 50;
+    const bgLinePos = new Float32Array(bgEdgesCount * 6);
+    for(let i=0; i<bgEdgesCount; i++){
+       let idx1 = Math.floor(Math.random() * particleCount);
+       let idx2 = Math.floor(Math.random() * particleCount);
+       bgLinePos[i*6+0] = bgPositions[idx1*3];
+       bgLinePos[i*6+1] = bgPositions[idx1*3+1];
+       bgLinePos[i*6+2] = bgPositions[idx1*3+2];
+       bgLinePos[i*6+3] = bgPositions[idx2*3];
+       bgLinePos[i*6+4] = bgPositions[idx2*3+1];
+       bgLinePos[i*6+5] = bgPositions[idx2*3+2];
     }
+    const bgLineGeo = new THREE.BufferGeometry();
+    bgLineGeo.setAttribute('position', new THREE.BufferAttribute(bgLinePos, 3));
+    const bgLineMat = new THREE.LineBasicMaterial({
+      color: 0x3b82f6,
+      transparent: true,
+      opacity: 0.15
+    });
+    mainGroup.add(new THREE.LineSegments(bgLineGeo, bgLineMat));
 
     let mouseX = 0, mouseY = 0;
     let targetX = 0, targetY = 0;
-    window.addEventListener('mousemove', (e) => {
-      const windowHalfX = window.innerWidth / 2;
-      const windowHalfY = window.innerHeight / 2;
-      mouseX = (e.clientX - windowHalfX) / windowHalfX;
-      mouseY = (e.clientY - windowHalfY) / windowHalfY;
-    });
+    
+    if (isReveal) {
+      window.addEventListener('mousemove', (e) => {
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+        mouseX = (e.clientX - windowHalfX) / windowHalfX;
+        mouseY = (e.clientY - windowHalfY) / windowHalfY;
+      });
+    }
 
-    let angleZW = 0;
-    let angleXW = 0;
+    const clock = new THREE.Clock();
 
     function animate() {
       requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+      const time = clock.getElapsedTime();
 
-      angleZW += 0.015;
-      angleXW += 0.01;
-
-      const distance = 2.8;
-      const projected3D = [];
-
-      for (let i = 0; i < 16; i++) {
-        let [x, y, z, w] = vertices4D[i];
-
-        let cosZW = Math.cos(angleZW), sinZW = Math.sin(angleZW);
-        let z1 = z * cosZW - w * sinZW;
-        let w1 = z * sinZW + w * cosZW;
-
-        let cosXW = Math.cos(angleXW), sinXW = Math.sin(angleXW);
-        let x1 = x * cosXW - w1 * sinXW;
-        let w2 = x * sinXW + w1 * cosXW;
-
-        let wPerspective = 1 / (distance - w2);
-        let px = x1 * wPerspective * 1.8;
-        let py = y * wPerspective * 1.8;
-        let pz = z1 * wPerspective * 1.8;
-
-        projected3D.push([px, py, pz]);
-        nodesGroup.children[i].position.set(px, py, pz);
-      }
-
-      const posAttr = lineGeometry.attributes.position;
-      let posIdx = 0;
-      for (let i = 0; i < edges.length; i++) {
-        const p1 = projected3D[edges[i][0]];
-        const p2 = projected3D[edges[i][1]];
-
-        posAttr.array[posIdx++] = p1[0];
-        posAttr.array[posIdx++] = p1[1];
-        posAttr.array[posIdx++] = p1[2];
-
-        posAttr.array[posIdx++] = p2[0];
-        posAttr.array[posIdx++] = p2[1];
-        posAttr.array[posIdx++] = p2[2];
-      }
-      posAttr.needsUpdate = true;
-
-      coreMesh.rotation.x += 0.01;
-      coreMesh.rotation.y += 0.015;
+      // Breathing animation for the M nodes
+      mGroup.children.forEach((child, index) => {
+        if (child.isMesh) {
+          const scale = 1.0 + Math.sin(time * 2 + index) * 0.2;
+          child.scale.set(scale, scale, scale);
+        }
+      });
 
       targetX += (mouseX - targetX) * 0.05;
       targetY += (mouseY - targetY) * 0.05;
-      mainGroup.rotation.y = targetX * 0.8 + angleZW * 0.2;
-      mainGroup.rotation.x = targetY * 0.8;
+      
+      mainGroup.rotation.y += delta * 0.2;
+      mainGroup.rotation.x += delta * 0.1;
+      
+      if (isReveal) {
+        mainGroup.rotation.y += targetX * 0.1;
+        mainGroup.rotation.x += targetY * 0.1;
+      }
 
-      renderer.render(scene, camera);
+      composer.render();
     }
 
     animate();
