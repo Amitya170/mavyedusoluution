@@ -137,146 +137,101 @@ function init4DLogoEngine() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.z = isReveal ? 6.0 : 4.0;
+    camera.position.z = isReveal ? 5.5 : 4.5;
 
+    // Use alpha: true and no EffectComposer to perfectly match the website CSS background!
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.toneMapping = THREE.ReinhardToneMapping;
+    renderer.setClearColor(0x000000, 0); // Fully transparent
     container.appendChild(renderer.domElement);
-
-    const renderScene = new THREE.RenderPass(scene, camera);
-    renderScene.clearColor = new THREE.Color(0, 0, 0);
-    renderScene.clearAlpha = 0;
-
-    const bloomPass = new THREE.UnrealBloomPass(
-      new THREE.Vector2(width, height),
-      1.5, // strength
-      0.4, // radius
-      0.85 // threshold
-    );
-    bloomPass.exposure = 1.0;
-
-    const composer = new THREE.EffectComposer(renderer);
-    composer.addPass(renderScene);
-    composer.addPass(bloomPass);
 
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
 
-    // 1. Background Globe Network (Particles)
-    const particleCount = isReveal ? 1000 : 300;
-    const bgGeometry = new THREE.BufferGeometry();
-    const bgPositions = new Float32Array(particleCount * 3);
-    const radius = 2.0;
+    // 1. Draw the Solid "M" Shape
+    const shape = new THREE.Shape();
+    shape.moveTo(-1, -1);
+    shape.lineTo(-1, 1);
+    shape.lineTo(-0.2, 0.2); // inner left dip
+    shape.lineTo(0.2, 0.2);  // inner right dip
+    shape.lineTo(1, 1);
+    shape.lineTo(1, -1);
+    shape.lineTo(0.5, -1);
+    shape.lineTo(0.5, 0.5);
+    shape.lineTo(0, 0);
+    shape.lineTo(-0.5, 0.5);
+    shape.lineTo(-0.5, -1);
+    shape.lineTo(-1, -1);
 
-    for (let i = 0; i < particleCount; i++) {
-      const phi = Math.acos(-1 + (2 * i) / particleCount);
-      const theta = Math.sqrt(particleCount * Math.PI) * phi;
-      bgPositions[i * 3] = radius * Math.cos(theta) * Math.sin(phi);
-      bgPositions[i * 3 + 1] = radius * Math.sin(theta) * Math.sin(phi);
-      bgPositions[i * 3 + 2] = radius * Math.cos(phi);
+    const extrudeSettings = {
+      depth: 0.4,
+      bevelEnabled: true,
+      bevelSegments: 4,
+      bevelSteps: 4,
+      bevelThickness: 0.08,
+      bevelSize: 0.08
+    };
+    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    // Center the geometry
+    geometry.computeBoundingBox();
+    const offset = geometry.boundingBox.getCenter(new THREE.Vector3());
+    geometry.translate(-offset.x, -offset.y, -offset.z);
+
+    // 2. High-End Glass Material (MeshPhysicalMaterial)
+    const glassMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      metalness: 0.2,
+      roughness: 0.05,
+      transmission: 1.0, // Flawless glass
+      ior: 1.5,
+      thickness: 1.5,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.1,
+      transparent: true
+    });
+    
+    const mMesh = new THREE.Mesh(geometry, glassMaterial);
+    
+    if(!isReveal){
+        mMesh.scale.set(1.5, 1.5, 1.5);
     }
-    bgGeometry.setAttribute('position', new THREE.BufferAttribute(bgPositions, 3));
     
-    // Shader material for glowing points
-    const bgMaterial = new THREE.PointsMaterial({
-      color: 0x3b82f6,
-      size: isReveal ? 0.05 : 0.02,
-      transparent: true,
-      opacity: 0.4,
-      blending: THREE.AdditiveBlending
-    });
-    const bgPoints = new THREE.Points(bgGeometry, bgMaterial);
-    mainGroup.add(bgPoints);
+    mainGroup.add(mMesh);
 
-    // 2. The Neural "M" points
-    const mRadius = 2.1;
-    // Points forming an 'M'
-    const mNodes = [
-      new THREE.Vector3(-1.0, -1.0, 1.0), // 0: Bottom left
-      new THREE.Vector3(-1.0, 0.0, 1.0),  // 1: Mid left
-      new THREE.Vector3(-1.0, 1.0, 1.0),  // 2: Top left
-      new THREE.Vector3(-0.5, 0.5, 1.2),  // 3: Inner left diag
-      new THREE.Vector3(0.0, 0.0, 1.4),   // 4: Center bottom
-      new THREE.Vector3(0.5, 0.5, 1.2),   // 5: Inner right diag
-      new THREE.Vector3(1.0, 1.0, 1.0),   // 6: Top right
-      new THREE.Vector3(1.0, 0.0, 1.0),   // 7: Mid right
-      new THREE.Vector3(1.0, -1.0, 1.0)   // 8: Bottom right
-    ];
+    // 3. Orbiting AI Data Orbs
+    const orbGroup = new THREE.Group();
+    const orbGeo = new THREE.SphereGeometry(isReveal ? 0.2 : 0.4, 32, 32);
     
-    // Normalize and project onto sphere
-    mNodes.forEach(p => {
-      p.normalize().multiplyScalar(mRadius);
-    });
+    // Cyan Orb
+    const orbMat1 = new THREE.MeshBasicMaterial({ color: 0x22d3ee }); 
+    const orb1 = new THREE.Mesh(orbGeo, orbMat1);
+    orb1.position.set(1.5, 0, 0);
+    orbGroup.add(orb1);
+    
+    // Purple Orb
+    const orbMat2 = new THREE.MeshBasicMaterial({ color: 0xc084fc }); 
+    const orb2 = new THREE.Mesh(orbGeo, orbMat2);
+    orb2.position.set(-1.5, 0, 0);
+    orbGroup.add(orb2);
+    
+    mainGroup.add(orbGroup);
 
-    const mGroup = new THREE.Group();
-    
-    // Create glowing nodes for the 'M'
-    const mNodeGeo = new THREE.SphereGeometry(isReveal ? 0.1 : 0.05, 16, 16);
-    const mNodeMat = new THREE.MeshBasicMaterial({
-      color: 0x22d3ee, // Cyan
-      transparent: true,
-      opacity: 0.9,
-    });
-    
-    mNodes.forEach(p => {
-      const mesh = new THREE.Mesh(mNodeGeo, mNodeMat);
-      mesh.position.copy(p);
-      mGroup.add(mesh);
-    });
+    // 4. Lighting setup for beautiful glass reflections
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
 
-    // Create connections (Neural Links) for the 'M'
-    const edges = [
-      [0,1], [1,2], // Left leg
-      [2,3], [3,4], // Left diag
-      [4,5], [5,6], // Right diag
-      [6,7], [7,8], // Right leg
-    ];
-    
-    const mLineGeo = new THREE.BufferGeometry();
-    const mLinePos = new Float32Array(edges.length * 6);
-    let lIdx = 0;
-    edges.forEach(edge => {
-      const p1 = mNodes[edge[0]];
-      const p2 = mNodes[edge[1]];
-      mLinePos[lIdx++] = p1.x; mLinePos[lIdx++] = p1.y; mLinePos[lIdx++] = p1.z;
-      mLinePos[lIdx++] = p2.x; mLinePos[lIdx++] = p2.y; mLinePos[lIdx++] = p2.z;
-    });
-    mLineGeo.setAttribute('position', new THREE.BufferAttribute(mLinePos, 3));
-    
-    const mLineMat = new THREE.LineBasicMaterial({
-      color: 0xc084fc, // Purple
-      linewidth: 3,
-      transparent: true,
-      opacity: 0.9
-    });
-    const mLines = new THREE.LineSegments(mLineGeo, mLineMat);
-    mGroup.add(mLines);
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
+    dirLight1.position.set(5, 5, 5);
+    scene.add(dirLight1);
 
-    mainGroup.add(mGroup);
+    const pointLight1 = new THREE.PointLight(0x22d3ee, 3, 10);
+    pointLight1.position.set(-3, 3, 3);
+    scene.add(pointLight1);
 
-    // Subtle background lines linking random nodes on the globe
-    const bgEdgesCount = isReveal ? 300 : 50;
-    const bgLinePos = new Float32Array(bgEdgesCount * 6);
-    for(let i=0; i<bgEdgesCount; i++){
-       let idx1 = Math.floor(Math.random() * particleCount);
-       let idx2 = Math.floor(Math.random() * particleCount);
-       bgLinePos[i*6+0] = bgPositions[idx1*3];
-       bgLinePos[i*6+1] = bgPositions[idx1*3+1];
-       bgLinePos[i*6+2] = bgPositions[idx1*3+2];
-       bgLinePos[i*6+3] = bgPositions[idx2*3];
-       bgLinePos[i*6+4] = bgPositions[idx2*3+1];
-       bgLinePos[i*6+5] = bgPositions[idx2*3+2];
-    }
-    const bgLineGeo = new THREE.BufferGeometry();
-    bgLineGeo.setAttribute('position', new THREE.BufferAttribute(bgLinePos, 3));
-    const bgLineMat = new THREE.LineBasicMaterial({
-      color: 0x3b82f6,
-      transparent: true,
-      opacity: 0.15
-    });
-    mainGroup.add(new THREE.LineSegments(bgLineGeo, bgLineMat));
+    const pointLight2 = new THREE.PointLight(0xc084fc, 3, 10);
+    pointLight2.position.set(3, -3, -3);
+    scene.add(pointLight2);
 
     let mouseX = 0, mouseY = 0;
     let targetX = 0, targetY = 0;
@@ -297,26 +252,27 @@ function init4DLogoEngine() {
       const delta = clock.getDelta();
       const time = clock.getElapsedTime();
 
-      // Breathing animation for the M nodes
-      mGroup.children.forEach((child, index) => {
-        if (child.isMesh) {
-          const scale = 1.0 + Math.sin(time * 2 + index) * 0.2;
-          child.scale.set(scale, scale, scale);
-        }
-      });
+      // Rotate the orbiting data orbs around the glass M
+      orbGroup.rotation.y += delta * 1.5;
+      orbGroup.rotation.z += delta * 0.5;
+
+      // Pulse the orbs slightly
+      const scale = 1.0 + Math.sin(time * 3) * 0.15;
+      orb1.scale.set(scale, scale, scale);
+      orb2.scale.set(scale, scale, scale);
 
       targetX += (mouseX - targetX) * 0.05;
       targetY += (mouseY - targetY) * 0.05;
       
-      mainGroup.rotation.y += delta * 0.2;
-      mainGroup.rotation.x += delta * 0.1;
+      mainGroup.rotation.y += delta * 0.3;
+      mainGroup.rotation.x += delta * 0.15;
       
       if (isReveal) {
-        mainGroup.rotation.y += targetX * 0.1;
-        mainGroup.rotation.x += targetY * 0.1;
+        mainGroup.rotation.y += targetX * 0.15;
+        mainGroup.rotation.x += targetY * 0.15;
       }
 
-      composer.render();
+      renderer.render(scene, camera);
     }
 
     animate();
