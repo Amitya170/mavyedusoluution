@@ -145,130 +145,167 @@ function init4DLogoEngine() {
     renderer.setClearColor(0x000000, 0); 
     container.appendChild(renderer.domElement);
 
-    // --- PRO ENHANCEMENT: Dynamic Environment Map for Realistic Glass Reflections ---
-    const envCanvas = document.createElement('canvas');
-    envCanvas.width = 512;
-    envCanvas.height = 512;
-    const ctx = envCanvas.getContext('2d');
-    const grad = ctx.createLinearGradient(0, 0, 512, 512);
-    grad.addColorStop(0, '#020617'); // Dark slate
-    grad.addColorStop(0.3, '#22d3ee'); // Cyan reflection
-    grad.addColorStop(0.7, '#c084fc'); // Purple reflection
-    grad.addColorStop(1, '#020617');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 512, 512);
-    ctx.fillStyle = '#ffffff'; // Bright light sources for sharp specular hits
-    ctx.beginPath(); ctx.arc(128, 128, 40, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(384, 384, 60, 0, Math.PI*2); ctx.fill();
-    
-    const envTexture = new THREE.CanvasTexture(envCanvas);
-    envTexture.mapping = THREE.EquirectangularReflectionMapping;
-    scene.environment = envTexture; 
-
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
 
-    // 1. Draw the Solid "M" Shape
-    const shape = new THREE.Shape();
-    shape.moveTo(-1, -1);
-    shape.lineTo(-1, 1);
-    shape.lineTo(-0.2, 0.2);
-    shape.lineTo(0.2, 0.2); 
-    shape.lineTo(1, 1);
-    shape.lineTo(1, -1);
-    shape.lineTo(0.5, -1);
-    shape.lineTo(0.5, 0.5);
-    shape.lineTo(0, 0);
-    shape.lineTo(-0.5, 0.5);
-    shape.lineTo(-0.5, -1);
-    shape.lineTo(-1, -1);
+    // --- 1. HOLOGRAPHIC GLITCH CORE (Custom GLSL) ---
+    const vertexShader = 
+      "uniform float time;\n" +
+      "varying vec2 vUv;\n" +
+      "varying vec3 vNormal;\n" +
+      "varying vec3 vPosition;\n" +
+      "\n" +
+      "// Simplex 3D Noise\n" +
+      "vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}\n" +
+      "vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}\n" +
+      "float snoise(vec3 v){ \n" +
+      "  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;\n" +
+      "  const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);\n" +
+      "  vec3 i  = floor(v + dot(v, C.yyy) );\n" +
+      "  vec3 x0 = v - i + dot(i, C.xxx) ;\n" +
+      "  vec3 g = step(x0.yzx, x0.xyz);\n" +
+      "  vec3 l = 1.0 - g;\n" +
+      "  vec3 i1 = min( g.xyz, l.zxy );\n" +
+      "  vec3 i2 = max( g.xyz, l.zxy );\n" +
+      "  vec3 x1 = x0 - i1 + 1.0 * C.xxx;\n" +
+      "  vec3 x2 = x0 - i2 + 2.0 * C.xxx;\n" +
+      "  vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;\n" +
+      "  i = mod(i, 289.0 ); \n" +
+      "  vec4 p = permute( permute( permute( \n" +
+      "             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))\n" +
+      "           + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) \n" +
+      "           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));\n" +
+      "  float n_ = 1.0/7.0;\n" +
+      "  vec3  ns = n_ * D.wyz - D.xzx;\n" +
+      "  vec4 j = p - 49.0 * floor(p * ns.z *ns.z);\n" +
+      "  vec4 x_ = floor(j * ns.z);\n" +
+      "  vec4 y_ = floor(j - 7.0 * x_ );\n" +
+      "  vec4 x = x_ *ns.x + ns.yyyy;\n" +
+      "  vec4 y = y_ *ns.x + ns.yyyy;\n" +
+      "  vec4 h = 1.0 - abs(x) - abs(y);\n" +
+      "  vec4 b0 = vec4( x.xy, y.xy );\n" +
+      "  vec4 b1 = vec4( x.zw, y.zw );\n" +
+      "  vec4 s0 = floor(b0)*2.0 + 1.0;\n" +
+      "  vec4 s1 = floor(b1)*2.0 + 1.0;\n" +
+      "  vec4 sh = -step(h, vec4(0.0));\n" +
+      "  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;\n" +
+      "  vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;\n" +
+      "  vec3 p0 = vec3(a0.xy,h.x);\n" +
+      "  vec3 p1 = vec3(a0.zw,h.y);\n" +
+      "  vec3 p2 = vec3(a1.xy,h.z);\n" +
+      "  vec3 p3 = vec3(a1.zw,h.w);\n" +
+      "  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));\n" +
+      "  p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;\n" +
+      "  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);\n" +
+      "  m = m * m;\n" +
+      "  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );\n" +
+      "}\n" +
+      "void main() {\n" +
+      "  vUv = uv;\n" +
+      "  vNormal = normal;\n" +
+      "  vec3 pos = position;\n" +
+      "  // Liquid metal displacement\n" +
+      "  float noise = snoise(vec3(pos.x * 2.0, pos.y * 2.0, pos.z * 2.0 + time * 0.8));\n" +
+      "  pos += normal * noise * 0.15;\n" +
+      "  vPosition = pos;\n" +
+      "  gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);\n" +
+      "}\n";
 
-    const extrudeSettings = {
-      depth: 0.4,
-      bevelEnabled: true,
-      bevelSegments: 8, // Pro: Smoother bevels
-      bevelSteps: 4,
-      bevelThickness: 0.08,
-      bevelSize: 0.08
-    };
-    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    geometry.computeBoundingBox();
-    const offset = geometry.boundingBox.getCenter(new THREE.Vector3());
-    geometry.translate(-offset.x, -offset.y, -offset.z);
+    const fragmentShader = 
+      "uniform float time;\n" +
+      "varying vec2 vUv;\n" +
+      "varying vec3 vNormal;\n" +
+      "varying vec3 vPosition;\n" +
+      "void main() {\n" +
+      "  // Holographic scanlines\n" +
+      "  float scanline = sin(vUv.y * 80.0 - time * 10.0) * 0.5 + 0.5;\n" +
+      "  // RGB glitch\n" +
+      "  float glitch = step(0.98, fract(sin(dot(vUv.xy, vec2(12.9898,78.233))) * 43758.5453 + time));\n" +
+      "  \n" +
+      "  vec3 baseColor = vec3(0.133, 0.827, 0.933); // Cyan\n" +
+      "  vec3 accentColor = vec3(0.753, 0.518, 0.988); // Purple\n" +
+      "  \n" +
+      "  vec3 color = mix(baseColor, accentColor, vUv.y + scanline*0.2);\n" +
+      "  color += vec3(glitch * 0.8, 0.0, glitch * 0.8); // Glitch color flash\n" +
+      "  \n" +
+      "  // Fresnel edge glow\n" +
+      "  vec3 viewDirection = normalize(cameraPosition - vPosition);\n" +
+      "  float fresnel = dot(viewDirection, vNormal);\n" +
+      "  fresnel = clamp(1.0 - fresnel, 0.0, 1.0);\n" +
+      "  fresnel = pow(fresnel, 3.0);\n" +
+      "  \n" +
+      "  color += fresnel * vec3(0.8, 0.8, 1.0);\n" +
+      "  float alpha = 0.4 + scanline * 0.2 + fresnel * 0.5;\n" +
+      "  gl_FragColor = vec4(color, alpha);\n" +
+      "}\n";
 
-    // 2. Pro Glass Material (MeshPhysicalMaterial with Attenuation)
-    const glassMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
-      metalness: 0.1,
-      roughness: 0.02, // Flawless surface
-      transmission: 1.0, // Fully glass
-      ior: 1.65, // High index of refraction for heavy distortion
-      thickness: 1.5,
-      attenuationColor: new THREE.Color(0xc084fc), // Absorbs light, giving thick parts a deep purple tint
-      attenuationDistance: 1.5,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.05,
+    const coreUniforms = { time: { value: 0 }, cameraPosition: { value: camera.position } };
+    const coreGeo = new THREE.SphereGeometry(isReveal ? 0.7 : 0.5, 64, 64);
+    const coreMat = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: coreUniforms,
       transparent: true,
-      envMapIntensity: 2.0 // Boosts reflections
+      blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide
     });
-    
-    const mMesh = new THREE.Mesh(geometry, glassMaterial);
-    
-    // --- PRO ENHANCEMENT: Inner Metallic Core ---
-    // A dark metallic core sitting inside the glass makes it look incredibly sophisticated
-    const coreMaterial = new THREE.MeshStandardMaterial({
-      color: 0x0f172a,
-      metalness: 1.0,
-      roughness: 0.2,
-      envMapIntensity: 1.5
-    });
-    const coreMesh = new THREE.Mesh(geometry, coreMaterial);
-    coreMesh.scale.set(0.85, 0.85, 0.6); // Scale down to fit inside the glass casing
-    mMesh.add(coreMesh);
-    
-    if(!isReveal){
-        mMesh.scale.set(1.5, 1.5, 1.5);
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    mainGroup.add(coreMesh);
+
+    // --- 2. 4D HYPER-M POINTS ---
+    const vertices4D = [
+      [-1.0, -1.0, 1.0, 1.0], [ -1.0,  0.0, 1.0, 1.0], [ -1.0,  1.0, 1.0, 1.0],
+      [-0.5,  0.5, 1.2, 1.0], [  0.0,  0.0, 1.4, 1.0], [  0.5,  0.5, 1.2, 1.0],
+      [ 1.0,  1.0, 1.0, 1.0], [  1.0,  0.0, 1.0, 1.0], [  1.0, -1.0, 1.0, 1.0],
+      // W=-1 copy
+      [-1.0, -1.0, 1.0,-1.0], [ -1.0,  0.0, 1.0,-1.0], [ -1.0,  1.0, 1.0,-1.0],
+      [-0.5,  0.5, 1.2,-1.0], [  0.0,  0.0, 1.4,-1.0], [  0.5,  0.5, 1.2,-1.0],
+      [ 1.0,  1.0, 1.0,-1.0], [  1.0,  0.0, 1.0,-1.0], [  1.0, -1.0, 1.0,-1.0]
+    ];
+    const mEdges = [
+      [0,1], [1,2], [2,3], [3,4], [4,5], [5,6], [6,7], [7,8], // front
+      [9,10],[10,11],[11,12],[12,13],[13,14],[14,15],[15,16],[16,17], // back
+      [0,9],[1,10],[2,11],[3,12],[4,13],[5,14],[6,15],[7,16],[8,17] // W links
+    ];
+
+    // --- 3. DYNAMIC FLUID PARTICLE SWARM ---
+    const pCount = isReveal ? 5000 : 1000;
+    const pGeo = new THREE.BufferGeometry();
+    const pPos = new Float32Array(pCount * 3);
+    const pEdgesArr = new Int32Array(pCount); 
+    const pLerps = new Float32Array(pCount); 
+
+    for(let i=0; i<pCount; i++) {
+      pPos[i*3] = (Math.random() - 0.5) * 5;
+      pPos[i*3+1] = (Math.random() - 0.5) * 5;
+      pPos[i*3+2] = (Math.random() - 0.5) * 5;
+      pEdgesArr[i] = Math.floor(Math.random() * mEdges.length);
+      pLerps[i] = Math.random();
     }
-    mainGroup.add(mMesh);
-
-    // 3. Orbiting AI Data Orbs with Faux Glow
-    const orbGroup = new THREE.Group();
-    const orbGeo = new THREE.SphereGeometry(isReveal ? 0.15 : 0.3, 32, 32);
-    const glowGeo = new THREE.SphereGeometry(isReveal ? 0.3 : 0.6, 32, 32);
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+    const pMat = new THREE.PointsMaterial({
+      color: 0xc084fc,
+      size: isReveal ? 0.05 : 0.03,
+      transparent: true,
+      opacity: 0.9,
+      blending: THREE.AdditiveBlending
+    });
+    const swarm = new THREE.Points(pGeo, pMat);
+    mainGroup.add(swarm);
     
-    // Cyan Orb
-    const orbMat1 = new THREE.MeshBasicMaterial({ color: 0x22d3ee }); 
-    const orb1 = new THREE.Mesh(orbGeo, orbMat1);
-    orb1.position.set(1.6, 0.4, 0);
-    const glowMat1 = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
-    orb1.add(new THREE.Mesh(glowGeo, glowMat1)); // Additive glow
-    orbGroup.add(orb1);
-    
-    // Purple Orb
-    const orbMat2 = new THREE.MeshBasicMaterial({ color: 0xc084fc }); 
-    const orb2 = new THREE.Mesh(orbGeo, orbMat2);
-    orb2.position.set(-1.6, -0.4, 0);
-    const glowMat2 = new THREE.MeshBasicMaterial({ color: 0xc084fc, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
-    orb2.add(new THREE.Mesh(glowGeo, glowMat2)); // Additive glow
-    orbGroup.add(orb2);
-    
-    mainGroup.add(orbGroup);
-
-    // 4. Lighting setup
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
-    dirLight1.position.set(5, 5, 5);
-    scene.add(dirLight1);
-
-    const pointLight1 = new THREE.PointLight(0x22d3ee, 3, 10);
-    pointLight1.position.set(-3, 3, 3);
-    scene.add(pointLight1);
-
-    const pointLight2 = new THREE.PointLight(0xc084fc, 3, 10);
-    pointLight2.position.set(3, -3, -3);
-    scene.add(pointLight2);
+    // Add a second cyan swarm for extreme density
+    const swarm2Geo = new THREE.BufferGeometry();
+    const swarm2Pos = new Float32Array(pPos); // Copy initial positions
+    swarm2Geo.setAttribute('position', new THREE.BufferAttribute(swarm2Pos, 3));
+    const swarm2Mat = new THREE.PointsMaterial({
+      color: 0x22d3ee,
+      size: isReveal ? 0.03 : 0.015,
+      transparent: true,
+      opacity: 0.9,
+      blending: THREE.AdditiveBlending
+    });
+    const swarm2 = new THREE.Points(swarm2Geo, swarm2Mat);
+    mainGroup.add(swarm2);
 
     let mouseX = 0, mouseY = 0;
     let targetX = 0, targetY = 0;
@@ -286,28 +323,81 @@ function init4DLogoEngine() {
 
     function animate() {
       requestAnimationFrame(animate);
-      const delta = clock.getDelta();
       const time = clock.getElapsedTime();
+      coreUniforms.time.value = time;
+      coreUniforms.cameraPosition.value.copy(camera.position);
 
-      // Dynamic cinematic orbiting
-      orbGroup.rotation.y += delta * 1.5;
-      orbGroup.rotation.z += delta * 0.8;
-      orbGroup.rotation.x += delta * 0.4;
+      // Rotate 4D Engine
+      let angleZW = time * 0.5;
+      let angleXW = time * 0.3;
+      const projected3D = [];
 
-      // Pulse the orbs slightly
-      const scale = 1.0 + Math.sin(time * 4) * 0.15;
-      orb1.scale.set(scale, scale, scale);
-      orb2.scale.set(scale, scale, scale);
+      for(let i=0; i<vertices4D.length; i++) {
+        let [x, y, z, w] = vertices4D[i];
+        let cosZW = Math.cos(angleZW), sinZW = Math.sin(angleZW);
+        let z1 = z * cosZW - w * sinZW;
+        let w1 = z * sinZW + w * cosZW;
+        let cosXW = Math.cos(angleXW), sinXW = Math.sin(angleXW);
+        let x1 = x * cosXW - w1 * sinXW;
+        let w2 = x * sinXW + w1 * cosXW;
+        let distance = 3.0;
+        let wPersp = 1 / (distance - w2);
+        projected3D.push([
+          x1 * wPersp * 1.5,
+          y * wPersp * 1.5,
+          z1 * wPersp * 1.5
+        ]);
+      }
+
+      // Update Swarm 1 (Purple)
+      const positions = swarm.geometry.attributes.position.array;
+      for(let i=0; i<pCount; i++) {
+        const edgeIdx = pEdgesArr[i];
+        const p1 = projected3D[mEdges[edgeIdx][0]];
+        const p2 = projected3D[mEdges[edgeIdx][1]];
+        const lerp = pLerps[i];
+        
+        // Liquid flow along edges
+        const flowLerp = (Math.sin(time * 2.0 + i) * 0.5 + 0.5 + lerp) % 1.0;
+        const targetX = p1[0] + (p2[0] - p1[0]) * flowLerp;
+        const targetY = p1[1] + (p2[1] - p1[1]) * flowLerp;
+        const targetZ = p1[2] + (p2[2] - p1[2]) * flowLerp;
+        
+        // Swarm turbulence
+        const noiseX = Math.sin(time * 5.0 + i) * 0.1;
+        const noiseY = Math.cos(time * 4.0 + i) * 0.1;
+        const noiseZ = Math.sin(time * 3.0 + i) * 0.1;
+        
+        positions[i*3] += (targetX + noiseX - positions[i*3]) * 0.1;
+        positions[i*3+1] += (targetY + noiseY - positions[i*3+1]) * 0.1;
+        positions[i*3+2] += (targetZ + noiseZ - positions[i*3+2]) * 0.1;
+      }
+      swarm.geometry.attributes.position.needsUpdate = true;
+      
+      // Update Swarm 2 (Cyan) with offset flow
+      const pos2 = swarm2.geometry.attributes.position.array;
+      for(let i=0; i<pCount; i++) {
+        const edgeIdx = pEdgesArr[i];
+        const p1 = projected3D[mEdges[edgeIdx][0]];
+        const p2 = projected3D[mEdges[edgeIdx][1]];
+        const flowLerp = (Math.cos(time * 1.5 + i) * 0.5 + 0.5 + pLerps[i]) % 1.0;
+        const targetX = p1[0] + (p2[0] - p1[0]) * flowLerp;
+        const targetY = p1[1] + (p2[1] - p1[1]) * flowLerp;
+        const targetZ = p1[2] + (p2[2] - p1[2]) * flowLerp;
+        pos2[i*3] += (targetX - pos2[i*3]) * 0.15;
+        pos2[i*3+1] += (targetY - pos2[i*3+1]) * 0.15;
+        pos2[i*3+2] += (targetZ - pos2[i*3+2]) * 0.15;
+      }
+      swarm2.geometry.attributes.position.needsUpdate = true;
 
       targetX += (mouseX - targetX) * 0.05;
       targetY += (mouseY - targetY) * 0.05;
       
-      mainGroup.rotation.y += delta * 0.3;
-      mainGroup.rotation.x += delta * 0.15;
-      
       if (isReveal) {
         mainGroup.rotation.y += targetX * 0.15;
         mainGroup.rotation.x += targetY * 0.15;
+      } else {
+        mainGroup.rotation.y += 0.01;
       }
 
       renderer.render(scene, camera);
