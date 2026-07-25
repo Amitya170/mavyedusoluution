@@ -1261,10 +1261,10 @@ function init4DLogoEngine() {
       targetY += (mouseY - targetY) * 0.05;
       
       if (isReveal) {
-        mainGroup.rotation.y += targetX * 0.15;
-        mainGroup.rotation.x += targetY * 0.15;
+        mainGroup.rotation.y += targetX * 0.02;
+        mainGroup.rotation.x += targetY * 0.02;
       } else {
-        mainGroup.rotation.y += 0.01;
+        mainGroup.rotation.y += 0.005;
       }
 
       renderer.render(scene, camera);
