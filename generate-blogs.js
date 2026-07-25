@@ -1261,8 +1261,13 @@ function init4DLogoEngine() {
       targetY += (mouseY - targetY) * 0.05;
       
       if (isReveal) {
-        mainGroup.rotation.y += targetX * 0.02;
-        mainGroup.rotation.x += targetY * 0.02;
+        if (animProgress >= 1.0) {
+          mainGroup.rotation.y += 0.005 + (targetX * 0.01);
+          mainGroup.rotation.x += (targetY * 0.01);
+        } else {
+          mainGroup.rotation.y = 0;
+          mainGroup.rotation.x = 0;
+        }
       } else {
         mainGroup.rotation.y += 0.005;
       }
