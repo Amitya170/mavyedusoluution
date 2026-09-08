@@ -11,7 +11,12 @@
 <meta property="og:description" content="Notes on shipping global product — localization, AI data, education solutions, and engineering from the Mavy EduSolutions team.">
 <meta property="og:url" content="https://www.mavyedusolution.com/blog/">
 <meta property="og:site_name" content="Mavy EduSolutions">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23050510'/%3E%3Ctext x='50' y='68' font-size='48' font-family='Georgia,serif' fill='%23a78bfa' text-anchor='middle'%3EME%3C/text%3E%3C/svg%3E">
+<meta property="og:image" content="https://www.mavyedusolution.com/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog | Mavy EduSolutions">
+<meta name="twitter:description" content="Notes on shipping global product — localization, AI data, education solutions, and engineering from the Mavy EduSolutions team.">
+<meta name="twitter:image" content="https://www.mavyedusolution.com/og-image.jpg">
+<link rel="icon" type="image/svg+xml" href="../logo.svg">
 <link rel="alternate" type="application/rss+xml" title="Mavy EduSolutions Blog" href="../rss.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,189 +76,165 @@
   .footer-social a:hover{border-color:var(--brass);color:var(--brass);}
   .footer-bottom{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem;max-width:1400px;margin:auto;flex-wrap:wrap;gap:1rem;padding-top:2rem;border-top:1px solid var(--line);}
   .footer-bottom a{color:var(--muted);margin-left:1.2rem;}.footer-bottom a:hover{color:var(--text);}
+  .scroll-top{position:fixed;bottom:2rem;right:2rem;z-index:90;width:48px;height:48px;border-radius:50%;background:var(--brass);color:#050510;border:none;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(167,139,250,0.35);opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s;pointer-events:none;}
+  .scroll-top.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+  .scroll-top:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(167,139,250,0.5);}
   @media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr;}}
   @media(max-width:768px){.footer-grid{grid-template-columns:1fr;}}
+  :focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
 </style>
 
 <!-- Three.js CDN for WebGL 4D Interactive Engine -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <script>
 function init4DLogoEngine() {
   if (typeof THREE === 'undefined') return;
-
-  const vertices4D = [];
-  for (let i = 0; i < 16; i++) {
-    vertices4D.push([
-      (i & 1) ? 1 : -1,
-      (i & 2) ? 1 : -1,
-      (i & 4) ? 1 : -1,
-      (i & 8) ? 1 : -1
-    ]);
-  }
-
-  const edges = [];
-  for (let i = 0; i < 16; i++) {
-    for (let j = i + 1; j < 16; j++) {
-      let diff = 0;
-      for (let k = 0; k < 4; k++) {
-        if (vertices4D[i][k] !== vertices4D[j][k]) diff++;
-      }
-      if (diff === 1) edges.push([i, j]);
-    }
-  }
-
   const containers = document.querySelectorAll('#webgl-reveal-container, .webgl-logo-container');
-
   containers.forEach(container => {
     if (container.dataset.webglInited) return;
     container.dataset.webglInited = 'true';
-
     const isReveal = container.id === 'webgl-reveal-container';
-    const width = isReveal ? 320 : 44;
-    const height = isReveal ? 320 : 44;
-
+    const width = isReveal ? 400 : 44;
+    const height = isReveal ? 400 : 44;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.z = isReveal ? 5.5 : 5.0;
-
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    camera.position.z = isReveal ? 5.5 : 4.5;
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0); 
     container.appendChild(renderer.domElement);
-
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
-
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x67e8f9,
-      transparent: true,
-      opacity: 0.85,
-      linewidth: isReveal ? 2 : 1
-    });
-
-    const lineGeometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(edges.length * 2 * 3);
-    lineGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-    const lineSegments = new THREE.LineSegments(lineGeometry, lineMaterial);
-    mainGroup.add(lineSegments);
-
-    const nodeGeo = new THREE.SphereGeometry(isReveal ? 0.08 : 0.06, 8, 8);
-    const nodeMat = new THREE.MeshBasicMaterial({ color: 0xc084fc });
-    const nodesGroup = new THREE.Group();
-    for (let i = 0; i < 16; i++) {
-      const mesh = new THREE.Mesh(nodeGeo, nodeMat);
-      nodesGroup.add(mesh);
+    const shapeM = new THREE.Shape();
+    shapeM.moveTo(-1, -1);
+    shapeM.lineTo(-1, 1);
+    shapeM.lineTo(-0.2, 0.2);
+    shapeM.lineTo(0.2, 0.2); 
+    shapeM.lineTo(1, 1);
+    shapeM.lineTo(1, -1);
+    shapeM.lineTo(0.5, -1);
+    shapeM.lineTo(0.5, 0.5);
+    shapeM.lineTo(0, 0);
+    shapeM.lineTo(-0.5, 0.5);
+    shapeM.lineTo(-0.5, -1);
+    shapeM.lineTo(-1, -1);
+    const shapeE = new THREE.Shape();
+    shapeE.moveTo(1.4, -1);
+    shapeE.lineTo(2.8, -1);
+    shapeE.lineTo(2.8, -0.5);
+    shapeE.lineTo(1.9, -0.5);
+    shapeE.lineTo(1.9, -0.2);
+    shapeE.lineTo(2.5, -0.2);
+    shapeE.lineTo(2.5, 0.2);
+    shapeE.lineTo(1.9, 0.2);
+    shapeE.lineTo(1.9, 0.5);
+    shapeE.lineTo(2.8, 0.5);
+    shapeE.lineTo(2.8, 1);
+    shapeE.lineTo(1.4, 1);
+    shapeE.lineTo(1.4, -1);
+    const extrudeSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, bevelSteps: 2, bevelThickness: 0.05, bevelSize: 0.05 };
+    const mGeo = new THREE.ExtrudeGeometry([shapeM, shapeE], extrudeSettings);
+    mGeo.computeBoundingBox();
+    const offset = mGeo.boundingBox.getCenter(new THREE.Vector3());
+    mGeo.translate(-offset.x, -offset.y, -offset.z);
+    mGeo.scale(1.0, 1.0, 1.0);
+    const edgesGeo = new THREE.EdgesGeometry(mGeo);
+    const edgePositions = edgesGeo.attributes.position.array;
+    const edgeCount = edgePositions.length / 6;
+    const pCount = 2000;
+    const pGeo = new THREE.BufferGeometry();
+    const pPos = new Float32Array(pCount * 3);
+    const pEdgesArr = new Int32Array(pCount); 
+    const pLerps = new Float32Array(pCount); 
+    for(let i=0; i<pCount; i++) {
+      pPos[i*3] = (Math.random() - 0.5) * 5;
+      pPos[i*3+1] = (Math.random() - 0.5) * 5;
+      pPos[i*3+2] = (Math.random() - 0.5) * 5;
+      pEdgesArr[i] = Math.floor(Math.random() * edgeCount);
+      pLerps[i] = Math.random();
     }
-    mainGroup.add(nodesGroup);
-
-    const coreGeo = new THREE.IcosahedronGeometry(isReveal ? 0.85 : 0.65, 0);
-    const coreMat = new THREE.MeshBasicMaterial({
-      color: 0xfde68a,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.9
-    });
-    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    mainGroup.add(coreMesh);
-
-    if (isReveal) {
-      const pCount = 250;
-      const pGeo = new THREE.BufferGeometry();
-      const pPos = new Float32Array(pCount * 3);
-      for (let p = 0; p < pCount * 3; p += 3) {
-        pPos[p] = (Math.random() - 0.5) * 8;
-        pPos[p+1] = (Math.random() - 0.5) * 8;
-        pPos[p+2] = (Math.random() - 0.5) * 8;
-      }
-      pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-      const pMat = new THREE.PointsMaterial({ color: 0x22d3ee, size: 0.04, transparent: true, opacity: 0.7 });
-      const particles = new THREE.Points(pGeo, pMat);
-      scene.add(particles);
-    }
-
-    let mouseX = 0, mouseY = 0;
-    let targetX = 0, targetY = 0;
-    window.addEventListener('mousemove', (e) => {
-      const windowHalfX = window.innerWidth / 2;
-      const windowHalfY = window.innerHeight / 2;
-      mouseX = (e.clientX - windowHalfX) / windowHalfX;
-      mouseY = (e.clientY - windowHalfY) / windowHalfY;
-    });
-
-    let angleZW = 0;
-    let angleXW = 0;
-
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+    const pMat = new THREE.PointsMaterial({ color: 0xc084fc, size: 0.02, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
+    const swarm = new THREE.Points(pGeo, pMat);
+    mainGroup.add(swarm);
+    const swarm2Geo = new THREE.BufferGeometry();
+    const swarm2Pos = new Float32Array(pPos);
+    swarm2Geo.setAttribute('position', new THREE.BufferAttribute(swarm2Pos, 3));
+    const swarm2Mat = new THREE.PointsMaterial({ color: 0x22d3ee, size: 0.015, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
+    const swarm2 = new THREE.Points(swarm2Geo, swarm2Mat);
+    mainGroup.add(swarm2);
+    const clock = new THREE.Clock();
     function animate() {
       requestAnimationFrame(animate);
-
-      angleZW += 0.015;
-      angleXW += 0.01;
-
-      const distance = 2.8;
-      const projected3D = [];
-
-      for (let i = 0; i < 16; i++) {
-        let [x, y, z, w] = vertices4D[i];
-
-        let cosZW = Math.cos(angleZW), sinZW = Math.sin(angleZW);
-        let z1 = z * cosZW - w * sinZW;
-        let w1 = z * sinZW + w * cosZW;
-
-        let cosXW = Math.cos(angleXW), sinXW = Math.sin(angleXW);
-        let x1 = x * cosXW - w1 * sinXW;
-        let w2 = x * sinXW + w1 * cosXW;
-
-        let wPerspective = 1 / (distance - w2);
-        let px = x1 * wPerspective * 1.8;
-        let py = y * wPerspective * 1.8;
-        let pz = z1 * wPerspective * 1.8;
-
-        projected3D.push([px, py, pz]);
-        nodesGroup.children[i].position.set(px, py, pz);
+      const time = clock.getElapsedTime();
+      const positions = swarm.geometry.attributes.position.array;
+      for(let i=0; i<pCount; i++) {
+        const edgeIdx = pEdgesArr[i];
+        const p1x = edgePositions[edgeIdx*6];
+        const p1y = edgePositions[edgeIdx*6 + 1];
+        const p1z = edgePositions[edgeIdx*6 + 2];
+        const p2x = edgePositions[edgeIdx*6 + 3];
+        const p2y = edgePositions[edgeIdx*6 + 4];
+        const p2z = edgePositions[edgeIdx*6 + 5];
+        const lerp = pLerps[i];
+        const flowLerp = (Math.sin(time * 3.0 + i) * 0.5 + 0.5 + lerp) % 1.0;
+        const distort1Z = Math.sin(time * 2.0 + p1x) * 0.1;
+        const distort2Z = Math.sin(time * 2.0 + p2x) * 0.1;
+        let targetX = p1x + (p2x - p1x) * flowLerp;
+        let targetY = p1y + (p2y - p1y) * flowLerp;
+        let targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
+        const noiseMulti = 0.02;
+        const noiseX = Math.sin(time * 8.0 + i) * noiseMulti;
+        const noiseY = Math.cos(time * 7.0 + i) * noiseMulti;
+        const noiseZ = Math.sin(time * 6.0 + i) * noiseMulti;
+        positions[i*3] += (targetX + noiseX - positions[i*3]) * 0.2;
+        positions[i*3+1] += (targetY + noiseY - positions[i*3+1]) * 0.2;
+        positions[i*3+2] += (targetZ + noiseZ - positions[i*3+2]) * 0.2;
       }
-
-      const posAttr = lineGeometry.attributes.position;
-      let posIdx = 0;
-      for (let i = 0; i < edges.length; i++) {
-        const p1 = projected3D[edges[i][0]];
-        const p2 = projected3D[edges[i][1]];
-
-        posAttr.array[posIdx++] = p1[0];
-        posAttr.array[posIdx++] = p1[1];
-        posAttr.array[posIdx++] = p1[2];
-
-        posAttr.array[posIdx++] = p2[0];
-        posAttr.array[posIdx++] = p2[1];
-        posAttr.array[posIdx++] = p2[2];
+      swarm.geometry.attributes.position.needsUpdate = true;
+      const pos2 = swarm2.geometry.attributes.position.array;
+      for(let i=0; i<pCount; i++) {
+        const edgeIdx = pEdgesArr[i];
+        const p1x = edgePositions[edgeIdx*6];
+        const p1y = edgePositions[edgeIdx*6 + 1];
+        const p1z = edgePositions[edgeIdx*6 + 2];
+        const p2x = edgePositions[edgeIdx*6 + 3];
+        const p2y = edgePositions[edgeIdx*6 + 4];
+        const p2z = edgePositions[edgeIdx*6 + 5];
+        const flowLerp = (Math.cos(time * 2.5 + i) * 0.5 + 0.5 + pLerps[i]) % 1.0;
+        const distort1Z = Math.sin(time * 2.0 + p1x) * 0.1;
+        const distort2Z = Math.sin(time * 2.0 + p2x) * 0.1;
+        let targetX = p1x + (p2x - p1x) * flowLerp;
+        let targetY = p1y + (p2y - p1y) * flowLerp;
+        let targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
+        const noiseMulti = 0.02;
+        const noiseX = Math.sin(time * 7.0 + i) * noiseMulti;
+        const noiseY = Math.cos(time * 6.0 + i) * noiseMulti;
+        const noiseZ = Math.sin(time * 8.0 + i) * noiseMulti;
+        pos2[i*3] += (targetX + noiseX - pos2[i*3]) * 0.25;
+        pos2[i*3+1] += (targetY + noiseY - pos2[i*3+1]) * 0.25;
+        pos2[i*3+2] += (targetZ + noiseZ - pos2[i*3+2]) * 0.25;
       }
-      posAttr.needsUpdate = true;
-
-      coreMesh.rotation.x += 0.01;
-      coreMesh.rotation.y += 0.015;
-
-      targetX += (mouseX - targetX) * 0.05;
-      targetY += (mouseY - targetY) * 0.05;
-      mainGroup.rotation.y = targetX * 0.8 + angleZW * 0.2;
-      mainGroup.rotation.x = targetY * 0.8;
-
+      swarm2.geometry.attributes.position.needsUpdate = true;
+      mainGroup.rotation.y += 0.005;
       renderer.render(scene, camera);
     }
-
     animate();
   });
 }
 document.addEventListener('DOMContentLoaded', init4DLogoEngine);
 </script>
-
 </head>
 <body>
 <nav>
-  <a href="../index.html" class="logo"><div class="webgl-logo-container logo-icon" style="width: 44px; height: 44px; display: inline-flex; justify-content: center; align-items: center;"></div>
-</div>
-</div>
-  <div class="logo-4d-text">M</div>
-</div>Mavy <span>EduSolutions</span></a>
+  <a href="../index.html" class="logo"><div class="webgl-logo-container logo-icon" style="width: 44px; height: 44px; display: inline-flex; justify-content: center; align-items: center;"></div>Mavy <span>EduSolutions</span></a>
   <div class="nav-links">
     <a href="../index.html#services">Services</a>
     <a href="../index.html#ai-data">AI Data</a>
@@ -287,101 +268,265 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
   </div>
 </div>
 
-<div class="blog-grid" id="blogGrid"></div>
+<div class="blog-grid" id="blogGrid">
+
+    <a href="mt-human-pass.html" class="blog-card" data-cat="Localization" data-title="why &quot;good enough&quot; machine translation still needs a human pass" data-desc="mt gets you a fast first draft. here's where it quietly breaks — idiom, tone, and anything with legal weight — and why a second linguist still has to catch it.">
+      <div class="blog-meta"><span class="blog-cat">Localization</span><span>Jul 2026</span></div>
+      <h3>Why "good enough" machine translation still needs a human pass</h3>
+      <p class="blog-excerpt">MT gets you a fast first draft. Here's where it quietly breaks — idiom, tone, and anything with legal weight — and why a second linguist still has to catch it.</p>
+      <span class="blog-read">6 min read →</span>
+    </a>
+    <a href="rlhf-agreement.html" class="blog-card" data-cat="AI Data" data-title="rlhf data quality: what &quot;high agreement&quot; actually measures" data-desc="inter-rater agreement is easy to game and easy to misread. what it tells you about your preference data, and what it doesn't.">
+      <div class="blog-meta"><span class="blog-cat">AI Data</span><span>Jul 2026</span></div>
+      <h3>RLHF data quality: what "high agreement" actually measures</h3>
+      <p class="blog-excerpt">Inter-rater agreement is easy to game and easy to misread. What it tells you about your preference data, and what it doesn't.</p>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="rtl-layouts.html" class="blog-card" data-cat="Engineering" data-title="shipping right-to-left layouts without a second sprint" data-desc="the layout bugs that only show up in arabic and hebrew builds, and how to catch them in qa instead of in a support ticket.">
+      <div class="blog-meta"><span class="blog-cat">Engineering</span><span>Jun 2026</span></div>
+      <h3>Shipping right-to-left layouts without a second sprint</h3>
+      <p class="blog-excerpt">The layout bugs that only show up in Arabic and Hebrew builds, and how to catch them in QA instead of in a support ticket.</p>
+      <span class="blog-read">5 min read →</span>
+    </a>
+    <a href="wake-word-audio.html" class="blog-card" data-cat="AI Data" data-title="sourcing wake-word audio across 40 languages without burning your timeline" data-desc="what actually slows down multilingual voice data collection — and it usually isn't the recording.">
+      <div class="blog-meta"><span class="blog-cat">AI Data</span><span>Jun 2026</span></div>
+      <h3>Sourcing wake-word audio across 40 languages without burning your timeline</h3>
+      <p class="blog-excerpt">What actually slows down multilingual voice data collection — and it usually isn't the recording.</p>
+      <span class="blog-read">6 min read →</span>
+    </a>
+    <a href="translation-memory.html" class="blog-card" data-cat="Process" data-title="what a translation memory actually saves you" data-desc="not just money on repeated strings — consistency across releases, and a paper trail when a term changes six months in.">
+      <div class="blog-meta"><span class="blog-cat">Process</span><span>May 2026</span></div>
+      <h3>What a translation memory actually saves you</h3>
+      <p class="blog-excerpt">Not just money on repeated strings — consistency across releases, and a paper trail when a term changes six months in.</p>
+      <span class="blog-read">4 min read →</span>
+    </a>
+    <a href="glossary-contract.html" class="blog-card" data-cat="Localization" data-title="a glossary is a contract: keeping terms consistent across 40 languages" data-desc="how one unreviewed term change turns into forty inconsistent ones, and the review step that stops it.">
+      <div class="blog-meta"><span class="blog-cat">Localization</span><span>May 2026</span></div>
+      <h3>A glossary is a contract: keeping terms consistent across 40 languages</h3>
+      <p class="blog-excerpt">How one unreviewed term change turns into forty inconsistent ones, and the review step that stops it.</p>
+      <span class="blog-read">5 min read →</span>
+    </a>
+    <a href="multilingual-seo.html" class="blog-card" data-cat="Localization" data-title="why multilingual seo is more than translating your keywords" data-desc="hreflang tags, locale-specific search intent, and the gap between &quot;translated&quot; and &quot;discoverable&quot; in 12 markets.">
+      <div class="blog-meta"><span class="blog-cat">Localization</span><span>Jul 2026</span></div>
+      <h3>Why multilingual SEO is more than translating your keywords</h3>
+      <p class="blog-excerpt">Hreflang tags, locale-specific search intent, and the gap between "translated" and "discoverable" in 12 markets.</p>
+      <span class="blog-read">6 min read →</span>
+    </a>
+    <a href="red-teaming-llm.html" class="blog-card" data-cat="AI Data" data-title="red-teaming your llm: what annotators actually look for" data-desc="a practical breakdown of the failure modes human raters flag — and why &quot;sounds correct&quot; is the hardest category to evaluate.">
+      <div class="blog-meta"><span class="blog-cat">AI Data</span><span>Jul 2026</span></div>
+      <h3>Red-teaming your LLM: what annotators actually look for</h3>
+      <p class="blog-excerpt">A practical breakdown of the failure modes human raters flag — and why "sounds correct" is the hardest category to evaluate.</p>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="elearning-cultural.html" class="blog-card" data-cat="EduSolutions" data-title="localizing e-learning for cultural learning styles, not just language" data-desc="why a translated course isn't a localized course — and the structural changes that make assessments work in mena, latam, and apac markets.">
+      <div class="blog-meta"><span class="blog-cat">EduSolutions</span><span>Jul 2026</span></div>
+      <h3>Localizing e-learning for cultural learning styles, not just language</h3>
+      <p class="blog-excerpt">Why a translated course isn't a localized course — and the structural changes that make assessments work in MENA, LATAM, and APAC markets.</p>
+      <span class="blog-read">6 min read →</span>
+    </a>
+    <a href="scorm-translation.html" class="blog-card" data-cat="EduSolutions" data-title="why scorm compliance breaks during translation — and how to prevent it" data-desc="the packaging failures that only surface after you upload to the lms, and the qa step that catches them before that.">
+      <div class="blog-meta"><span class="blog-cat">EduSolutions</span><span>Jun 2026</span></div>
+      <h3>Why SCORM compliance breaks during translation — and how to prevent it</h3>
+      <p class="blog-excerpt">The packaging failures that only surface after you upload to the LMS, and the QA step that catches them before that.</p>
+      <span class="blog-read">5 min read →</span>
+    </a>
+    <a href="ai-tutoring-data.html" class="blog-card" data-cat="EduSolutions" data-title="building ai tutoring datasets that actually improve student outcomes" data-desc="what separates useful q&a training pairs from noise — difficulty calibration, pedagogical intent tagging, and subject-area coverage.">
+      <div class="blog-meta"><span class="blog-cat">EduSolutions</span><span>Jun 2026</span></div>
+      <h3>Building AI tutoring datasets that actually improve student outcomes</h3>
+      <p class="blog-excerpt">What separates useful Q&A training pairs from noise — difficulty calibration, pedagogical intent tagging, and subject-area coverage.</p>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="pseudo-localization.html" class="blog-card" data-cat="Engineering" data-title="pseudo-localization: catching layout bugs before your linguists do" data-desc="how synthetic placeholder text with accents and extended characters reveals truncation and overflow issues in your ui before real translation begins.">
+      <div class="blog-meta"><span class="blog-cat">Engineering</span><span>May 2026</span></div>
+      <h3>Pseudo-localization: catching layout bugs before your linguists do</h3>
+      <p class="blog-excerpt">How synthetic placeholder text with accents and extended characters reveals truncation and overflow issues in your UI before real translation begins.</p>
+      <span class="blog-read">5 min read →</span>
+    </a>
+    <a href="multimodal-dataset-curation.html" class="blog-card" data-cat="AI Data" data-title="curating multimodal datasets for vision-language models: image-text pairing at scale" data-desc="high-quality image-text alignment for vlm fine-tuning. how synthetic captioning, bounding box verification, and ocr extraction prevent hallucination.">
+      <div class="blog-meta"><span class="blog-cat">AI Data</span><span>Jul 2026</span></div>
+      <h3>Curating Multimodal Datasets for Vision-Language Models: Image-Text Pairing at Scale</h3>
+      <p class="blog-excerpt">High-quality image-text alignment for VLM fine-tuning. How synthetic captioning, bounding box verification, and OCR extraction prevent hallucination.</p>
+      <span class="blog-read">8 min read →</span>
+    </a>
+    <a href="llm-localization-eval.html" class="blog-card" data-cat="Localization" data-title="evaluating llm translation quality: comet, bleu, and human rating correlation" data-desc="why traditional bleu scores fail to capture semantic nuance in modern llm translations, and how comet metrics paired with mqm human evaluation set the gold standard.">
+      <div class="blog-meta"><span class="blog-cat">Localization</span><span>Jul 2026</span></div>
+      <h3>Evaluating LLM Translation Quality: COMET, BLEU, and Human Rating Correlation</h3>
+      <p class="blog-excerpt">Why traditional BLEU scores fail to capture semantic nuance in modern LLM translations, and how COMET metrics paired with MQM human evaluation set the gold standard.</p>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="adaptive-learning-analytics.html" class="blog-card" data-cat="EduSolutions" data-title="designing adaptive learning engines: item response theory (irt) in modern edtech" data-desc="how 3pl item response theory and knowledge tracing algorithms dynamically adjust question difficulty for personalized student learning pathways.">
+      <div class="blog-meta"><span class="blog-cat">EduSolutions</span><span>Jul 2026</span></div>
+      <h3>Designing Adaptive Learning Engines: Item Response Theory (IRT) in Modern EdTech</h3>
+      <p class="blog-excerpt">How 3PL Item Response Theory and knowledge tracing algorithms dynamically adjust question difficulty for personalized student learning pathways.</p>
+      <span class="blog-read">6 min read →</span>
+    </a>
+    <a href="multilingual-voice-cloning.html" class="blog-card" data-cat="AI Data" data-title="zero-shot multilingual voice cloning: dataset requirements & phoneme alignment" data-desc="what makes voice cloning sound natural across language boundaries — ipa phoneme mapping, studio-quality noise floor, and cross-lingual prosody transfer.">
+      <div class="blog-meta"><span class="blog-cat">AI Data</span><span>Jul 2026</span></div>
+      <h3>Zero-Shot Multilingual Voice Cloning: Dataset Requirements & Phoneme Alignment</h3>
+      <p class="blog-excerpt">What makes voice cloning sound natural across language boundaries — IPA phoneme mapping, studio-quality noise floor, and cross-lingual prosody transfer.</p>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="rag-chunking-localization.html" class="blog-card" data-cat="Engineering" data-title="chunking strategies for multilingual rag: retaining semantic context across languages" data-desc="why fixed-length character chunking breaks cross-lingual vector retrieval, and how sentence-boundary awareness and metadata enrichment boost rag accuracy.">
+      <div class="blog-meta"><span class="blog-cat">Engineering</span><span>Jul 2026</span></div>
+      <h3>Chunking Strategies for Multilingual RAG: Retaining Semantic Context Across Languages</h3>
+      <p class="blog-excerpt">Why fixed-length character chunking breaks cross-lingual vector retrieval, and how sentence-boundary awareness and metadata enrichment boost RAG accuracy.</p>
+      <span class="blog-read">6 min read →</span>
+    </a>
+    <a href="enterprise-lqa-framework.html" class="blog-card" data-cat="Localization" data-title="building an enterprise lqa framework: dqf-mqm error typology in practice" data-desc="standardizing localization quality audit scoring across 40 vendors with dqf-mqm severity weighting and automated quality gates.">
+      <div class="blog-meta"><span class="blog-cat">Localization</span><span>Jul 2026</span></div>
+      <h3>Building an Enterprise LQA Framework: DQF-MQM Error Typology in Practice</h3>
+      <p class="blog-excerpt">Standardizing localization quality audit scoring across 40 vendors with DQF-MQM severity weighting and automated quality gates.</p>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="ai-voice-dubbing-ethics.html" class="blog-card" data-cat="AI Data" data-title="the ethical framework for ai voice cloning and dubbing" data-desc="as synthetic voice reaches parity with human actors, how do we handle consent, compensation, and copyright? a look into our voice ai training guidelines.">
+      <div class="blog-meta"><span class="blog-cat">AI Data</span><span>Jul 2026</span></div>
+      <h3>The ethical framework for AI voice cloning and dubbing</h3>
+      <p class="blog-excerpt">As synthetic voice reaches parity with human actors, how do we handle consent, compensation, and copyright? A look into our voice AI training guidelines.</p>
+      <span class="blog-read">5 min read →</span>
+    </a>
+    <a href="semantic-search-seo.html" class="blog-card" data-cat="Localization" data-title="beyond keywords: semantic seo in global markets" data-desc="why translating your english keyword list is actively harming your international seo, and how to optimize for semantic search intent instead.">
+      <div class="blog-meta"><span class="blog-cat">Localization</span><span>Aug 2026</span></div>
+      <h3>Beyond keywords: Semantic SEO in global markets</h3>
+      <p class="blog-excerpt">Why translating your English keyword list is actively harming your international SEO, and how to optimize for semantic search intent instead.</p>
+      <span class="blog-read">6 min read →</span>
+    </a>
+    <a href="immersive-vr-learning.html" class="blog-card" data-cat="Education" data-title="localizing vr and ar learning environments" data-desc="text expansion is hard on a screen. it's even harder in 3d space. how we adapt immersive spatial learning experiences for global audiences.">
+      <div class="blog-meta"><span class="blog-cat">Education</span><span>Aug 2026</span></div>
+      <h3>Localizing VR and AR learning environments</h3>
+      <p class="blog-excerpt">Text expansion is hard on a screen. It's even harder in 3D space. How we adapt immersive spatial learning experiences for global audiences.</p>
+      <span class="blog-read">8 min read →</span>
+    </a>
+    <a href="llm-jailbreak-red-teaming.html" class="blog-card" data-cat="AI Data" data-title="multilingual red teaming: finding llm vulnerabilities across 50 languages" data-desc="an llm might be safe in english, but easily jailbroken in swahili. why foundation models need comprehensive multilingual red teaming.">
+      <div class="blog-meta"><span class="blog-cat">AI Data</span><span>Aug 2026</span></div>
+      <h3>Multilingual Red Teaming: Finding LLM vulnerabilities across 50 languages</h3>
+      <p class="blog-excerpt">An LLM might be safe in English, but easily jailbroken in Swahili. Why foundation models need comprehensive multilingual red teaming.</p>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="llm-agent-tool-calling-multilingual.html" class="blog-card" data-cat="AI Data" data-title="benchmarking tool & function calling in multilingual llm agents" data-desc="why function calling breaks down when user prompts are in hindi, arabic, or japanese, and how to build robust cross-lingual parameter extraction benchmarks.">
+      <div class="blog-meta"><span class="blog-cat">AI Data</span><span>Aug 2026</span></div>
+      <h3>Benchmarking Tool & Function Calling in Multilingual LLM Agents</h3>
+      <p class="blog-excerpt">Why function calling breaks down when user prompts are in Hindi, Arabic, or Japanese, and how to build robust cross-lingual parameter extraction benchmarks.</p>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="multilingual-tokenizer-fertility.html" class="blog-card" data-cat="Engineering" data-title="tokenizer fertility in low-resource languages: why your llm costs 4x more in hindi and swahili" data-desc="subword tokenization disparities penalize non-english llm queries with inflated inference latency, truncated context windows, and 4x cost multipliers.">
+      <div class="blog-meta"><span class="blog-cat">Engineering</span><span>Aug 2026</span></div>
+      <h3>Tokenizer Fertility in Low-Resource Languages: Why Your LLM Costs 4x More in Hindi and Swahili</h3>
+      <p class="blog-excerpt">Subword tokenization disparities penalize non-English LLM queries with inflated inference latency, truncated context windows, and 4x cost multipliers.</p>
+      <span class="blog-read">8 min read →</span>
+    </a>
+    <a href="synthetic-data-contamination-eval.html" class="blog-card" data-cat="AI Data" data-title="synthetic data generation & contamination auditing in multilingual foundation models" data-desc="how translation-based synthetic data secretly leaks english benchmark answers into multilingual test splits, and how to detect contamination before pre-training.">
+      <div class="blog-meta"><span class="blog-cat">AI Data</span><span>Aug 2026</span></div>
+      <h3>Synthetic Data Generation & Contamination Auditing in Multilingual Foundation Models</h3>
+      <p class="blog-excerpt">How translation-based synthetic data secretly leaks English benchmark answers into multilingual test splits, and how to detect contamination before pre-training.</p>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="enterprise-ai-act-localization.html" class="blog-card" data-cat="Localization" data-title="eu ai act compliance: localizing technical documentation & model cards for global regulators" data-desc="translating algorithmic impact assessments, high-risk ai system cards, and automated disclosures without regulatory ambiguity across eu member states.">
+      <div class="blog-meta"><span class="blog-cat">Localization</span><span>Sep 2026</span></div>
+      <h3>EU AI Act Compliance: Localizing Technical Documentation & Model Cards for Global Regulators</h3>
+      <p class="blog-excerpt">Translating algorithmic impact assessments, high-risk AI system cards, and automated disclosures without regulatory ambiguity across EU member states.</p>
+      <span class="blog-read">6 min read →</span>
+    </a>
+    <a href="longform-neural-voice-dubbing.html" class="blog-card" data-cat="AI Data" data-title="long-form neural voice dubbing: prosody preservation and lip-sync timing at scale" data-desc="why standard tts engines fail on 45-minute e-learning modules, and how neural prosody contouring maintains natural vocal fatigue and breath dynamics.">
+      <div class="blog-meta"><span class="blog-cat">AI Data</span><span>Sep 2026</span></div>
+      <h3>Long-Form Neural Voice Dubbing: Prosody Preservation and Lip-Sync Timing at Scale</h3>
+      <p class="blog-excerpt">Why standard TTS engines fail on 45-minute e-learning modules, and how neural prosody contouring maintains natural vocal fatigue and breath dynamics.</p>
+      <span class="blog-read">7 min read →</span>
+    </a>
+    <a href="xapi-cmi5-global-lms.html" class="blog-card" data-cat="EduSolutions" data-title="xapi and cmi5 in global e-learning: modernizing beyond legacy scorm for multilingual telemetry" data-desc="how to capture granular learner behavior across localized courses without breaking state persistence when students switch language tracks mid-session.">
+      <div class="blog-meta"><span class="blog-cat">EduSolutions</span><span>Sep 2026</span></div>
+      <h3>xAPI and cmi5 in Global E-Learning: Modernizing Beyond Legacy SCORM for Multilingual Telemetry</h3>
+      <p class="blog-excerpt">How to capture granular learner behavior across localized courses without breaking state persistence when students switch language tracks mid-session.</p>
+      <span class="blog-read">6 min read →</span>
+    </a>
+</div>
 <div class="no-results" id="noResults" style="display:none;">No articles match your search.</div>
 
 <footer>
   <div class="footer-grid">
     <div>
-      <a href="../index.html" class="logo"><div class="webgl-logo-container logo-icon" style="width: 44px; height: 44px; display: inline-flex; justify-content: center; align-items: center;"></div>
-</div>
-</div>
-  <div class="logo-4d-text">M</div>
-</div>Mavy <span>EduSolutions</span></a>
-      <p style="margin-top:1rem;max-width:280px;">Localization, AI data, and education solutions — one shared system of terms, tone, and formatting behind every language you ship.</p>
+      <a href="../index.html" class="logo"><div class="webgl-logo-container logo-icon" style="width: 44px; height: 44px; display: inline-flex; justify-content: center; align-items: center;"></div>Mavy <span>EduSolutions</span></a>
+      <p style="margin-top:1rem;max-width:280px;">Localization, AI data, and education solutions built like a type foundry: one shared system of terms, tone, and formatting behind every language you ship.</p>
       <div class="footer-social">
         <a href="https://www.linkedin.com/company/mavyedusolutions/posts/?feedView=all" aria-label="LinkedIn" title="LinkedIn" target="_blank">in</a>
         <a href="#" aria-label="Twitter / X" title="Twitter / X">𝕏</a>
       </div>
     </div>
-    <div><h4>Services</h4><a href="../index.html#services">Localization</a><a href="../index.html#ai-data">AI Data Services</a><a href="../index.html#edu-solutions">Education Solutions</a></div>
+    <div><h4>Services</h4><a href="../index.html#services">Localization</a><a href="../index.html#ai-data">AI Data Services</a><a href="../index.html#edu-solutions">Education Solutions</a><a href="../index.html#process">Process</a></div>
     <div><h4>Company</h4><a href="../index.html#about">About</a><a href="../index.html#blog">Blog</a><a href="../index.html#faq">FAQ</a></div>
-    <div><h4>Contact</h4><a href="../index.html#contact">Start a project</a><a href="mailto:hello@mavyedusolution.com">hello@mavyedusolution.com</a></div>
+    <div><h4>Contact</h4><a href="../index.html#contact">Start a project</a><a href="mailto:collab@mavyedusolutions.co.in">collab@mavyedusolutions.co.in</a></div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 Mavy EduSolutions.</span>
     <span>Built for global scale, one string at a time.<a href="#">Privacy</a><a href="#">Terms</a></span>
   </div>
 </footer>
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
 
 <script>
-const POSTS = [
-  { slug:'mt-human-pass', cat:'Localization', title:'Why "good enough" machine translation still needs a human pass', excerpt:'MT gets you a fast first draft. Here\'s where it quietly breaks — idiom, tone, and anything with legal weight.', read:'6 min read', date:'Jul 2026' },
-  { slug:'rlhf-agreement', cat:'AI Data', title:'RLHF data quality: what "high agreement" actually measures', excerpt:'Inter-rater agreement is easy to game and easy to misread. What it tells you about your preference data.', read:'7 min read', date:'Jul 2026' },
-  { slug:'rtl-layouts', cat:'Engineering', title:'Shipping right-to-left layouts without a second sprint', excerpt:'The layout bugs that only show up in Arabic and Hebrew builds, and how to catch them in QA.', read:'5 min read', date:'Jun 2026' },
-  { slug:'wake-word-audio', cat:'AI Data', title:'Sourcing wake-word audio across 40 languages', excerpt:'What actually slows down multilingual voice data collection — and it usually isn\'t the recording.', read:'6 min read', date:'Jun 2026' },
-  { slug:'translation-memory', cat:'Process', title:'What a translation memory actually saves you', excerpt:'Not just money on repeated strings — consistency across releases, and a paper trail when a term changes.', read:'4 min read', date:'May 2026' },
-  { slug:'glossary-contract', cat:'Localization', title:'A glossary is a contract: keeping terms consistent across 40 languages', excerpt:'How one unreviewed term change turns into forty inconsistent ones.', read:'5 min read', date:'May 2026' },
-  { slug:'multilingual-seo', cat:'Localization', title:'Why multilingual SEO is more than translating your keywords', excerpt:'Hreflang tags, locale-specific search intent, and the gap between "translated" and "discoverable".', read:'6 min read', date:'Jul 2026' },
-  { slug:'red-teaming-llm', cat:'AI Data', title:'Red-teaming your LLM: what annotators actually look for', excerpt:'A practical breakdown of the failure modes human raters flag.', read:'7 min read', date:'Jul 2026' },
-  { slug:'elearning-cultural', cat:'EduSolutions', title:'Localizing e-learning for cultural learning styles', excerpt:'Why a translated course isn\'t a localized course — and the structural changes that make assessments work.', read:'6 min read', date:'Jul 2026' },
-  { slug:'scorm-translation', cat:'EduSolutions', title:'Why SCORM compliance breaks during translation', excerpt:'The packaging failures that only surface after you upload to the LMS.', read:'5 min read', date:'Jun 2026' },
-  { slug:'ai-tutoring-data', cat:'EduSolutions', title:'Building AI tutoring datasets that improve student outcomes', excerpt:'What separates useful Q&A training pairs from noise.', read:'7 min read', date:'Jun 2026' },
-  { slug:'pseudo-localization', cat:'Engineering', title:'Pseudo-localization: catching layout bugs before your linguists do', excerpt:'How synthetic placeholder text reveals truncation and overflow issues in your UI.', read:'5 min read', date:'May 2026' },
-];
-
+// Live Search & Category Filtering
+const cards = Array.from(document.querySelectorAll('.blog-card'));
+const noResults = document.getElementById('noResults');
 let activeCat = 'all';
 let searchQuery = '';
 
-function renderBlog() {
-  const grid = document.getElementById('blogGrid');
-  const noRes = document.getElementById('noResults');
-  const filtered = POSTS.filter(p => {
-    const catMatch = activeCat === 'all' || p.cat === activeCat;
-    const searchMatch = !searchQuery || p.title.toLowerCase().includes(searchQuery) || p.excerpt.toLowerCase().includes(searchQuery) || p.cat.toLowerCase().includes(searchQuery);
-    return catMatch && searchMatch;
+function filterCards() {
+  let visible = 0;
+  cards.forEach(card => {
+    const cat = card.dataset.cat || '';
+    const title = card.dataset.title || '';
+    const desc = card.dataset.desc || '';
+    const catMatch = activeCat === 'all' || cat.toLowerCase() === activeCat.toLowerCase();
+    const searchMatch = !searchQuery || title.includes(searchQuery) || desc.includes(searchQuery) || cat.toLowerCase().includes(searchQuery);
+    if (catMatch && searchMatch) {
+      card.style.display = 'flex';
+      visible++;
+    } else {
+      card.style.display = 'none';
+    }
   });
-
-  if (filtered.length === 0) {
-    grid.innerHTML = '';
-    noRes.style.display = 'block';
-    return;
-  }
-  noRes.style.display = 'none';
-  grid.innerHTML = filtered.map(p => `
-    <a href="${p.slug}.html" class="blog-card">
-      <div class="blog-meta"><span class="blog-cat">${p.cat}</span><span>${p.date}</span></div>
-      <h3>${p.title}</h3>
-      <p class="blog-excerpt">${p.excerpt}</p>
-      <span class="blog-read">${p.read} →</span>
-    </a>`).join('');
+  if (noResults) noResults.style.display = visible === 0 ? 'block' : 'none';
 }
 
-renderBlog();
-
-document.getElementById('blogFilters').querySelectorAll('.filter-chip').forEach(chip => {
+document.querySelectorAll('#blogFilters .filter-chip').forEach(chip => {
   chip.addEventListener('click', () => {
-    document.getElementById('blogFilters').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('#blogFilters .filter-chip').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
     activeCat = chip.dataset.cat;
-    renderBlog();
+    filterCards();
   });
 });
 
-document.getElementById('blogSearch').addEventListener('input', (e) => {
-  searchQuery = e.target.value.trim().toLowerCase();
-  renderBlog();
-});
+const searchInput = document.getElementById('blogSearch');
+if (searchInput) {
+  searchInput.addEventListener('input', (e) => {
+    searchQuery = e.target.value.trim().toLowerCase();
+    filterCards();
+  });
+}
 
-// Mobile menu
+// Mobile Menu
 const menuToggle = document.getElementById('menuToggle');
 const mobileMenu = document.getElementById('mobileMenu');
 const mobileClose = document.getElementById('mobileClose');
-menuToggle.addEventListener('click', () => { mobileMenu.classList.add('open'); document.body.style.overflow = 'hidden'; });
-function closeMobile() { mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
-mobileClose.addEventListener('click', closeMobile);
-mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobile));
+if (menuToggle && mobileMenu) {
+  menuToggle.addEventListener('click', () => { mobileMenu.classList.add('open'); document.body.style.overflow = 'hidden'; });
+}
+function closeMobile() {
+  if (mobileMenu) { mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+}
+if (mobileClose) mobileClose.addEventListener('click', closeMobile);
+if (mobileMenu) mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobile));
+
+// Scroll to top
+const scrollTopBtn = document.getElementById('scrollTop');
+if (scrollTopBtn) {
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('show', window.scrollY > 400);
+  }, { passive: true });
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
 </script>
-<script src="../main.js"></script>
 </body>
 </html>

@@ -47,7 +47,7 @@ const posts = [
 
   <ul>
     <li><strong>Speed:</strong> MT produces a first draft in seconds. The linguist spends time refining, not starting from scratch.</li>
-    <li><strong>Cost:</strong> MTPE typically runs 30â€“40% less than full human translation for suitable content types.</li>
+    <li><strong>Cost:</strong> MTPE typically runs 30–40% less than full human translation for suitable content types.</li>
     <li><strong>Consistency:</strong> When combined with a translation memory and glossary, MTPE can actually improve consistency across large volumes.</li>
   </ul>
 
@@ -151,7 +151,7 @@ const posts = [
   <ul>
     <li><strong>Hardcoded margins and padding:</strong> <code>margin-left: 16px</code> should be <code>margin-inline-start: 16px</code>. Every hardcoded directional property is a potential bug.</li>
     <li><strong>Icon mirroring:</strong> Back arrows, chevrons, and progress indicators need to flip. But not all icons should — a phone handset icon or a checkmark stays the same regardless of direction.</li>
-    <li><strong>Text truncation:</strong> Arabic text is often 20â€“30% longer than English. Combined with RTL flow, truncation happens in different places and can cut words mid-morpheme.</li>
+    <li><strong>Text truncation:</strong> Arabic text is often 20–30% longer than English. Combined with RTL flow, truncation happens in different places and can cut words mid-morpheme.</li>
     <li><strong>Bidirectional text (Bidi):</strong> When Arabic text contains English brand names, numbers, or URLs, the browser's Bidi algorithm can produce unexpected word order without explicit direction markers.</li>
   </ul>
 
@@ -217,7 +217,7 @@ const posts = [
 
   <ol>
     <li><strong>Parallel recruitment:</strong> We start recruitment in all 40 markets simultaneously, not sequentially. Languages with smaller speaker pools get a head start.</li>
-    <li><strong>Standardized recording kit:</strong> Every speaker gets the same recording environment spec — device type, distance from mic, ambient noise ceiling — regardless of whether they're in SÃ£o Paulo or Seoul.</li>
+    <li><strong>Standardized recording kit:</strong> Every speaker gets the same recording environment spec — device type, distance from mic, ambient noise ceiling — regardless of whether they're in São Paulo or Seoul.</li>
     <li><strong>Tiered QC:</strong> Automated checks catch technical failures (SNR, duration, format). Native-speaker reviewers handle pronunciation accuracy and accent classification. Both stages run in parallel with recording.</li>
     <li><strong>Consent as infrastructure:</strong> Consent forms are localized, reviewed by local counsel, and managed through a single platform so you have one rights ledger across all 40 markets.</li>
   </ol>
@@ -572,7 +572,7 @@ const posts = [
 
   <h3>1. String truncation</h3>
 
-  <p>German text is typically 30% longer than English. Finnish can be 40% longer. If your button says "Submit" and only has room for 8 characters, the German "Absenden" fits — but "Abonnement kÃ¼ndigen" (Cancel subscription) definitely doesn't. Pseudo-localization pads every string to 130â€“150% of its English length, surfacing every truncation point before you spend money on real translation.</p>
+  <p>German text is typically 30% longer than English. Finnish can be 40% longer. If your button says "Submit" and only has room for 8 characters, the German "Absenden" fits — but "Abonnement kündigen" (Cancel subscription) definitely doesn't. Pseudo-localization pads every string to 130–150% of its English length, surfacing every truncation point before you spend money on real translation.</p>
 
   <h3>2. Hardcoded strings</h3>
 
@@ -580,7 +580,7 @@ const posts = [
 
   <h3>3. Character encoding issues</h3>
 
-  <p>Pseudo-localization replaces ASCII characters with accented Unicode equivalents (a â†’ Ã¥, e â†’ Ã«). If these render as boxes or question marks anywhere in your UI, you have an encoding issue that will break real translations — especially for languages like Arabic, Chinese, or Thai.</p>
+  <p>Pseudo-localization replaces ASCII characters with accented Unicode equivalents (a → å, e → ë). If these render as boxes or question marks anywhere in your UI, you have an encoding issue that will break real translations — especially for languages like Arabic, Chinese, or Thai.</p>
 
   <h3>4. Concatenation bugs</h3>
 
@@ -878,8 +878,172 @@ const posts = [
   <p>At Mavy EduSolutions, our adversarial testing teams consist of native speakers who understand local slang, cultural friction points, and linguistic nuances. We probe models using idioms, colloquialisms, and code-switching to ensure safety alignment is globally robust.</p>
   `,
     related: ['red-teaming-llm', 'rlhf-agreement']
+  },
+  {
+    slug: 'llm-agent-tool-calling-multilingual',
+    cat: 'AI Data',
+    title: 'Benchmarking Tool & Function Calling in Multilingual LLM Agents',
+    description: 'Why function calling breaks down when user prompts are in Hindi, Arabic, or Japanese, and how to build robust cross-lingual parameter extraction benchmarks.',
+    date: 'Aug 2026',
+    dateISO: '2026-08-22',
+    read: '7 min read',
+    body: `
+  <p>Autonomous AI agents are only as capable as their tool-calling precision. When an agent receives a user prompt, reasons about the intent, and extracts arguments into structured JSON to execute an external API call, reliability in English is often above 95%. However, when enterprise deployments expose that same agent to global users prompting in Arabic, Japanese, or Hindi, tool selection accuracy and parameter extraction plummet.</p>
+  <h2>The Cross-Lingual Parameter Gap</h2>
+  <p>Most tool interfaces define function names and docstrings in English (e.g., <code>check_flight_availability(origin: str, destination: str, date: str)</code>). When a user writes: <em>"मुझे अगले शुक्रवार दिल्ली से मुंबई की फ्लाइट चाहिए"</em> (I need a flight from Delhi to Mumbai next Friday), the model must bridge three translation gaps simultaneously:</p>
+  <ul>
+    <li><strong>Intent Mapping:</strong> Connecting non-English phrasing to English API function definitions.</li>
+    <li><strong>Entity Extraction:</strong> Identifying "Delhi" as <code>origin</code> and "Mumbai" as <code>destination</code> without transposing arguments.</li>
+    <li><strong>Temporal Resolution:</strong> Accurately calculating "next Friday" based on the user's locale and timezone rather than the server's UTC clock.</li>
+  </ul>
+  <h2>Common Failure Modes in Multilingual Function Calling</h2>
+  <ol>
+    <li><strong>Hallucinated Parameter Keys:</strong> Models frequently translate English argument keys into the prompt's language (e.g., outputting <code>{"प्रस्थान": "DEL"}</code> instead of <code>{"origin": "DEL"}</code>), crashing downstream schema validators.</li>
+    <li><strong>Cultural Entity Ambiguity:</strong> Honorifics and complex morphological case endings in languages like Korean, Turkish, and Finnish often attach directly to proper nouns, confounding standard substring matching.</li>
+    <li><strong>Format Corruptions:</strong> Currency symbols, dates (DD/MM vs. MM/DD), and numerical delimiters (decimal commas in Europe) trigger type-casting errors.</li>
+  </ol>
+  <h2>Building Rigorous Multilingual Tool Benchmarks</h2>
+  <p>At Mavy EduSolutions, we evaluate agent function-calling using native-speaker conversational sets across 35 languages. We test single-turn calls, parallel function calling, and multi-step tool chaining with adversarial edge cases to guarantee global production readiness.</p>
+  <hr>
+  <p><strong>Deploying multilingual AI agents?</strong> <a href="../index.html#contact">Start a project with Mavy EduSolutions</a> — we construct verified tool-calling datasets and API evaluation suites for foundation models.</p>
+  `,
+    related: ['llm-jailbreak-red-teaming', 'rag-chunking-localization', 'red-teaming-llm']
+  },
+  {
+    slug: 'multilingual-tokenizer-fertility',
+    cat: 'Engineering',
+    title: 'Tokenizer Fertility in Low-Resource Languages: Why Your LLM Costs 4x More in Hindi and Swahili',
+    description: 'Subword tokenization disparities penalize non-English LLM queries with inflated inference latency, truncated context windows, and 4x cost multipliers.',
+    date: 'Aug 2026',
+    dateISO: '2026-08-25',
+    read: '8 min read',
+    body: `
+  <p>When enterprise developers calculate the cost of running foundation model inference across global markets, they often assume token consumption scales linearly with word count. In reality, modern Byte-Pair Encoding (BPE) tokenizers exhibit massive <strong>fertility disparities</strong>: the number of subword tokens required to represent the exact same semantic sentence varies wildly across languages.</p>
+  <h2>The Fertility Tax Explained</h2>
+  <p>Because foundation model vocabularies (typically 32k to 128k tokens) are predominantly trained on English text, English words are assigned single dedicated tokens or concise 2-piece subwords. By contrast, non-Latin scripts and low-resource languages undergo extreme character-level or byte-level fragmentation.</p>
+  <ul>
+    <li><strong>English:</strong> <em>"The patient showed significant improvement after treatment."</em> &rarr; <strong>8 tokens</strong> (fertility: 1.0)</li>
+    <li><strong>Spanish:</strong> <em>"El paciente mostró una mejoría significativa tras el tratamiento."</em> &rarr; <strong>11 tokens</strong> (fertility: 1.2)</li>
+    <li><strong>Hindi:</strong> <em>"इलाज के बाद मरीज की स्थिति में काफी सुधार देखा गया।"</em> &rarr; <strong>34 tokens</strong> (fertility: 3.4)</li>
+    <li><strong>Swahili:</strong> <em>"Mgonjwa alionyesha nafuu kubwa baada ya matibabu."</em> &rarr; <strong>22 tokens</strong> (fertility: 3.1)</li>
+  </ul>
+  <h2>Architectural Penalties for Global Apps</h2>
+  <ol>
+    <li><strong>4x API Cost Multiplier:</strong> In commercial LLM APIs billed per input/output token, serving users in South Asia or East Africa costs 3x to 4x more per completed transaction.</li>
+    <li><strong>Context Window Choking:</strong> A 128k token context window can fit a 100-page English technical manual, but only ~30 pages of the same document in Hindi, Telugu, or Amharic before running out of memory.</li>
+    <li><strong>Inference Latency Spike:</strong> Because autoregressive generation produces one token per step, output generation in high-fertility languages is physically 2x to 3x slower, degrading real-time chatbot responsiveness.</li>
+  </ol>
+  <h2>Mitigation Strategies</h2>
+  <p>At Mavy EduSolutions, we engineer vocabulary-expanded subword tokenizers and multilingual compression layers. By retraining tokenizers on balanced native-language text corpora, fertility in Indic and African languages drops by over 50%, directly slashing latency and API operating costs.</p>
+  `,
+    related: ['rag-chunking-localization', 'pseudo-localization', 'rtl-layouts']
+  },
+  {
+    slug: 'synthetic-data-contamination-eval',
+    cat: 'AI Data',
+    title: 'Synthetic Data Generation & Contamination Auditing in Multilingual Foundation Models',
+    description: 'How translation-based synthetic data secretly leaks English benchmark answers into multilingual test splits, and how to detect contamination before pre-training.',
+    date: 'Aug 2026',
+    dateISO: '2026-08-28',
+    read: '7 min read',
+    body: `
+  <p>As the frontier AI race exhausts available human-written web text, labs increasingly rely on synthetic data pipelines to expand multilingual instruction tuning sets. But translating synthetic English datasets into dozens of languages introduces a silent killer: <strong>benchmark contamination and synthetic feedback loops</strong>.</p>
+  <h2>The Contamination Leakage Pipeline</h2>
+  <p>When labs use automated translation to generate reasoning chains in French, German, or Japanese, translation memory engines and automated scrapers frequently translate benchmark evaluation suites (MMLU, GSM8K, HumanEval) into training corpora. When the fine-tuned model scores 88% on a multilingual reasoning benchmark, engineers celebrate — unaware that the model simply memorized the translated test questions.</p>
+  <h3>Synthetic Quality Degradation</h3>
+  <p>Machine-translated synthetic data also accumulates subtle semantic drift:</p>
+  <ul>
+    <li><strong>Inverted Logic in Negations:</strong> Subordinate clauses with double negatives frequently invert meaning when translated by MT without human review.</li>
+    <li><strong>Loss of Idiomatic Coherence:</strong> Figurative reasoning collapses into literal nonsense, teaching the model unnatural phrasing.</li>
+    <li><strong>Loss of Math Formatting:</strong> LaTeX formulas and code blocks frequently get corrupted by translation tag reordering.</li>
+  </ul>
+  <h2>Cross-Lingual De-duplication and Auditing</h2>
+  <p>To ensure evaluation integrity, Mavy EduSolutions deploys MinHash and dense vector embedding pipelines to compute cross-lingual n-gram overlap between candidate training sets and standard evaluation suites across 60+ languages. Furthermore, native human annotators audit sample batches to certify grammatical fluency and reasoning validity before data enters production pre-training runs.</p>
+  <hr>
+  <p><strong>Curating high-integrity training data?</strong> <a href="../index.html#contact">Consult with Mavy EduSolutions</a> to build decontamination pipelines and high-agreement human validation workflows.</p>
+  `,
+    related: ['multimodal-dataset-curation', 'rlhf-agreement', 'red-teaming-llm']
+  },
+  {
+    slug: 'enterprise-ai-act-localization',
+    cat: 'Localization',
+    title: 'EU AI Act Compliance: Localizing Technical Documentation & Model Cards for Global Regulators',
+    description: 'Translating algorithmic impact assessments, high-risk AI system cards, and automated disclosures without regulatory ambiguity across EU member states.',
+    date: 'Sep 2026',
+    dateISO: '2026-09-01',
+    read: '6 min read',
+    body: `
+  <p>With the phased enforcement of the European Union AI Act, global technology enterprises deploying AI systems across the 27 EU member states face strict localization mandates. For high-risk systems under Annex III, technical documentation, risk management summaries, and user instructions cannot simply remain in English — they must be available in the official languages of the member states where the AI system is placed on the market.</p>
+  <h2>Legal Precision vs. Technical Jargon</h2>
+  <p>Localizing an AI transparency document or model card is fundamentally different from website marketing translation. A single mistranslated technical term can trigger regulatory non-compliance, market withdrawal notices, or severe administrative fines.</p>
+  <h3>Key Compliance Terminology Challenges</h3>
+  <ul>
+    <li><strong>"Reasonably Foreseeable Misuse":</strong> Must align precisely with established EU product liability directives in German (<em>vernünftigerweise vorhersehbare Fehlanwendung</em>), French, and Italian.</li>
+    <li><strong>"Post-Market Monitoring":</strong> Requires clear procedural language conforming to ISO/IEC 42001 and EU harmonized standards.</li>
+    <li><strong>Bias and Disparate Impact Disclosures:</strong> Must use legally sound sociological and statistical terms recognized by national data protection authorities.</li>
+  </ul>
+  <h2>The Mavy EduSolutions Compliance Protocol</h2>
+  <p>Our EU AI Act localization team pairs native legal linguists certified in regulatory translation with machine learning engineers. Every system card, impact assessment, and automated notification undergoes dual-layer verification against official Eur-Lex terminology databases and national regulatory guidance.</p>
+  `,
+    related: ['enterprise-lqa-framework', 'glossary-contract', 'mt-human-pass']
+  },
+  {
+    slug: 'longform-neural-voice-dubbing',
+    cat: 'AI Data',
+    title: 'Long-Form Neural Voice Dubbing: Prosody Preservation and Lip-Sync Timing at Scale',
+    description: 'Why standard TTS engines fail on 45-minute e-learning modules, and how neural prosody contouring maintains natural vocal fatigue and breath dynamics.',
+    date: 'Sep 2026',
+    dateISO: '2026-09-04',
+    read: '7 min read',
+    body: `
+  <p>While neural text-to-speech (TTS) models have mastered 10-second voice clips and virtual assistant responses, deploying synthetic voices for <strong>long-form educational courses, documentaries, and executive training modules</strong> reveals immediate limitations. After 5 minutes, listeners experience cognitive fatigue caused by monotonic prosody, unnatural breath cadence, and robotic pacing.</p>
+  <h2>The Challenges of Long-Form Neural Dubbing</h2>
+  <ul>
+    <li><strong>Paragraph-Level Macro-Prosody:</strong> Sentence-level TTS models synthesize each sentence in isolation. In natural human speech, pitch range and vocal energy shift dynamically between introduction, key concept emphasis, and summarizing conclusions.</li>
+    <li><strong>Vocal Dynamics and Breath Physics:</strong> Real voice actors take micro-breaths tailored to sentence complexity. Synthetic speech that omits breathing sounds uncanny; synthetic speech that places breaths randomly sounds unnatural.</li>
+    <li><strong>Syllable Expansion and Video Synchronization:</strong> When English dialogue is localized into German, Spanish, or Russian, syllable count expands by 20% to 35%. Simply speeding up audio playback by 1.3x creates an unlistenable chipmunk effect.</li>
+  </ul>
+  <h2>Our Synchronization & Timing Pipeline</h2>
+  <p>At Mavy EduSolutions, our multimedia team utilizes script adaptation techniques combined with neural dynamic time warping (DTW):</p>
+  <ol>
+    <li><strong>Linguistic Transcreation:</strong> Script editors adjust sentence conciseness prior to synthesis to fit the exact visual timing window.</li>
+    <li><strong>Phoneme-Aligned Breath Modeling:</strong> We generate physiological breath cues matched to acoustic pause duration.</li>
+    <li><strong>Emotional Contour Transfer:</strong> The synthetic voiceprint adapts energy and tone based on speaker sentiment in the original video.</li>
+  </ol>
+  `,
+    related: ['multilingual-voice-cloning', 'ai-voice-dubbing-ethics', 'wake-word-audio']
+  },
+  {
+    slug: 'xapi-cmi5-global-lms',
+    cat: 'EduSolutions',
+    title: 'xAPI and cmi5 in Global E-Learning: Modernizing Beyond Legacy SCORM for Multilingual Telemetry',
+    description: 'How to capture granular learner behavior across localized courses without breaking state persistence when students switch language tracks mid-session.',
+    date: 'Sep 2026',
+    dateISO: '2026-09-06',
+    read: '6 min read',
+    body: `
+  <p>For over two decades, SCORM 1.2 and SCORM 2004 have served as the default packaging formats for enterprise e-learning. Yet global learning organizations operating across multilingual workforces consistently encounter SCORM's hard limits: fragile suspend-data strings that truncate when courseware contains multi-byte UTF-8 characters, and the inability to track mobile or offline learning.</p>
+  <h2>Why Global EdTech Is Moving to xAPI and cmi5</h2>
+  <p>The Experience API (xAPI) combined with the cmi5 specification solves the multi-locale challenge at the architectural level by replacing opaque tracking blobs with structured JSON Activity Streams:</p>
+  <pre><code>{
+  "actor": { "mbox": "mailto:elena@globalcorp.es" },
+  "verb": { "id": "http://adlnet.gov/expapi/verbs/completed" },
+  "object": {
+    "id": "http://learn.mavyedusolutions.com/modules/safety-quiz",
+    "definition": {
+      "name": { "en": "Safety Compliance", "es": "Cumplimiento de Seguridad" }
+    }
   }
-
+}</code></pre>
+  <h2>Solving the Mid-Session Language Switch Problem</h2>
+  <p>In traditional SCORM packages, if a bilingual learner begins an assessment in English and switches to Spanish halfway through, the session state often resets, erasing test scores. With cmi5 state services, the learner's interaction state is decoupled from the UI rendering layer, ensuring persistent bookmarking, assessment checkpoints, and localized analytics across all LMS instances.</p>
+  <h2>Enterprise Course Modernization</h2>
+  <p>Mavy EduSolutions converts legacy SCORM catalogs into high-performance, cmi5-compliant multilingual packages compatible with Cornerstone, Canvas, Moodle, and proprietary enterprise learning record stores (LRS).</p>
+  <hr>
+  <p><strong>Upgrading your global learning platform?</strong> <a href="../index.html#contact">Contact Mavy EduSolutions</a> to design SCORM-to-xAPI modernization pipelines.</p>
+  `,
+    related: ['scorm-translation', 'elearning-cultural', 'adaptive-learning-analytics']
+  }
 ];
 
 // Build lookup for related posts
@@ -899,7 +1063,7 @@ function generateHTML(post) {
     <a href="${r.slug}.html" class="related-card">
       <span class="blog-cat">${r.cat}</span>
       <h3>${r.title}</h3>
-      <span class="blog-read">${r.read} â†’</span>
+      <span class="blog-read">${r.read} →</span>
     </a>`;
   }).join('');
 
@@ -940,11 +1104,11 @@ function generateHTML(post) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#050510;--surface:rgba(255,255,255,0.03);--surface-solid:#0d0d20;--surface-2:rgba(255,255,255,0.06);--text:#f0f0ff;--muted:#8888aa;--brass:#a78bfa;--brass-soft:rgba(167,139,250,0.14);--coral:#22d3ee;--paper:#0e0e1e;--line:rgba(255,255,255,0.08);--shadow:0 20px 60px rgba(0,0,0,0.6);--glass:blur(16px) saturate(180%);--r-lg:22px;--r-md:14px;--accent-pink:#f472b6;}
+  :root{--ink:#030712;--surface:rgba(15,23,42,0.65);--surface-solid:#0b0f19;--surface-2:rgba(30,41,59,0.75);--text:#f8fafc;--muted:#94a3b8;--brass:#818cf8;--brass-soft:rgba(129,140,248,0.14);--coral:#22d3ee;--paper:#0b0f19;--line:rgba(255,255,255,0.08);--shadow:0 20px 60px rgba(0,0,0,0.7);--glass:blur(16px) saturate(180%);--r-lg:22px;--r-md:14px;--accent-pink:#f472b6;}
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{background:var(--ink);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;overflow-x:hidden;}
-  ::selection{background:var(--brass);color:#050510;}
+  ::selection{background:var(--brass);color:#030712;}
   h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;}
   a{color:inherit;text-decoration:none;}
   nav{position:fixed;top:0;width:100%;z-index:100;padding:1.1rem 5%;display:flex;justify-content:space-between;align-items:center;background:var(--surface);backdrop-filter:var(--glass);border-bottom:1px solid var(--line);}
@@ -963,6 +1127,7 @@ function generateHTML(post) {
   .mobile-menu a{font-size:1.6rem;font-weight:500;color:var(--muted);transition:color .2s;}
   .mobile-menu a:hover{color:var(--brass);}
   .mobile-menu .mobile-close{position:absolute;top:1.2rem;right:5%;font-size:1.5rem;color:var(--text);background:none;border:none;cursor:pointer;padding:.5rem;}
+  .blog-hero{padding:8rem 5% 3rem;max-width:1400px;margin:auto;text-align:center;}
   .reading-progress{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,var(--brass),var(--coral));z-index:200;transition:width .1s linear;}
   .breadcrumbs{padding:6rem 5% 0;max-width:900px;margin:auto;}
   .breadcrumbs ol{list-style:none;display:flex;gap:.6rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);flex-wrap:wrap;}
@@ -1280,7 +1445,7 @@ function init4DLogoEngine() {
 }
 document.addEventListener('DOMContentLoaded', init4DLogoEngine);
 </script>
-\n</head>
+</head>
 <body>
 <div class="reading-progress" id="readingProgress"></div>
 <nav>
@@ -1289,16 +1454,18 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
     <a href="../index.html#services">Services</a>
     <a href="../index.html#ai-data">AI Data</a>
     <a href="../index.html#edu-solutions">EduSolutions</a>
+    <a href="../index.html#tools">Free Tools</a>
     <a href="../index.html#blog" class="active">Blog</a>
     <a href="../index.html#contact">Contact</a>
-    <button class="icon-btn" id="menuToggle" aria-label="Open menu" aria-expanded="false">\u2630</button>
+    <button class="icon-btn" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-close" id="mobileClose" aria-label="Close menu">\u2715</button>
+  <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
   <a href="../index.html#services">Services</a>
   <a href="../index.html#ai-data">AI Data</a>
   <a href="../index.html#edu-solutions">EduSolutions</a>
+  <a href="../index.html#tools">Free Tools</a>
   <a href="../index.html#blog">Blog</a>
   <a href="../index.html#contact">Contact</a>
 </div>
@@ -1371,13 +1538,462 @@ scrollTopBtn.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smoo
 </html>`;
 }
 
+function escapeXML(str) {
+  return str.replace(/[<>&'"]/g, c => {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case '\'': return '&apos;';
+      case '"': return '&quot;';
+      default: return c;
+    }
+  });
+}
+
+function generateBlogIndexHTML(posts) {
+  const LOGO_SVG = `<div class="webgl-logo-container logo-icon" style="width: 44px; height: 44px; display: inline-flex; justify-content: center; align-items: center;"></div>`;
+
+  const cardsHTML = posts.map(p => {
+    const escapedTitle = p.title.replace(/"/g, '&quot;');
+    const escapedDesc = p.description.replace(/"/g, '&quot;');
+    return `
+    <a href="${p.slug}.html" class="blog-card" data-cat="${p.cat}" data-title="${p.title.toLowerCase().replace(/"/g, '&quot;')}" data-desc="${p.description.toLowerCase().replace(/"/g, '&quot;')}">
+      <div class="blog-meta"><span class="blog-cat">${p.cat}</span><span>${p.date}</span></div>
+      <h3>${p.title}</h3>
+      <p class="blog-excerpt">${p.description}</p>
+      <span class="blog-read">${p.read} →</span>
+    </a>`;
+  }).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog | ${BRAND}</title>
+<meta name="description" content="Notes on shipping global product — localization, AI data, education solutions, and engineering from the ${BRAND} team.">
+<link rel="canonical" href="${DOMAIN}/blog/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Blog | ${BRAND}">
+<meta property="og:description" content="Notes on shipping global product — localization, AI data, education solutions, and engineering from the ${BRAND} team.">
+<meta property="og:url" content="${DOMAIN}/blog/">
+<meta property="og:site_name" content="${BRAND}">
+<meta property="og:image" content="${DOMAIN}/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog | ${BRAND}">
+<meta name="twitter:description" content="Notes on shipping global product — localization, AI data, education solutions, and engineering from the ${BRAND} team.">
+<meta name="twitter:image" content="${DOMAIN}/og-image.jpg">
+<link rel="icon" type="image/svg+xml" href="../logo.svg">
+<link rel="alternate" type="application/rss+xml" title="${BRAND} Blog" href="../rss.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#050510;--surface:rgba(255,255,255,0.035);--surface-solid:#0a0a1a;--surface-2:rgba(255,255,255,0.06);--text:#f0f0ff;--muted:#8888aa;--brass:#a78bfa;--brass-soft:rgba(167,139,250,0.14);--coral:#22d3ee;--paper:#0e0e1e;--line:rgba(255,255,255,0.08);--shadow:0 20px 60px rgba(0,0,0,0.6);--glass:blur(16px) saturate(180%);--r-lg:22px;--r-md:14px;--accent-pink:#f472b6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--ink);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;overflow-x:hidden;}
+  ::selection{background:var(--brass);color:#050510;}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;}
+  a{color:inherit;text-decoration:none;}
+  nav{position:fixed;top:0;width:100%;z-index:100;padding:1.1rem 5%;display:flex;justify-content:space-between;align-items:center;background:var(--surface);backdrop-filter:var(--glass);border-bottom:1px solid var(--line);}
+  .logo{font-size:1.3rem;font-weight:600;display:flex;align-items:center;gap:.5rem;}
+  .logo span{color:var(--brass);}
+  .logo-icon{width:32px;height:32px;flex-shrink:0;}
+  .nav-links{display:flex;gap:2.1rem;align-items:center;}
+  .nav-links a{font-size:.92rem;font-weight:500;position:relative;color:var(--muted);transition:color .2s;}
+  .nav-links a::after{content:'';position:absolute;bottom:-6px;left:0;width:0;height:1.5px;background:var(--brass);transition:width .3s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--text);}
+  .nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+  .icon-btn{cursor:pointer;padding:.5rem .6rem;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--text);font-size:1rem;display:none;}
+  @media(max-width:768px){.icon-btn{display:block;}.nav-links a{display:none;}}
+  .mobile-menu{position:fixed;inset:0;background:var(--ink);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;pointer-events:none;transition:opacity .3s;}
+  .mobile-menu.open{opacity:1;pointer-events:auto;}
+  .mobile-menu a{font-size:1.6rem;font-weight:500;color:var(--muted);transition:color .2s;}
+  .mobile-menu a:hover{color:var(--brass);}
+  .mobile-menu .mobile-close{position:absolute;top:1.2rem;right:5%;font-size:1.5rem;color:var(--text);background:none;border:none;cursor:pointer;padding:.5rem;}
+  .blog-hero{padding:8rem 5% 3rem;max-width:1400px;margin:auto;text-align:center;}
+  .blog-hero h1{font-size:clamp(2rem,4vw,3rem);margin-bottom:.8rem;}
+  .blog-hero p{color:var(--muted);font-size:1.08rem;max-width:560px;margin:0 auto 2rem;line-height:1.6;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1rem;}
+  .eyebrow::before,.eyebrow::after{content:'';width:26px;height:1px;background:var(--brass);}
+  .blog-filters{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:3rem;}
+  .filter-chip{font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem .9rem;border-radius:20px;border:1px solid var(--line);color:var(--muted);cursor:pointer;background:transparent;transition:border-color .2s,color .2s;}
+  .filter-chip.active,.filter-chip:hover{border-color:var(--brass);color:var(--brass);}
+  .blog-search{max-width:400px;margin:0 auto 2rem;position:relative;}
+  .blog-search input{width:100%;padding:.8rem 1rem .8rem 2.4rem;background:rgba(11,31,28,0.6);border:1.5px solid rgba(157,182,174,0.25);border-radius:10px;color:var(--text);font-size:.95rem;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color .3s;}
+  .blog-search input:focus{border-color:var(--brass);}
+  .blog-search::before{content:'🔍';position:absolute;left:.8rem;top:50%;transform:translateY(-50%);font-size:.9rem;}
+  .blog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.6rem;max-width:1400px;margin:0 auto;padding:0 5% 4rem;}
+  .blog-card{background:var(--surface);backdrop-filter:var(--glass);border:1px solid var(--line);border-radius:var(--r-lg);padding:2rem;display:flex;flex-direction:column;transition:border-color .3s,transform .3s;text-decoration:none;}
+  .blog-card:hover{border-color:var(--brass);transform:translateY(-4px);}
+  .blog-meta{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:1rem;}
+  .blog-meta .blog-cat{color:var(--brass);text-transform:uppercase;letter-spacing:.06em;}
+  .blog-card h3{font-size:1.15rem;margin-bottom:.7rem;line-height:1.35;}
+  .blog-excerpt{color:var(--muted);font-size:.9rem;line-height:1.6;margin-bottom:1.2rem;flex:1;}
+  .blog-read{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--brass);}
+  .no-results{text-align:center;color:var(--muted);padding:3rem;font-size:1rem;}
+  footer{border-top:1px solid var(--line);padding:3.5rem 5% 2rem;margin-top:2rem;}
+  .footer-grid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:2rem;max-width:1400px;margin:auto auto 2.5rem;}
+  .footer-grid h4{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--brass);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;}
+  .footer-grid a,.footer-grid p{color:var(--muted);font-size:.88rem;display:block;margin-bottom:.6rem;}
+  .footer-grid a:hover{color:var(--text);}
+  .footer-social{display:flex;gap:.8rem;margin-top:1rem;}
+  .footer-social a{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);color:var(--muted);font-size:.9rem;transition:border-color .2s,color .2s;}
+  .footer-social a:hover{border-color:var(--brass);color:var(--brass);}
+  .footer-bottom{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem;max-width:1400px;margin:auto;flex-wrap:wrap;gap:1rem;padding-top:2rem;border-top:1px solid var(--line);}
+  .footer-bottom a{color:var(--muted);margin-left:1.2rem;}.footer-bottom a:hover{color:var(--text);}
+  .scroll-top{position:fixed;bottom:2rem;right:2rem;z-index:90;width:48px;height:48px;border-radius:50%;background:var(--brass);color:#050510;border:none;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(167,139,250,0.35);opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s;pointer-events:none;}
+  .scroll-top.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+  .scroll-top:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(167,139,250,0.5);}
+  @media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:768px){.footer-grid{grid-template-columns:1fr;}}
+  :focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
+</style>
+
+<!-- Three.js CDN for WebGL 4D Interactive Engine -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script>
+function init4DLogoEngine() {
+  if (typeof THREE === 'undefined') return;
+  const containers = document.querySelectorAll('#webgl-reveal-container, .webgl-logo-container');
+  containers.forEach(container => {
+    if (container.dataset.webglInited) return;
+    container.dataset.webglInited = 'true';
+    const isReveal = container.id === 'webgl-reveal-container';
+    const width = isReveal ? 400 : 44;
+    const height = isReveal ? 400 : 44;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+    camera.position.z = isReveal ? 5.5 : 4.5;
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0); 
+    container.appendChild(renderer.domElement);
+    const mainGroup = new THREE.Group();
+    scene.add(mainGroup);
+    const shapeM = new THREE.Shape();
+    shapeM.moveTo(-1, -1);
+    shapeM.lineTo(-1, 1);
+    shapeM.lineTo(-0.2, 0.2);
+    shapeM.lineTo(0.2, 0.2); 
+    shapeM.lineTo(1, 1);
+    shapeM.lineTo(1, -1);
+    shapeM.lineTo(0.5, -1);
+    shapeM.lineTo(0.5, 0.5);
+    shapeM.lineTo(0, 0);
+    shapeM.lineTo(-0.5, 0.5);
+    shapeM.lineTo(-0.5, -1);
+    shapeM.lineTo(-1, -1);
+    const shapeE = new THREE.Shape();
+    shapeE.moveTo(1.4, -1);
+    shapeE.lineTo(2.8, -1);
+    shapeE.lineTo(2.8, -0.5);
+    shapeE.lineTo(1.9, -0.5);
+    shapeE.lineTo(1.9, -0.2);
+    shapeE.lineTo(2.5, -0.2);
+    shapeE.lineTo(2.5, 0.2);
+    shapeE.lineTo(1.9, 0.2);
+    shapeE.lineTo(1.9, 0.5);
+    shapeE.lineTo(2.8, 0.5);
+    shapeE.lineTo(2.8, 1);
+    shapeE.lineTo(1.4, 1);
+    shapeE.lineTo(1.4, -1);
+    const extrudeSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, bevelSteps: 2, bevelThickness: 0.05, bevelSize: 0.05 };
+    const mGeo = new THREE.ExtrudeGeometry([shapeM, shapeE], extrudeSettings);
+    mGeo.computeBoundingBox();
+    const offset = mGeo.boundingBox.getCenter(new THREE.Vector3());
+    mGeo.translate(-offset.x, -offset.y, -offset.z);
+    mGeo.scale(1.0, 1.0, 1.0);
+    const edgesGeo = new THREE.EdgesGeometry(mGeo);
+    const edgePositions = edgesGeo.attributes.position.array;
+    const edgeCount = edgePositions.length / 6;
+    const pCount = 2000;
+    const pGeo = new THREE.BufferGeometry();
+    const pPos = new Float32Array(pCount * 3);
+    const pEdgesArr = new Int32Array(pCount); 
+    const pLerps = new Float32Array(pCount); 
+    for(let i=0; i<pCount; i++) {
+      pPos[i*3] = (Math.random() - 0.5) * 5;
+      pPos[i*3+1] = (Math.random() - 0.5) * 5;
+      pPos[i*3+2] = (Math.random() - 0.5) * 5;
+      pEdgesArr[i] = Math.floor(Math.random() * edgeCount);
+      pLerps[i] = Math.random();
+    }
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+    const pMat = new THREE.PointsMaterial({ color: 0xc084fc, size: 0.02, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
+    const swarm = new THREE.Points(pGeo, pMat);
+    mainGroup.add(swarm);
+    const swarm2Geo = new THREE.BufferGeometry();
+    const swarm2Pos = new Float32Array(pPos);
+    swarm2Geo.setAttribute('position', new THREE.BufferAttribute(swarm2Pos, 3));
+    const swarm2Mat = new THREE.PointsMaterial({ color: 0x22d3ee, size: 0.015, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
+    const swarm2 = new THREE.Points(swarm2Geo, swarm2Mat);
+    mainGroup.add(swarm2);
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const time = clock.getElapsedTime();
+      const positions = swarm.geometry.attributes.position.array;
+      for(let i=0; i<pCount; i++) {
+        const edgeIdx = pEdgesArr[i];
+        const p1x = edgePositions[edgeIdx*6];
+        const p1y = edgePositions[edgeIdx*6 + 1];
+        const p1z = edgePositions[edgeIdx*6 + 2];
+        const p2x = edgePositions[edgeIdx*6 + 3];
+        const p2y = edgePositions[edgeIdx*6 + 4];
+        const p2z = edgePositions[edgeIdx*6 + 5];
+        const lerp = pLerps[i];
+        const flowLerp = (Math.sin(time * 3.0 + i) * 0.5 + 0.5 + lerp) % 1.0;
+        const distort1Z = Math.sin(time * 2.0 + p1x) * 0.1;
+        const distort2Z = Math.sin(time * 2.0 + p2x) * 0.1;
+        let targetX = p1x + (p2x - p1x) * flowLerp;
+        let targetY = p1y + (p2y - p1y) * flowLerp;
+        let targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
+        const noiseMulti = 0.02;
+        const noiseX = Math.sin(time * 8.0 + i) * noiseMulti;
+        const noiseY = Math.cos(time * 7.0 + i) * noiseMulti;
+        const noiseZ = Math.sin(time * 6.0 + i) * noiseMulti;
+        positions[i*3] += (targetX + noiseX - positions[i*3]) * 0.2;
+        positions[i*3+1] += (targetY + noiseY - positions[i*3+1]) * 0.2;
+        positions[i*3+2] += (targetZ + noiseZ - positions[i*3+2]) * 0.2;
+      }
+      swarm.geometry.attributes.position.needsUpdate = true;
+      const pos2 = swarm2.geometry.attributes.position.array;
+      for(let i=0; i<pCount; i++) {
+        const edgeIdx = pEdgesArr[i];
+        const p1x = edgePositions[edgeIdx*6];
+        const p1y = edgePositions[edgeIdx*6 + 1];
+        const p1z = edgePositions[edgeIdx*6 + 2];
+        const p2x = edgePositions[edgeIdx*6 + 3];
+        const p2y = edgePositions[edgeIdx*6 + 4];
+        const p2z = edgePositions[edgeIdx*6 + 5];
+        const flowLerp = (Math.cos(time * 2.5 + i) * 0.5 + 0.5 + pLerps[i]) % 1.0;
+        const distort1Z = Math.sin(time * 2.0 + p1x) * 0.1;
+        const distort2Z = Math.sin(time * 2.0 + p2x) * 0.1;
+        let targetX = p1x + (p2x - p1x) * flowLerp;
+        let targetY = p1y + (p2y - p1y) * flowLerp;
+        let targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
+        const noiseMulti = 0.02;
+        const noiseX = Math.sin(time * 7.0 + i) * noiseMulti;
+        const noiseY = Math.cos(time * 6.0 + i) * noiseMulti;
+        const noiseZ = Math.sin(time * 8.0 + i) * noiseMulti;
+        pos2[i*3] += (targetX + noiseX - pos2[i*3]) * 0.25;
+        pos2[i*3+1] += (targetY + noiseY - pos2[i*3+1]) * 0.25;
+        pos2[i*3+2] += (targetZ + noiseZ - pos2[i*3+2]) * 0.25;
+      }
+      swarm2.geometry.attributes.position.needsUpdate = true;
+      mainGroup.rotation.y += 0.005;
+      renderer.render(scene, camera);
+    }
+    animate();
+  });
+}
+document.addEventListener('DOMContentLoaded', init4DLogoEngine);
+</script>
+</head>
+<body>
+<nav>
+  <a href="../index.html" class="logo">${LOGO_SVG}Mavy <span>EduSolutions</span></a>
+  <div class="nav-links">
+    <a href="../index.html#services">Services</a>
+    <a href="../index.html#ai-data">AI Data</a>
+    <a href="../index.html#edu-solutions">EduSolutions</a>
+    <a href="../index.html#blog" class="active">Blog</a>
+    <a href="../index.html#contact">Contact</a>
+    <button class="icon-btn" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+  <a href="../index.html#services">Services</a>
+  <a href="../index.html#ai-data">AI Data</a>
+  <a href="../index.html#edu-solutions">EduSolutions</a>
+  <a href="../index.html#blog">Blog</a>
+  <a href="../index.html#contact">Contact</a>
+</div>
+
+<div class="blog-hero">
+  <div class="eyebrow">Blog</div>
+  <h1>Notes on shipping global product</h1>
+  <p>Localization, AI data, education solutions, and engineering — from the team that builds the pipeline behind your multilingual product.</p>
+  <div class="blog-search"><input type="text" id="blogSearch" placeholder="Search articles..."></div>
+  <div class="blog-filters" id="blogFilters">
+    <button class="filter-chip active" data-cat="all">All</button>
+    <button class="filter-chip" data-cat="Localization">Localization</button>
+    <button class="filter-chip" data-cat="AI Data">AI Data</button>
+    <button class="filter-chip" data-cat="EduSolutions">EduSolutions</button>
+    <button class="filter-chip" data-cat="Engineering">Engineering</button>
+    <button class="filter-chip" data-cat="Process">Process</button>
+  </div>
+</div>
+
+<div class="blog-grid" id="blogGrid">
+${cardsHTML}
+</div>
+<div class="no-results" id="noResults" style="display:none;">No articles match your search.</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <a href="../index.html" class="logo">${LOGO_SVG}Mavy <span>EduSolutions</span></a>
+      <p style="margin-top:1rem;max-width:280px;">Localization, AI data, and education solutions built like a type foundry: one shared system of terms, tone, and formatting behind every language you ship.</p>
+      <div class="footer-social">
+        <a href="https://www.linkedin.com/company/mavyedusolutions/posts/?feedView=all" aria-label="LinkedIn" title="LinkedIn" target="_blank">in</a>
+        <a href="#" aria-label="Twitter / X" title="Twitter / X">𝕏</a>
+      </div>
+    </div>
+    <div><h4>Services</h4><a href="../index.html#services">Localization</a><a href="../index.html#ai-data">AI Data Services</a><a href="../index.html#edu-solutions">Education Solutions</a><a href="../index.html#process">Process</a></div>
+    <div><h4>Company</h4><a href="../index.html#about">About</a><a href="../index.html#blog">Blog</a><a href="../index.html#faq">FAQ</a></div>
+    <div><h4>Contact</h4><a href="../index.html#contact">Start a project</a><a href="mailto:${EMAIL}">${EMAIL}</a></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 ${BRAND}.</span>
+    <span>Built for global scale, one string at a time.<a href="#">Privacy</a><a href="#">Terms</a></span>
+  </div>
+</footer>
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+<script>
+// Live Search & Category Filtering
+const cards = Array.from(document.querySelectorAll('.blog-card'));
+const noResults = document.getElementById('noResults');
+let activeCat = 'all';
+let searchQuery = '';
+
+function filterCards() {
+  let visible = 0;
+  cards.forEach(card => {
+    const cat = card.dataset.cat || '';
+    const title = card.dataset.title || '';
+    const desc = card.dataset.desc || '';
+    const catMatch = activeCat === 'all' || cat.toLowerCase() === activeCat.toLowerCase();
+    const searchMatch = !searchQuery || title.includes(searchQuery) || desc.includes(searchQuery) || cat.toLowerCase().includes(searchQuery);
+    if (catMatch && searchMatch) {
+      card.style.display = 'flex';
+      visible++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  if (noResults) noResults.style.display = visible === 0 ? 'block' : 'none';
+}
+
+document.querySelectorAll('#blogFilters .filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#blogFilters .filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeCat = chip.dataset.cat;
+    filterCards();
+  });
+});
+
+const searchInput = document.getElementById('blogSearch');
+if (searchInput) {
+  searchInput.addEventListener('input', (e) => {
+    searchQuery = e.target.value.trim().toLowerCase();
+    filterCards();
+  });
+}
+
+// Mobile Menu
+const menuToggle = document.getElementById('menuToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+const mobileClose = document.getElementById('mobileClose');
+if (menuToggle && mobileMenu) {
+  menuToggle.addEventListener('click', () => { mobileMenu.classList.add('open'); document.body.style.overflow = 'hidden'; });
+}
+function closeMobile() {
+  if (mobileMenu) { mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+}
+if (mobileClose) mobileClose.addEventListener('click', closeMobile);
+if (mobileMenu) mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobile));
+
+// Scroll to top
+const scrollTopBtn = document.getElementById('scrollTop');
+if (scrollTopBtn) {
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('show', window.scrollY > 400);
+  }, { passive: true });
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+</script>
+</body>
+</html>`;
+}
+
+function generateSitemapXML(posts) {
+  const latestDate = posts.reduce((latest, p) => p.dateISO > latest ? p.dateISO : latest, '2026-01-01');
+  const urls = [
+    `  <url><loc>${DOMAIN}/</loc><lastmod>${latestDate}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
+    `  <url><loc>${DOMAIN}/blog/</loc><lastmod>${latestDate}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`,
+    ...posts.map(p => `  <url><loc>${DOMAIN}/blog/${p.slug}.html</loc><lastmod>${p.dateISO}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
+  ];
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`;
+}
+
+function generateRSSXML(posts) {
+  const nowRFC = new Date().toUTCString();
+  const items = posts.map(p => {
+    const d = new Date(p.dateISO + 'T00:00:00Z');
+    const pubDate = d.toUTCString();
+    return `    <item>
+      <title>${escapeXML(p.title)}</title>
+      <link>${DOMAIN}/blog/${p.slug}.html</link>
+      <description>${escapeXML(p.description)}</description>
+      <category>${escapeXML(p.cat)}</category>
+      <pubDate>${pubDate}</pubDate>
+      <guid>${DOMAIN}/blog/${p.slug}.html</guid>
+    </item>`;
+  }).join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>${BRAND} Blog</title>
+    <link>${DOMAIN}/blog/</link>
+    <description>Notes on shipping global product — localization, AI data, education solutions, and engineering from the ${BRAND} team.</description>
+    <language>en</language>
+    <lastBuildDate>${nowRFC}</lastBuildDate>
+    <atom:link href="${DOMAIN}/rss.xml" rel="self" type="application/rss+xml"/>
+${items}
+  </channel>
+</rss>\n`;
+}
+
 // Generate all blog files
 const blogDir = path.join(__dirname, 'blog');
+if (!fs.existsSync(blogDir)) fs.mkdirSync(blogDir, { recursive: true });
+
 posts.forEach(post => {
   const filepath = path.join(blogDir, `${post.slug}.html`);
   fs.writeFileSync(filepath, generateHTML(post), 'utf8');
-  console.log(`\u2705 Created: blog/${post.slug}.html`);
+  console.log(`✅ Created: blog/${post.slug}.html`);
 });
 
-console.log(`\n\ud83c\udf89 Generated ${posts.length} blog articles in ./blog/`);
+// Generate blog index
+const blogIndexPath = path.join(blogDir, 'index.html');
+fs.writeFileSync(blogIndexPath, generateBlogIndexHTML(posts), 'utf8');
+console.log(`✅ Created: blog/index.html`);
 
+// Generate sitemap.xml
+const sitemapPath = path.join(__dirname, 'sitemap.xml');
+fs.writeFileSync(sitemapPath, generateSitemapXML(posts), 'utf8');
+console.log(`✅ Created: sitemap.xml`);
+
+// Generate rss.xml
+const rssPath = path.join(__dirname, 'rss.xml');
+fs.writeFileSync(rssPath, generateRSSXML(posts), 'utf8');
+console.log(`✅ Created: rss.xml`);
+
+console.log(`\n🎉 Successfully generated ${posts.length} blog articles, blog/index.html, sitemap.xml, and rss.xml!`);

@@ -124,6 +124,22 @@ const CONTENT = {
     { slug:'scorm-translation', cat:'EduSolutions', title:'Why SCORM compliance breaks during translation — and how to prevent it', excerpt:'The packaging failures that only surface after you upload to the LMS, and the QA step that catches them before that.', read:'5 min read', date:'Jun 2026' },
     { slug:'ai-tutoring-data', cat:'EduSolutions', title:'Building AI tutoring datasets that actually improve student outcomes', excerpt:'What separates useful Q&A training pairs from noise — difficulty calibration, pedagogical intent tagging, and subject-area coverage.', read:'7 min read', date:'Jun 2026' },
     { slug:'pseudo-localization', cat:'Engineering', title:'Pseudo-localization: catching layout bugs before your linguists do', excerpt:'How synthetic placeholder text with accents and extended characters reveals truncation and overflow issues in your UI before real translation begins.', read:'5 min read', date:'May 2026' },
+    { slug:'multimodal-dataset-curation', cat:'AI Data', title:'Curating Multimodal Datasets for Vision-Language Models: Image-Text Pairing at Scale', excerpt:'High-quality image-text alignment for VLM fine-tuning. How synthetic captioning, bounding box verification, and OCR extraction prevent hallucination.', read:'8 min read', date:'Jul 2026' },
+    { slug:'llm-localization-eval', cat:'Localization', title:'Evaluating LLM Translation Quality: COMET, BLEU, and Human Rating Correlation', excerpt:'Why traditional BLEU scores fail to capture semantic nuance in modern LLM translations, and how COMET metrics paired with MQM human evaluation set the gold standard.', read:'7 min read', date:'Jul 2026' },
+    { slug:'adaptive-learning-analytics', cat:'EduSolutions', title:'Designing Adaptive Learning Engines: Item Response Theory (IRT) in Modern EdTech', excerpt:'How 3PL Item Response Theory and knowledge tracing algorithms dynamically adjust question difficulty for personalized student learning pathways.', read:'6 min read', date:'Jul 2026' },
+    { slug:'multilingual-voice-cloning', cat:'AI Data', title:'Zero-Shot Multilingual Voice Cloning: Dataset Requirements & Phoneme Alignment', excerpt:'What makes voice cloning sound natural across language boundaries — IPA phoneme mapping, studio-quality noise floor, and cross-lingual prosody transfer.', read:'7 min read', date:'Jul 2026' },
+    { slug:'rag-chunking-localization', cat:'Engineering', title:'Chunking Strategies for Multilingual RAG: Retaining Semantic Context Across Languages', excerpt:'Why fixed-length character chunking breaks cross-lingual vector retrieval, and how sentence-boundary awareness and metadata enrichment boost RAG accuracy.', read:'6 min read', date:'Jul 2026' },
+    { slug:'enterprise-lqa-framework', cat:'Localization', title:'Building an Enterprise LQA Framework: DQF-MQM Error Typology in Practice', excerpt:'Standardizing localization quality audit scoring across 40 vendors with DQF-MQM severity weighting and automated quality gates.', read:'7 min read', date:'Jul 2026' },
+    { slug:'ai-voice-dubbing-ethics', cat:'AI Data', title:'The ethical framework for AI voice cloning and dubbing', excerpt:'As synthetic voice reaches parity with human actors, how do we handle consent, compensation, and copyright? A look into our voice AI training guidelines.', read:'5 min read', date:'Jul 2026' },
+    { slug:'semantic-search-seo', cat:'Localization', title:'Beyond keywords: Semantic SEO in global markets', excerpt:'Why translating your English keyword list is actively harming your international SEO, and how to optimize for semantic search intent instead.', read:'6 min read', date:'Aug 2026' },
+    { slug:'immersive-vr-learning', cat:'EduSolutions', title:'Localizing VR and AR learning environments', excerpt:'Text expansion is hard on a screen. It\'s even harder in 3D space. How we adapt immersive spatial learning experiences for global audiences.', read:'8 min read', date:'Aug 2026' },
+    { slug:'llm-jailbreak-red-teaming', cat:'AI Data', title:'Multilingual Red Teaming: Finding LLM vulnerabilities across 50 languages', excerpt:'An LLM might be safe in English, but easily jailbroken in Swahili. Why foundation models need comprehensive multilingual red teaming.', read:'7 min read', date:'Aug 2026' },
+    { slug:'llm-agent-tool-calling-multilingual', cat:'AI Data', title:'Benchmarking Tool & Function Calling in Multilingual LLM Agents', excerpt:'Why function calling breaks down when user prompts are in Hindi, Arabic, or Japanese, and how to build robust cross-lingual parameter extraction benchmarks.', read:'7 min read', date:'Aug 2026' },
+    { slug:'multilingual-tokenizer-fertility', cat:'Engineering', title:'Tokenizer Fertility in Low-Resource Languages: Why Your LLM Costs 4x More in Hindi and Swahili', excerpt:'Subword tokenization disparities penalize non-English LLM queries with inflated inference latency, truncated context windows, and 4x cost multipliers.', read:'8 min read', date:'Aug 2026' },
+    { slug:'synthetic-data-contamination-eval', cat:'AI Data', title:'Synthetic Data Generation & Contamination Auditing in Multilingual Foundation Models', excerpt:'How translation-based synthetic data secretly leaks English benchmark answers into multilingual test splits, and how to detect contamination before pre-training.', read:'7 min read', date:'Aug 2026' },
+    { slug:'enterprise-ai-act-localization', cat:'Localization', title:'EU AI Act Compliance: Localizing Technical Documentation & Model Cards for Global Regulators', excerpt:'Translating algorithmic impact assessments, high-risk AI system cards, and automated disclosures without regulatory ambiguity across EU member states.', read:'6 min read', date:'Sep 2026' },
+    { slug:'longform-neural-voice-dubbing', cat:'AI Data', title:'Long-Form Neural Voice Dubbing: Prosody Preservation and Lip-Sync Timing at Scale', excerpt:'Why standard TTS engines fail on 45-minute e-learning modules, and how neural prosody contouring maintains natural vocal fatigue and breath dynamics.', read:'7 min read', date:'Sep 2026' },
+    { slug:'xapi-cmi5-global-lms', cat:'EduSolutions', title:'xAPI and cmi5 in Global E-Learning: Modernizing Beyond Legacy SCORM for Multilingual Telemetry', excerpt:'How to capture granular learner behavior across localized courses without breaking state persistence when students switch language tracks mid-session.', read:'6 min read', date:'Sep 2026' },
   ],
 };
 
@@ -262,13 +278,16 @@ function renderBlog() {
   const blogGrid = document.getElementById('blogGrid');
   if (!blogGrid || typeof CONTENT === 'undefined' || !CONTENT.blogPosts) return;
 
+  const isInsideBlog = window.location.pathname.includes('/blog/');
+  const prefix = isInsideBlog ? '' : 'blog/';
+
   const filtered = blogActiveCat === 'all'
     ? CONTENT.blogPosts
     : CONTENT.blogPosts.filter(p => p.cat === blogActiveCat);
 
   const visible = filtered.slice(0, blogVisibleCount);
   blogGrid.innerHTML = visible.map(p => `
-    <a href="blog/${p.slug}.html" class="blog-card">
+    <a href="${prefix}${p.slug}.html" class="blog-card">
       <div class="blog-meta"><span class="blog-cat">${p.cat}</span><span>${p.date}</span></div>
       <h3>${p.title}</h3>
       <p class="blog-excerpt">${p.excerpt}</p>
@@ -690,8 +709,9 @@ function validateEmail(input, errorEl) {
 }
 
 if (form) {
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
     const name = document.getElementById('name');
     const email = document.getElementById('email');
     const service = document.getElementById('service');
@@ -705,13 +725,45 @@ if (form) {
     const messageOk = validateField(message, message.nextElementSibling?.nextElementSibling);
 
     if (nameOk && emailOk && serviceOk && messageOk) {
-      if (typeof gtag === 'function') gtag('event', 'form_submit', { event_category: 'contact', event_label: service.value });
-      if (toast) {
-        toast.textContent = '✅ Project request sent successfully!';
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3200);
+      const originalBtnText = submitBtn ? submitBtn.textContent : 'Send project request';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
       }
-      form.reset();
+
+      try {
+        const formData = new FormData(form);
+        const actionUrl = form.getAttribute('action') || 'https://formspree.io/f/mgogkawo';
+        const response = await fetch(actionUrl, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          if (typeof gtag === 'function') gtag('event', 'form_submit', { event_category: 'contact', event_label: service.value });
+          if (toast) {
+            const h3 = toast.querySelector('h3');
+            const p = toast.querySelector('p');
+            if (h3) h3.textContent = 'Message Received';
+            if (p) p.textContent = 'Thank you for reaching out! A localization expert from our team will contact you within 1 business day.';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+          }
+          form.reset();
+        } else {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(data.error || 'Submission failed');
+        }
+      } catch (err) {
+        console.error('Contact form submission error:', err);
+        alert('There was a problem sending your project request. Please email us directly at collab@mavyedusolutions.co.in');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+        }
+      }
     }
   });
 }
@@ -873,7 +925,7 @@ if (blogGridEl) {
   const ctx = canvas.getContext('2d');
 
   let width, height;
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789Ã†Î£Î©ã ‚ã „ã †äºœæ–°'.split('');
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ÆΣΩあいう亜新'.split('');
   const particles = [];
 
   function resize() {
@@ -1272,7 +1324,7 @@ window.addEventListener('load', () => {
     document.body.classList.add('loaded');
     const reveal = document.getElementById('page-reveal');
     if (reveal) reveal.classList.add('hidden');
-  }, 6500);
+  }, 600);
 });
 
 /* ============ Theme Toggle & LocalStorage ============ */
@@ -1298,3 +1350,348 @@ window.addEventListener('load', () => {
     });
   }
 })();
+
+/* ================================================================
+   FREE INTERACTIVE TOOLS & ADVANCED SYSTEM ANIMATIONS
+   ================================================================ */
+
+/* --- 1. Tool 1: Global Text Expansion & Pseudo-Localization Estimator --- */
+(() => {
+  const inputEl = document.getElementById('expansionInput');
+  const chipsEl = document.getElementById('expansionChips');
+  const previewEl = document.getElementById('pseudoPreview');
+  const copyBtn = document.getElementById('copyPseudoBtn');
+  if (!inputEl || !chipsEl || !previewEl) return;
+
+  const expansionFactors = [
+    { code: 'DE', name: 'German', rate: 0.30, flag: '🇩🇪' },
+    { code: 'FI', name: 'Finnish', rate: 0.40, flag: '🇫🇮' },
+    { code: 'FR', name: 'French', rate: 0.20, flag: '🇫🇷' },
+    { code: 'ES', name: 'Spanish', rate: 0.25, flag: '🇪🇸' },
+    { code: 'AR', name: 'Arabic', rate: 0.25, flag: '🇸🇦' },
+    { code: 'JA', name: 'Japanese', rate: -0.35, flag: '🇯🇵' },
+  ];
+
+  const charMap = {
+    'a': 'á', 'A': 'Å', 'b': 'þ', 'B': 'ß', 'c': 'ç', 'C': 'Ç',
+    'd': 'ð', 'D': 'Ð', 'e': 'é', 'E': 'Ë', 'f': 'ƒ', 'g': 'ĝ',
+    'h': 'ĥ', 'i': 'î', 'I': 'Î', 'l': 'ľ', 'm': 'ɱ', 'n': 'ñ',
+    'o': 'ö', 'O': 'Ö', 'p': 'ƥ', 'r': 'ř', 's': 'ş', 'S': 'Ş',
+    't': 'ţ', 'u': 'û', 'U': 'Û', 'w': 'ŵ', 'y': 'ŷ', 'z': 'ž'
+  };
+
+  function toPseudo(str) {
+    if (!str) return '[ !!! Empty String !!! ]';
+    const transformed = str.split('').map(c => charMap[c] || c).join('');
+    const padLen = Math.max(3, Math.round(str.length * 0.3));
+    const pad = '~'.repeat(padLen);
+    return `[ !!! ${transformed} ${pad} !!! ]`;
+  }
+
+  function updateEstimator() {
+    const raw = inputEl.value.trim();
+    const len = raw.length || 0;
+
+    chipsEl.innerHTML = expansionFactors.map(f => {
+      const targetLen = Math.max(1, Math.round(len * (1 + f.rate)));
+      const diffPct = Math.round(f.rate * 100);
+      const sign = diffPct > 0 ? `+${diffPct}%` : `${diffPct}%`;
+      const isWarn = f.rate > 0.25 && targetLen > 32;
+      const statusHtml = isWarn
+        ? `<span class="expansion-warn">⚠️ Overflow Risk</span>`
+        : `<span class="expansion-ok">✓ Safe Fit</span>`;
+
+      return `
+        <div class="expansion-chip">
+          <div class="expansion-chip-top">
+            <span class="expansion-flag">${f.flag}</span>
+            <span class="expansion-lang">${f.name} (${sign})</span>
+          </div>
+          <div class="expansion-chip-chars"><strong>${targetLen}</strong> chars</div>
+          ${statusHtml}
+        </div>
+      `;
+    }).join('');
+
+    previewEl.textContent = toPseudo(raw);
+  }
+
+  inputEl.addEventListener('input', updateEstimator);
+  updateEstimator();
+
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const textToCopy = previewEl.textContent;
+      if (!textToCopy) return;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const orig = copyBtn.innerHTML;
+        copyBtn.innerHTML = '✓ Copied to Clipboard!';
+        copyBtn.style.background = 'rgba(52,211,153,0.2)';
+        copyBtn.style.borderColor = 'var(--accent-emerald)';
+        copyBtn.style.color = '#34d399';
+        setTimeout(() => {
+          copyBtn.innerHTML = orig;
+          copyBtn.style.background = '';
+          copyBtn.style.borderColor = '';
+          copyBtn.style.color = '';
+        }, 2000);
+      }).catch(() => {
+        // Fallback
+        const sel = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(previewEl);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        document.execCommand('copy');
+        alert('Copied to clipboard!');
+      });
+    });
+  }
+})();
+
+/* --- 2. Tool 2: AI Multilingual Dataset Scope & Token Calculator --- */
+(() => {
+  const modalityEl = document.getElementById('calcModality');
+  const sliderLangs = document.getElementById('sliderLanguages');
+  const valLangs = document.getElementById('valLanguages');
+  const sliderVol = document.getElementById('sliderVolume');
+  const valVol = document.getElementById('valVolume');
+  const lblVol = document.getElementById('lblVolume');
+  const resCohort = document.getElementById('resCohort');
+  const resTimeline = document.getElementById('resTimeline');
+  const resQC = document.getElementById('resQC');
+  const exportBtn = document.getElementById('btnExportBrief');
+
+  if (!modalityEl || !sliderLangs || !sliderVol) return;
+
+  const modalityData = {
+    audio: {
+      unit: 'hrs',
+      label: 'Dataset Volume (Recorded Hours of Native Audio)',
+      minVol: 20, maxVol: 2000, step: 20, defVol: 300,
+      cohortCalc: (langs, vol) => Math.max(12, Math.round(langs * 3.5 + vol * 0.08)),
+      timelineCalc: (langs, vol) => {
+        const low = (vol / (langs * 20 + 40) + 1.5).toFixed(1);
+        const high = (vol / (langs * 20 + 40) + 3.0).toFixed(1);
+        return `${low} - ${high} weeks`;
+      },
+      qc: "3-Tier (SNR Acoustic Verification + Phoneme LQA + Native Speaker Validation)",
+      serviceName: "AI data collection"
+    },
+    text: {
+      unit: 'instruction pairs',
+      label: 'Dataset Volume (Verified Multilingual Q&A Pairs)',
+      minVol: 100, maxVol: 10000, step: 100, defVol: 2500,
+      cohortCalc: (langs, vol) => Math.max(8, Math.round(langs * 2.2 + (vol / 10) * 0.04)),
+      timelineCalc: (langs, vol) => {
+        const v = vol / 10;
+        const low = (v / (langs * 30 + 60) + 1.2).toFixed(1);
+        const high = (v / (langs * 30 + 60) + 2.5).toFixed(1);
+        return `${low} - ${high} weeks`;
+      },
+      qc: "3-Tier (Syntax Parsing + Fleiss' κ Inter-Rater Agreement + Domain SME Review)",
+      serviceName: "Data annotation & labeling"
+    },
+    rlhf: {
+      unit: 'preference turns',
+      label: 'Dataset Volume (Human Rater Comparison Turns)',
+      minVol: 100, maxVol: 8000, step: 100, defVol: 1500,
+      cohortCalc: (langs, vol) => Math.max(15, Math.round(langs * 4.0 + (vol / 5) * 0.06)),
+      timelineCalc: (langs, vol) => {
+        const v = vol / 5;
+        const low = (v / (langs * 18 + 35) + 1.8).toFixed(1);
+        const high = (v / (langs * 18 + 35) + 3.8).toFixed(1);
+        return `${low} - ${high} weeks`;
+      },
+      qc: "4-Tier (Adversarial Red-Team + Cohen's κ > 0.85 + Safety Guardrails + Benchmark Holdout)",
+      serviceName: "RLHF & model evaluation"
+    },
+    multimodal: {
+      unit: 'paired assets',
+      label: 'Dataset Volume (Image/Video-to-Text Labeled Pairs)',
+      minVol: 100, maxVol: 5000, step: 50, defVol: 1000,
+      cohortCalc: (langs, vol) => Math.max(16, Math.round(langs * 3.2 + (vol / 2) * 0.05)),
+      timelineCalc: (langs, vol) => {
+        const v = vol / 2;
+        const low = (v / (langs * 16 + 30) + 2.0).toFixed(1);
+        const high = (v / (langs * 16 + 30) + 4.2).toFixed(1);
+        return `${low} - ${high} weeks`;
+      },
+      qc: "3-Tier (Bounding Box IoU > 0.92 + OCR Alignment + Native Cultural Review)",
+      serviceName: "Data annotation & labeling"
+    }
+  };
+
+  function syncModalityConfig() {
+    const mode = modalityEl.value;
+    const cfg = modalityData[mode];
+    if (!cfg) return;
+    if (lblVol) lblVol.textContent = cfg.label;
+    sliderVol.min = cfg.minVol;
+    sliderVol.max = cfg.maxVol;
+    sliderVol.step = cfg.step;
+    sliderVol.value = cfg.defVol;
+    updateScope();
+  }
+
+  function updateScope() {
+    const mode = modalityEl.value;
+    const cfg = modalityData[mode];
+    if (!cfg) return;
+
+    const langs = parseInt(sliderLangs.value, 10);
+    const vol = parseInt(sliderVol.value, 10);
+
+    if (valLangs) valLangs.textContent = `${langs} ${langs === 1 ? 'locale' : 'locales'}`;
+    if (valVol) valVol.textContent = `${vol.toLocaleString()} ${cfg.unit}`;
+
+    const cohort = cfg.cohortCalc(langs, vol);
+    const timeline = cfg.timelineCalc(langs, vol);
+
+    if (resCohort) resCohort.textContent = `~${cohort} native specialists`;
+    if (resTimeline) resTimeline.textContent = timeline;
+    if (resQC) resQC.textContent = cfg.qc;
+  }
+
+  modalityEl.addEventListener('change', syncModalityConfig);
+  sliderLangs.addEventListener('input', updateScope);
+  sliderVol.addEventListener('input', updateScope);
+  syncModalityConfig();
+
+  if (exportBtn) {
+    exportBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const mode = modalityEl.value;
+      const cfg = modalityData[mode];
+      const langs = sliderLangs.value;
+      const vol = sliderVol.value;
+      const cohort = resCohort ? resCohort.textContent : '';
+      const timeline = resTimeline ? resTimeline.textContent : '';
+      const qc = resQC ? resQC.textContent : '';
+
+      const serviceDropdown = document.getElementById('service');
+      if (serviceDropdown && cfg.serviceName) {
+        for (let i = 0; i < serviceDropdown.options.length; i++) {
+          if (serviceDropdown.options[i].text.toLowerCase().includes(cfg.serviceName.toLowerCase())) {
+            serviceDropdown.selectedIndex = i;
+            break;
+          }
+        }
+      }
+
+      const msgBox = document.getElementById('message');
+      if (msgBox) {
+        msgBox.value = [
+          `[Scope Brief from Interactive AI Dataset Calculator]`,
+          `• Target Modality: ${modalityEl.options[modalityEl.selectedIndex].text}`,
+          `• Target Languages: ${langs} locales`,
+          `• Target Volume: ${parseInt(vol, 10).toLocaleString()} ${cfg.unit}`,
+          `• Estimated Cohort: ${cohort}`,
+          `• Projected Turnaround: ${timeline}`,
+          `• Quality Gates: ${qc}`,
+          ``,
+          `Please provide a customized quotation and production roadmap.`
+        ].join('\n');
+
+        msgBox.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+
+      const contactSection = document.getElementById('contact');
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+          if (msgBox) msgBox.focus();
+        }, 600);
+      }
+    });
+  }
+})();
+
+/* --- 3. Bento Spotlight Radial Follower --- */
+(() => {
+  const cards = document.querySelectorAll('.spotlight-card, .service-card, .tool-box, .case-card, .industry-card');
+  if (!cards.length) return;
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+  if (isTouch) return;
+
+  cards.forEach(card => {
+    card.classList.add('spotlight-card');
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+})();
+
+/* --- 4. IntersectionObserver Animated Stat Counters --- */
+(() => {
+  const counters = document.querySelectorAll('.counter-num');
+  if (!counters.length) return;
+  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const counterObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      observer.unobserve(el);
+
+      const target = parseFloat(el.getAttribute('data-target')) || 0;
+      const suffix = el.getAttribute('data-suffix') || '';
+
+      if (isReducedMotion) {
+        el.textContent = `${target}${suffix}`;
+        return;
+      }
+
+      const duration = 1200;
+      const startTime = performance.now();
+
+      function updateNumber(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(target * easeOut);
+        el.textContent = `${current}${suffix}`;
+
+        if (progress < 1) {
+          requestAnimationFrame(updateNumber);
+        } else {
+          el.textContent = `${target}${suffix}`;
+        }
+      }
+      requestAnimationFrame(updateNumber);
+    });
+  }, { threshold: 0.3 });
+
+  counters.forEach(c => counterObserver.observe(c));
+})();
+
+/* --- 5. Magnetic Hover Micro-Interaction --- */
+(() => {
+  const magneticBtns = document.querySelectorAll('.magnetic-btn');
+  if (!magneticBtns.length) return;
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+  if (isTouch) return;
+
+  magneticBtns.forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) * 0.22;
+      const dy = (e.clientY - cy) * 0.22;
+      btn.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0px, 0px)';
+      btn.style.transition = 'transform 0.3s cubic-bezier(0.2, 0, 0, 1)';
+    });
+    btn.addEventListener('mouseenter', () => {
+      btn.style.transition = 'none';
+    });
+  });
+})();
+

@@ -5,20 +5,20 @@
     <link>https://www.mavyedusolution.com/blog/</link>
     <description>Notes on shipping global product — localization, AI data, education solutions, and engineering from the Mavy EduSolutions team.</description>
     <language>en</language>
-    <lastBuildDate>Fri, 18 Jul 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 08 Sep 2026 08:13:13 GMT</lastBuildDate>
     <atom:link href="https://www.mavyedusolution.com/rss.xml" rel="self" type="application/rss+xml"/>
     <item>
-      <title>Why "good enough" machine translation still needs a human pass</title>
+      <title>Why &quot;good enough&quot; machine translation still needs a human pass</title>
       <link>https://www.mavyedusolution.com/blog/mt-human-pass.html</link>
-      <description>MT gets you a fast first draft. Here's where it quietly breaks — idiom, tone, and anything with legal weight — and why a second linguist still has to catch it.</description>
+      <description>MT gets you a fast first draft. Here&apos;s where it quietly breaks — idiom, tone, and anything with legal weight — and why a second linguist still has to catch it.</description>
       <category>Localization</category>
       <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/mt-human-pass.html</guid>
     </item>
     <item>
-      <title>RLHF data quality: what "high agreement" actually measures</title>
+      <title>RLHF data quality: what &quot;high agreement&quot; actually measures</title>
       <link>https://www.mavyedusolution.com/blog/rlhf-agreement.html</link>
-      <description>Inter-rater agreement is easy to game and easy to misread. What it tells you about your preference data, and what it doesn't.</description>
+      <description>Inter-rater agreement is easy to game and easy to misread. What it tells you about your preference data, and what it doesn&apos;t.</description>
       <category>AI Data</category>
       <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/rlhf-agreement.html</guid>
@@ -34,7 +34,7 @@
     <item>
       <title>Sourcing wake-word audio across 40 languages without burning your timeline</title>
       <link>https://www.mavyedusolution.com/blog/wake-word-audio.html</link>
-      <description>What actually slows down multilingual voice data collection — and it usually isn't the recording.</description>
+      <description>What actually slows down multilingual voice data collection — and it usually isn&apos;t the recording.</description>
       <category>AI Data</category>
       <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/wake-word-audio.html</guid>
@@ -44,7 +44,7 @@
       <link>https://www.mavyedusolution.com/blog/translation-memory.html</link>
       <description>Not just money on repeated strings — consistency across releases, and a paper trail when a term changes six months in.</description>
       <category>Process</category>
-      <pubDate>Thu, 15 May 2026 00:00:00 GMT</pubDate>
+      <pubDate>Fri, 15 May 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/translation-memory.html</guid>
     </item>
     <item>
@@ -52,13 +52,13 @@
       <link>https://www.mavyedusolution.com/blog/glossary-contract.html</link>
       <description>How one unreviewed term change turns into forty inconsistent ones, and the review step that stops it.</description>
       <category>Localization</category>
-      <pubDate>Thu, 15 May 2026 00:00:00 GMT</pubDate>
+      <pubDate>Fri, 15 May 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/glossary-contract.html</guid>
     </item>
     <item>
       <title>Why multilingual SEO is more than translating your keywords</title>
       <link>https://www.mavyedusolution.com/blog/multilingual-seo.html</link>
-      <description>Hreflang tags, locale-specific search intent, and the gap between "translated" and "discoverable" in 12 markets.</description>
+      <description>Hreflang tags, locale-specific search intent, and the gap between &quot;translated&quot; and &quot;discoverable&quot; in 12 markets.</description>
       <category>Localization</category>
       <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/multilingual-seo.html</guid>
@@ -66,7 +66,7 @@
     <item>
       <title>Red-teaming your LLM: what annotators actually look for</title>
       <link>https://www.mavyedusolution.com/blog/red-teaming-llm.html</link>
-      <description>A practical breakdown of the failure modes human raters flag — and why "sounds correct" is the hardest category to evaluate.</description>
+      <description>A practical breakdown of the failure modes human raters flag — and why &quot;sounds correct&quot; is the hardest category to evaluate.</description>
       <category>AI Data</category>
       <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/red-teaming-llm.html</guid>
@@ -74,7 +74,7 @@
     <item>
       <title>Localizing e-learning for cultural learning styles, not just language</title>
       <link>https://www.mavyedusolution.com/blog/elearning-cultural.html</link>
-      <description>Why a translated course isn't a localized course — and the structural changes that make assessments work in MENA, LATAM, and APAC markets.</description>
+      <description>Why a translated course isn&apos;t a localized course — and the structural changes that make assessments work in MENA, LATAM, and APAC markets.</description>
       <category>EduSolutions</category>
       <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/elearning-cultural.html</guid>
@@ -100,7 +100,7 @@
       <link>https://www.mavyedusolution.com/blog/pseudo-localization.html</link>
       <description>How synthetic placeholder text with accents and extended characters reveals truncation and overflow issues in your UI before real translation begins.</description>
       <category>Engineering</category>
-      <pubDate>Thu, 15 May 2026 00:00:00 GMT</pubDate>
+      <pubDate>Fri, 15 May 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/pseudo-localization.html</guid>
     </item>
     <item>
@@ -150,6 +150,86 @@
       <category>Localization</category>
       <pubDate>Sun, 05 Jul 2026 00:00:00 GMT</pubDate>
       <guid>https://www.mavyedusolution.com/blog/enterprise-lqa-framework.html</guid>
+    </item>
+    <item>
+      <title>The ethical framework for AI voice cloning and dubbing</title>
+      <link>https://www.mavyedusolution.com/blog/ai-voice-dubbing-ethics.html</link>
+      <description>As synthetic voice reaches parity with human actors, how do we handle consent, compensation, and copyright? A look into our voice AI training guidelines.</description>
+      <category>AI Data</category>
+      <pubDate>Mon, 20 Jul 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/ai-voice-dubbing-ethics.html</guid>
+    </item>
+    <item>
+      <title>Beyond keywords: Semantic SEO in global markets</title>
+      <link>https://www.mavyedusolution.com/blog/semantic-search-seo.html</link>
+      <description>Why translating your English keyword list is actively harming your international SEO, and how to optimize for semantic search intent instead.</description>
+      <category>Localization</category>
+      <pubDate>Sun, 02 Aug 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/semantic-search-seo.html</guid>
+    </item>
+    <item>
+      <title>Localizing VR and AR learning environments</title>
+      <link>https://www.mavyedusolution.com/blog/immersive-vr-learning.html</link>
+      <description>Text expansion is hard on a screen. It&apos;s even harder in 3D space. How we adapt immersive spatial learning experiences for global audiences.</description>
+      <category>Education</category>
+      <pubDate>Mon, 10 Aug 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/immersive-vr-learning.html</guid>
+    </item>
+    <item>
+      <title>Multilingual Red Teaming: Finding LLM vulnerabilities across 50 languages</title>
+      <link>https://www.mavyedusolution.com/blog/llm-jailbreak-red-teaming.html</link>
+      <description>An LLM might be safe in English, but easily jailbroken in Swahili. Why foundation models need comprehensive multilingual red teaming.</description>
+      <category>AI Data</category>
+      <pubDate>Tue, 18 Aug 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/llm-jailbreak-red-teaming.html</guid>
+    </item>
+    <item>
+      <title>Benchmarking Tool &amp; Function Calling in Multilingual LLM Agents</title>
+      <link>https://www.mavyedusolution.com/blog/llm-agent-tool-calling-multilingual.html</link>
+      <description>Why function calling breaks down when user prompts are in Hindi, Arabic, or Japanese, and how to build robust cross-lingual parameter extraction benchmarks.</description>
+      <category>AI Data</category>
+      <pubDate>Sat, 22 Aug 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/llm-agent-tool-calling-multilingual.html</guid>
+    </item>
+    <item>
+      <title>Tokenizer Fertility in Low-Resource Languages: Why Your LLM Costs 4x More in Hindi and Swahili</title>
+      <link>https://www.mavyedusolution.com/blog/multilingual-tokenizer-fertility.html</link>
+      <description>Subword tokenization disparities penalize non-English LLM queries with inflated inference latency, truncated context windows, and 4x cost multipliers.</description>
+      <category>Engineering</category>
+      <pubDate>Tue, 25 Aug 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/multilingual-tokenizer-fertility.html</guid>
+    </item>
+    <item>
+      <title>Synthetic Data Generation &amp; Contamination Auditing in Multilingual Foundation Models</title>
+      <link>https://www.mavyedusolution.com/blog/synthetic-data-contamination-eval.html</link>
+      <description>How translation-based synthetic data secretly leaks English benchmark answers into multilingual test splits, and how to detect contamination before pre-training.</description>
+      <category>AI Data</category>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/synthetic-data-contamination-eval.html</guid>
+    </item>
+    <item>
+      <title>EU AI Act Compliance: Localizing Technical Documentation &amp; Model Cards for Global Regulators</title>
+      <link>https://www.mavyedusolution.com/blog/enterprise-ai-act-localization.html</link>
+      <description>Translating algorithmic impact assessments, high-risk AI system cards, and automated disclosures without regulatory ambiguity across EU member states.</description>
+      <category>Localization</category>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/enterprise-ai-act-localization.html</guid>
+    </item>
+    <item>
+      <title>Long-Form Neural Voice Dubbing: Prosody Preservation and Lip-Sync Timing at Scale</title>
+      <link>https://www.mavyedusolution.com/blog/longform-neural-voice-dubbing.html</link>
+      <description>Why standard TTS engines fail on 45-minute e-learning modules, and how neural prosody contouring maintains natural vocal fatigue and breath dynamics.</description>
+      <category>AI Data</category>
+      <pubDate>Fri, 04 Sep 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/longform-neural-voice-dubbing.html</guid>
+    </item>
+    <item>
+      <title>xAPI and cmi5 in Global E-Learning: Modernizing Beyond Legacy SCORM for Multilingual Telemetry</title>
+      <link>https://www.mavyedusolution.com/blog/xapi-cmi5-global-lms.html</link>
+      <description>How to capture granular learner behavior across localized courses without breaking state persistence when students switch language tracks mid-session.</description>
+      <category>EduSolutions</category>
+      <pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate>
+      <guid>https://www.mavyedusolution.com/blog/xapi-cmi5-global-lms.html</guid>
     </item>
   </channel>
 </rss>

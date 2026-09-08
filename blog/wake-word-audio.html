@@ -33,11 +33,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#050510;--surface:rgba(255,255,255,0.03);--surface-solid:#0d0d20;--surface-2:rgba(255,255,255,0.06);--text:#f0f0ff;--muted:#8888aa;--brass:#a78bfa;--brass-soft:rgba(167,139,250,0.14);--coral:#22d3ee;--paper:#0e0e1e;--line:rgba(255,255,255,0.08);--shadow:0 20px 60px rgba(0,0,0,0.6);--glass:blur(16px) saturate(180%);--r-lg:22px;--r-md:14px;--accent-pink:#f472b6;}
+  :root{--ink:#030712;--surface:rgba(15,23,42,0.65);--surface-solid:#0b0f19;--surface-2:rgba(30,41,59,0.75);--text:#f8fafc;--muted:#94a3b8;--brass:#818cf8;--brass-soft:rgba(129,140,248,0.14);--coral:#22d3ee;--paper:#0b0f19;--line:rgba(255,255,255,0.08);--shadow:0 20px 60px rgba(0,0,0,0.7);--glass:blur(16px) saturate(180%);--r-lg:22px;--r-md:14px;--accent-pink:#f472b6;}
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{background:var(--ink);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;overflow-x:hidden;}
-  ::selection{background:var(--brass);color:#050510;}
+  ::selection{background:var(--brass);color:#030712;}
   h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;}
   a{color:inherit;text-decoration:none;}
   nav{position:fixed;top:0;width:100%;z-index:100;padding:1.1rem 5%;display:flex;justify-content:space-between;align-items:center;background:var(--surface);backdrop-filter:var(--glass);border-bottom:1px solid var(--line);}
@@ -56,6 +56,7 @@
   .mobile-menu a{font-size:1.6rem;font-weight:500;color:var(--muted);transition:color .2s;}
   .mobile-menu a:hover{color:var(--brass);}
   .mobile-menu .mobile-close{position:absolute;top:1.2rem;right:5%;font-size:1.5rem;color:var(--text);background:none;border:none;cursor:pointer;padding:.5rem;}
+  .blog-hero{padding:8rem 5% 3rem;max-width:1400px;margin:auto;text-align:center;}
   .reading-progress{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,var(--brass),var(--coral));z-index:200;transition:width .1s linear;}
   .breadcrumbs{padding:6rem 5% 0;max-width:900px;margin:auto;}
   .breadcrumbs ol{list-style:none;display:flex;gap:.6rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);flex-wrap:wrap;}
@@ -373,7 +374,6 @@ function init4DLogoEngine() {
 }
 document.addEventListener('DOMContentLoaded', init4DLogoEngine);
 </script>
-
 </head>
 <body>
 <div class="reading-progress" id="readingProgress"></div>
@@ -383,6 +383,7 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
     <a href="../index.html#services">Services</a>
     <a href="../index.html#ai-data">AI Data</a>
     <a href="../index.html#edu-solutions">EduSolutions</a>
+    <a href="../index.html#tools">Free Tools</a>
     <a href="../index.html#blog" class="active">Blog</a>
     <a href="../index.html#contact">Contact</a>
     <button class="icon-btn" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
@@ -393,6 +394,7 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
   <a href="../index.html#services">Services</a>
   <a href="../index.html#ai-data">AI Data</a>
   <a href="../index.html#edu-solutions">EduSolutions</a>
+  <a href="../index.html#tools">Free Tools</a>
   <a href="../index.html#blog">Blog</a>
   <a href="../index.html#contact">Contact</a>
 </div>
@@ -438,7 +440,7 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
 
   <ol>
     <li><strong>Parallel recruitment:</strong> We start recruitment in all 40 markets simultaneously, not sequentially. Languages with smaller speaker pools get a head start.</li>
-    <li><strong>Standardized recording kit:</strong> Every speaker gets the same recording environment spec — device type, distance from mic, ambient noise ceiling — regardless of whether they're in SÃ£o Paulo or Seoul.</li>
+    <li><strong>Standardized recording kit:</strong> Every speaker gets the same recording environment spec — device type, distance from mic, ambient noise ceiling — regardless of whether they're in São Paulo or Seoul.</li>
     <li><strong>Tiered QC:</strong> Automated checks catch technical failures (SNR, duration, format). Native-speaker reviewers handle pronunciation accuracy and accent classification. Both stages run in parallel with recording.</li>
     <li><strong>Consent as infrastructure:</strong> Consent forms are localized, reviewed by local counsel, and managed through a single platform so you have one rights ledger across all 40 markets.</li>
   </ol>
@@ -469,17 +471,17 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
     <a href="rlhf-agreement.html" class="related-card">
       <span class="blog-cat">AI Data</span>
       <h3>RLHF data quality: what "high agreement" actually measures</h3>
-      <span class="blog-read">7 min read â†’</span>
+      <span class="blog-read">7 min read →</span>
     </a>
     <a href="red-teaming-llm.html" class="related-card">
       <span class="blog-cat">AI Data</span>
       <h3>Red-teaming your LLM: what annotators actually look for</h3>
-      <span class="blog-read">7 min read â†’</span>
+      <span class="blog-read">7 min read →</span>
     </a>
     <a href="ai-tutoring-data.html" class="related-card">
       <span class="blog-cat">EduSolutions</span>
       <h3>Building AI tutoring datasets that actually improve student outcomes</h3>
-      <span class="blog-read">7 min read â†’</span>
+      <span class="blog-read">7 min read →</span>
     </a></div>
 </div>
 <a href="../index.html#blog" class="back-to-blog" style="margin-bottom:3rem;">← Back to all posts</a>

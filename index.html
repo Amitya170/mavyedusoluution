@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
 
 <!-- ============ NAVIGATION ============ -->
 <nav>
-  <a href="index.html" class="logo"><div class="webgl-logo-container logo-icon" style="width: 28px; height: 28px; display: inline-flex; justify-content: center; align-items: center; margin-right: 8px;"></div>Mavy <span>EduSolutions</span></a>
+  <a href="index.html" class="logo"><img src="logo.svg" alt="Mavy EduSolutions" class="logo-icon" width="32" height="32" style="margin-right: 8px; vertical-align: middle;">Mavy <span>EduSolutions</span></a>
   <div class="nav-links">
     <a href="#services" data-section="services">Services</a>
     <a href="#ai-data" data-section="ai-data">AI Data</a>
@@ -396,38 +396,38 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
 
 <!-- ============ MOBILE NAV ============ -->
 <div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-close" id="mobileClose" aria-label="Close menu">âœ•</button>
+  <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
   <a href="#services">Services</a>
   <a href="#ai-data">AI Data</a>
   <a href="#edu-solutions">EduSolutions</a>
   <a href="#about">About</a>
   <a href="#blog">Blog</a>
   <a href="#contact">Contact</a>
-  <button class="btn btn-primary" style="padding:.6rem 1.2rem;font-size:.82rem;" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'});closeMobile()">Start a project â†’</button>
+  <button class="btn btn-primary" style="padding:.6rem 1.2rem;font-size:.82rem;" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'});closeMobile()">Start a project →</button>
 </div>
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="main">
   <div class="hero-grid">
     <div>
-      <div class="eyebrow">Localization Â· AI Data Â· Education</div>
+      <div class="eyebrow">Localization · AI Data · Education</div>
       <h1>Your product, <em>fluent</em> in every market you ship to.</h1>
       <p class="subtitle">Mavy EduSolutions pairs native linguists with a translation memory engine so every string, screen, course, and subtitle lands the way it would if it were written there first — not translated to get there.</p>
       <div class="cta-group">
-        <button class="btn btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Start a project</button>
+        <button class="btn btn-primary magnetic-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Start a project</button>
         <button class="btn btn-outline" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">See what we do</button>
       </div>
       <div class="hero-meta">
-        <div><b>150+</b>languages shipped</div>
-        <div><b>98%</b>first-pass accuracy</div>
-        <div><b>24hr</b>average turnaround</div>
+        <div><b class="counter-num" data-target="150" data-suffix="+">150+</b>languages shipped</div>
+        <div><b class="counter-num" data-target="98" data-suffix="%">98%</b>first-pass accuracy</div>
+        <div><b class="counter-num" data-target="24" data-suffix="hr">24hr</b>average turnaround</div>
       </div>
       <div class="float-badge float-badge--1">🌐 150+ Languages Shipped</div>
       <div class="float-badge float-badge--2">⚡ AI-Powered MTPE</div>
       <div class="float-badge float-badge--3">🤖 RLHF Data Quality</div>
     </div>
     <div class="lens-card">
-      <div class="cap"><span>LIVE LENS DEMO</span><span id="lensLangLabel">â†’ ES</span></div>
+      <div class="cap"><span>LIVE LENS DEMO</span><span id="lensLangLabel">→ ES</span></div>
       <div class="lens-wrap" id="lensWrap">
         <div class="lens-original">Your product, fluent everywhere.</div>
         <div class="lens-translated" id="lensTranslated">Tu producto, fluido en todas partes.</div>
@@ -628,7 +628,7 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
     </svg>
   </div>
   <div class="lang-controls">
-    <input type="text" class="lang-search" id="langSearch" placeholder="Search a language or codeâ€¦">
+    <input type="text" class="lang-search" id="langSearch" placeholder="Search a language or code…">
     <div class="lang-filters" id="langFilters">
       <button class="filter-chip active" data-filter="all">All</button>
       <button class="filter-chip" data-filter="rtl">Right-to-left</button>
@@ -668,6 +668,95 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
   </div>
   <div class="blog-grid" id="blogGrid"></div>
   <button class="btn btn-outline blog-load-more" id="blogLoadMore" style="display:none;">Load more posts</button>
+</section>
+
+<!-- ============ FREE INTERACTIVE TOOLS ============ -->
+<section id="tools" class="tools-section">
+  <div class="section-head center">
+    <div class="eyebrow">Free Developer &amp; Localization Tools</div>
+    <h2>Interactive Calculators &amp; Simulators</h2>
+    <p>Client-side estimation tools designed for engineering and localization teams. Test string expansion rates and compute AI dataset training scopes in real time.</p>
+  </div>
+  <div class="tools-grid">
+    <!-- Tool 1: Text Expansion & Pseudo-Localization -->
+    <div class="tool-box spotlight-card">
+      <div class="tool-box-header">
+        <div>
+          <h3>Global Text Expansion Estimator</h3>
+          <p class="tool-desc">Enter any English UI string or button text to preview predicted length expansion across global locales and generate instant pseudo-localized test strings.</p>
+        </div>
+        <span class="tool-badge">LQA &amp; UI Tool</span>
+      </div>
+      <div class="tool-field">
+        <label for="expansionInput">English UI String or Button Label</label>
+        <textarea id="expansionInput" class="tool-textarea" placeholder="e.g. Complete your registration to start your 14-day free trial">Complete your registration to start your 14-day free trial</textarea>
+      </div>
+      <div class="tool-results-panel">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;">Predicted Length by Locale</div>
+        <div class="expansion-chips" id="expansionChips">
+          <!-- Populated by JavaScript -->
+        </div>
+        <div style="margin-top:0.4rem;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:0.3rem;">PSEUDO-LOCALIZED PREVIEW (FOR FIGMA / REPO):</div>
+          <div class="pseudo-preview" id="pseudoPreview">[ !!! Çömpľéţé ŷöûř řégîşţřáţîöñ... !!! ]</div>
+        </div>
+        <button class="copy-btn" id="copyPseudoBtn">📋 Copy Test String</button>
+      </div>
+    </div>
+
+    <!-- Tool 2: AI Dataset Scope & Token Calculator -->
+    <div class="tool-box spotlight-card">
+      <div class="tool-box-header">
+        <div>
+          <h3>AI Multilingual Dataset Scope Calculator</h3>
+          <p class="tool-desc">Model your foundation training pipeline. Estimate native annotator pool, audio hours, and verification cycles based on your token and language parameters.</p>
+        </div>
+        <span class="tool-badge">AI Data Planning</span>
+      </div>
+      <div class="tool-field">
+        <label for="calcModality">Target Modality</label>
+        <select id="calcModality" class="tool-select">
+          <option value="audio">Multilingual Voice &amp; Audio (Speech/Wake-Word)</option>
+          <option value="text">Text QA &amp; Instruction Fine-Tuning</option>
+          <option value="rlhf">RLHF Human Preference Ranks</option>
+          <option value="multimodal">Vision-Language Multimodal Pairs</option>
+        </select>
+      </div>
+      <div class="tool-field">
+        <div style="display:flex;justify-content:space-between;">
+          <label>Target Languages Count</label>
+          <span class="tool-slider-val" id="valLanguages">15 locales</span>
+        </div>
+        <div class="tool-slider-wrap">
+          <input type="range" id="sliderLanguages" class="tool-slider" min="1" max="50" value="15">
+        </div>
+      </div>
+      <div class="tool-field">
+        <div style="display:flex;justify-content:space-between;">
+          <label id="lblVolume">Dataset Volume (Hours / Pairs / Tokens)</label>
+          <span class="tool-slider-val" id="valVolume">500 units</span>
+        </div>
+        <div class="tool-slider-wrap">
+          <input type="range" id="sliderVolume" class="tool-slider" min="50" max="5000" step="50" value="500">
+        </div>
+      </div>
+      <div class="tool-results-panel">
+        <div class="scope-summary-row">
+          <span class="scope-label">Annotator / Speaker Cohort:</span>
+          <span class="scope-val" id="resCohort">~45 native linguists</span>
+        </div>
+        <div class="scope-summary-row">
+          <span class="scope-label">Estimated Delivery Turnaround:</span>
+          <span class="scope-val" id="resTimeline">2.5 - 3.5 weeks</span>
+        </div>
+        <div class="scope-summary-row">
+          <span class="scope-label">Quality Assurance Gates:</span>
+          <span class="scope-val" id="resQC">3-Tier (LQA + Fleiss' κ + Human Pass)</span>
+        </div>
+        <button class="btn btn-outline" id="btnExportBrief" style="margin-top:0.6rem;padding:0.6rem 1.2rem;font-size:0.82rem;width:100%;text-align:center;">Transfer Scope to Project Form ↓</button>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ============ FAQ ============ -->
@@ -727,11 +816,11 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
 <footer>
   <div class="footer-grid">
     <div>
-      <a href="index.html" class="logo"><div class="webgl-logo-container logo-icon" style="width: 28px; height: 28px; display: inline-flex; justify-content: center; align-items: center; margin-right: 8px;"></div>Mavy <span>EduSolutions</span></a>
+      <a href="index.html" class="logo"><img src="logo.svg" alt="Mavy EduSolutions Logo" class="logo-icon" width="28" height="28" style="margin-right: 8px;">Mavy <span>EduSolutions</span></a>
       <p style="margin-top:1rem; max-width:280px;">Localization, AI data, and education solutions built like a type foundry: one shared system of terms, tone, and formatting behind every language you ship.</p>
       <div class="footer-social">
         <!-- EDIT ME: Replace # with your real social URLs -->
-        <a href="https://www.linkedin.com/company/mavyedusolutions/posts/?feedView=all" aria-label="LinkedIn" title="LinkedIn" target="_blank">in</a>
+        <a href="https://www.linkedin.com/company/mavyedusolutions/posts/?feedView=all" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer">in</a>
         <a href="#" aria-label="Twitter / X" title="Twitter / X">𝕏 </a>
       </div>
     </div>
@@ -793,517 +882,6 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true });
-</script>
-<script>
-
-/* ================================================================
-   3D OVERHAUL JAVASCRIPT INJECTIONS
-   ================================================================ */
-
-(() => {
-  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isTouch = window.matchMedia('(pointer: coarse)').matches;
-
-  // 1. Magnetic Hover for Nav & Buttons
-  if (!isTouch) {
-    const magneticEls = document.querySelectorAll('.btn-primary, .btn-outline, .nav-links a');
-    magneticEls.forEach(el => {
-      el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        el.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
-      });
-      el.addEventListener('mouseleave', () => {
-        el.style.transform = '';
-      });
-    });
-  }
-
-  // 2. 3D Tilt Cards with Glare
-  const tiltCards = document.querySelectorAll('.service-card, .industry-card, .case-card, .testimonial-card, .step, .blog-card');
-  
-  tiltCards.forEach(card => {
-    // Inject glare div
-    const glare = document.createElement('div');
-    glare.className = 'card-glare';
-    card.appendChild(glare);
-
-    if (!isTouch && !isReducedMotion) {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        // Calculate tilt (-15 to 15 deg)
-        const tiltX = ((x / rect.width) - 0.5) * 30;
-        const tiltY = ((y / rect.height) - 0.5) * -30;
-        
-        card.style.setProperty('--tilt-x', `${tiltX}deg`);
-        card.style.setProperty('--tilt-y', `${tiltY}deg`);
-        card.style.setProperty('--glare-x', `${x}px`);
-        card.style.setProperty('--glare-y', `${y}px`);
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.setProperty('--tilt-x', `0deg`);
-        card.style.setProperty('--tilt-y', `0deg`);
-      });
-    }
-  });
-
-  // 3. Staggered Scroll Reveal (IntersectionObserver)
-  if (!isReducedMotion) {
-    const observer = new IntersectionObserver((entries) => {
-      let delay = 0;
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            entry.target.classList.add('revealed');
-          }, delay);
-          delay += 100; // Stagger delay
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-    tiltCards.forEach(card => observer.observe(card));
-  } else {
-    // Instant reveal
-    tiltCards.forEach(card => card.classList.add('revealed'));
-  }
-
-  // 4. Custom Cursor 3D State on Hero
-  if (!isTouch) {
-    const heroCanvas = document.getElementById('bgCanvas');
-    const ring = document.getElementById('cursorRing');
-    const dot = document.getElementById('cursorDot');
-    if (heroCanvas && ring && dot) {
-      heroCanvas.addEventListener('mouseenter', () => { ring.setAttribute('data-cursor', '3d'); dot.setAttribute('data-cursor', '3d'); });
-      heroCanvas.addEventListener('mouseleave', () => { ring.removeAttribute('data-cursor'); dot.removeAttribute('data-cursor'); });
-    }
-  }
-})();
-
-// Three.js code removed
-
-</script>
-<script>
-
-/* ================================================================
-   FLOATING CHARACTERS ANIMATION
-   ================================================================ */
-(() => {
-  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (isReducedMotion) return;
-
-  const canvas = document.getElementById('charsCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  let width, height;
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789Ã†Î£Î©ã ‚ã „ã †äºœæ–°'.split('');
-  const particles = [];
-
-  function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  class CharParticle {
-    constructor() {
-      this.reset();
-      this.y = Math.random() * height; // initial random spread
-    }
-    reset() {
-      this.x = Math.random() * width;
-      this.y = height + Math.random() * 100;
-      this.speed = 0.2 + Math.random() * 0.5;
-      this.char = chars[Math.floor(Math.random() * chars.length)];
-      this.size = 10 + Math.random() * 24;
-      this.opacity = 0.1 + Math.random() * 0.4;
-      this.rotation = Math.random() * Math.PI * 2;
-      this.rotSpeed = (Math.random() - 0.5) * 0.02;
-    }
-    update() {
-      this.y -= this.speed;
-      this.rotation += this.rotSpeed;
-      if (this.y < -50) this.reset();
-    }
-    draw(ctx) {
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.rotation);
-      ctx.fillStyle = `rgba(202, 162, 68, ${this.opacity})`; // Brass color
-      ctx.font = `${this.size}px "IBM Plex Mono"`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(this.char, 0, 0);
-      ctx.restore();
-    }
-  }
-
-  // Determine count based on screen size to keep performance
-  const count = Math.min(Math.floor(window.innerWidth / 20), 80);
-  for (let i = 0; i < count; i++) {
-    particles.push(new CharParticle());
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-    particles.forEach(p => {
-      p.update();
-      p.draw(ctx);
-    });
-    requestAnimationFrame(animate);
-  }
-  animate();
-})();
-
-</script>
-
-<script>
-/* ================================================================
-   ELEGANCE: Constellation Mesh Canvas + Split Slider
-   ================================================================ */
-
-/* --- 1. Interactive Constellation Mesh (Hero Background) --- */
-(() => {
-  const isRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const canvas = document.getElementById('bgCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-  let w, h, dpr;
-  let mx = -9999, my = -9999;
-  const nodes = [];
-  const NODE_COUNT = window.innerWidth < 768 ? 35 : 70;
-  const CONN_DIST = 140;
-  const MOUSE_R = 180;
-
-  function resize() {
-    w = window.innerWidth; h = window.innerHeight;
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = w * dpr; canvas.height = h * dpr;
-    canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  function seed() {
-    const palette = ['167,139,250','34,211,238','244,114,182','52,211,153'];
-    nodes.length = 0;
-    for (let i = 0; i < NODE_COUNT; i++) {
-      nodes.push({
-        x: Math.random() * w, y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        r: 1.2 + Math.random() * 1.8,
-        glow: Math.random() > 0.75,
-        color: palette[Math.floor(Math.random() * palette.length)]
-      });
-    }
-  }
-  resize(); seed();
-  window.addEventListener('resize', () => { resize(); seed(); });
-  const isTouch = window.matchMedia('(pointer: coarse)').matches;
-  if (!isTouch) {
-    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    window.addEventListener('mouseleave', () => { mx = -9999; my = -9999; });
-  }
-
-  let visible = true;
-  const hero = document.getElementById('hero');
-  if (hero) {
-    const obs = new IntersectionObserver(e => { visible = e[0].isIntersecting; });
-    obs.observe(hero);
-  }
-
-  function draw() {
-    requestAnimationFrame(draw);
-    if (!visible) return;
-    ctx.clearRect(0, 0, w, h);
-    nodes.forEach(n => {
-      n.x += n.vx; n.y += n.vy;
-      if (n.x < -20) n.x = w + 20; if (n.x > w + 20) n.x = -20;
-      if (n.y < -20) n.y = h + 20; if (n.y > h + 20) n.y = -20;
-      const dx = n.x - mx, dy = n.y - my;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < MOUSE_R && dist > 0) {
-        const f = (MOUSE_R - dist) / MOUSE_R * 0.6;
-        n.x += (dx / dist) * f * 2;
-        n.y += (dy / dist) * f * 2;
-      }
-    });
-    // Edges — violet tinted data connections
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const dx = nodes[i].x - nodes[j].x;
-        const dy = nodes[i].y - nodes[j].y;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < CONN_DIST) {
-          ctx.beginPath();
-          ctx.moveTo(nodes[i].x, nodes[i].y);
-          ctx.lineTo(nodes[j].x, nodes[j].y);
-          ctx.strokeStyle = `rgba(167,139,250,${(1 - d / CONN_DIST) * 0.15})`;
-          ctx.lineWidth = 0.6;
-          ctx.stroke();
-        }
-      }
-    }
-    // Nodes — multi-colored data points
-    nodes.forEach(n => {
-      if (n.glow) {
-        ctx.beginPath(); ctx.arc(n.x, n.y, n.r * 5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${n.color},0.04)`; ctx.fill();
-      }
-      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${n.color},0.7)`; ctx.fill();
-    });
-  }
-  if (isRM) {
-    nodes.forEach(n => {
-      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${n.color},0.4)`; ctx.fill();
-    });
-  } else { draw(); }
-})();
-
-/* --- 3. Before/After Split Slider Interaction --- */
-(() => {
-  const container = document.getElementById('splitContainer');
-  const handle = document.getElementById('splitHandle');
-  const after = container ? container.querySelector('.split-side--after') : null;
-  if (!container || !handle || !after) return;
-  let dragging = false;
-
-  function update(clientX) {
-    const rect = container.getBoundingClientRect();
-    let x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-    const pct = (x / rect.width) * 100;
-    after.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
-    handle.style.left = pct + '%';
-  }
-
-  handle.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
-  container.addEventListener('mousedown', e => { dragging = true; update(e.clientX); });
-  window.addEventListener('mousemove', e => { if (dragging) update(e.clientX); });
-  window.addEventListener('mouseup', () => { dragging = false; });
-
-  // Touch
-  handle.addEventListener('touchstart', e => { dragging = true; e.preventDefault(); }, { passive: false });
-  container.addEventListener('touchstart', e => { dragging = true; update(e.touches[0].clientX); });
-  window.addEventListener('touchmove', e => { if (dragging) update(e.touches[0].clientX); }, { passive: true });
-  window.addEventListener('touchend', () => { dragging = false; });
-})();
-
-</script>
-<script>
-/* ================================================================
-   4D INTERACTIVE DEPTH ENGINE
-   ================================================================ */
-
-/* --- 1. Scroll Progress Bar --- */
-(() => {
-  const bar = document.getElementById('scrollProgress');
-  if (!bar) return;
-  window.addEventListener('scroll', () => {
-    const h = document.documentElement.scrollHeight - window.innerHeight;
-    bar.style.width = (window.scrollY / h * 100) + '%';
-  }, { passive: true });
-})();
-
-/* --- 2. Parallax Floating Shapes (mouse-reactive) --- */
-(() => {
-  const shapes = document.querySelectorAll('.float-shape');
-  if (!shapes.length) return;
-  // Fade in after load
-  setTimeout(() => shapes.forEach(s => s.classList.add('loaded')), 500);
-  // Mouse parallax
-  const isTouch = window.matchMedia('(pointer: coarse)').matches;
-  if (!isTouch) {
-    let mx = 0.5, my = 0.5;
-    window.addEventListener('mousemove', e => {
-      mx = e.clientX / window.innerWidth;
-      my = e.clientY / window.innerHeight;
-    });
-    const depths = [0.02, 0.035, 0.025, 0.015, 0.03];
-    function animateShapes() {
-      shapes.forEach((s, i) => {
-        const d = depths[i % depths.length];
-        const ox = (mx - 0.5) * window.innerWidth * d;
-        const oy = (my - 0.5) * window.innerHeight * d;
-        s.style.transform = s.style.transform.replace(/translate\([^)]*\)/, '') || '';
-        const current = getComputedStyle(s).transform;
-        s.style.setProperty('--px', ox + 'px');
-        s.style.setProperty('--py', oy + 'px');
-        s.style.translate = `${ox}px ${oy}px`;
-      });
-      requestAnimationFrame(animateShapes);
-    }
-    animateShapes();
-  }
-})();
-
-/* --- 3. Conic Gradient Card Angle (follows mouse on hover) --- */
-(() => {
-  const cards = document.querySelectorAll('.service-card, .industry-card, .case-card, .blog-card');
-  cards.forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const angle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI);
-      card.style.setProperty('--card-angle', angle + 'deg');
-    });
-  });
-})();
-
-/* --- 4. Section Depth Parallax on Scroll --- */
-(() => {
-  const sections = document.querySelectorAll('section');
-  const isRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (isRM) return;
-  
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.transform = 'translateZ(0)';
-        entry.target.style.opacity = '1';
-      }
-    });
-  }, { threshold: 0.1 });
-  
-  sections.forEach(s => {
-    s.style.opacity = '0';
-    s.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-    observer.observe(s);
-  });
-})();
-
-/* --- 5. Enhanced Constellation: Add color variety --- */
-(() => {
-  const canvas = document.getElementById('bgCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-  // Override the draw colors with multi-chromatic nodes
-  // We do this by adding a secondary overlay effect
-  const overlayCanvas = document.createElement('canvas');
-  overlayCanvas.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.2;';
-  overlayCanvas.setAttribute('aria-hidden', 'true');
-  document.body.insertBefore(overlayCanvas, document.body.firstChild);
-  const octx = overlayCanvas.getContext('2d');
-  let ow, oh;
-  function resizeOverlay() {
-    ow = window.innerWidth; oh = window.innerHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    overlayCanvas.width = ow * dpr; overlayCanvas.height = oh * dpr;
-    overlayCanvas.style.width = ow + 'px'; overlayCanvas.style.height = oh + 'px';
-    octx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  resizeOverlay();
-  window.addEventListener('resize', resizeOverlay);
-  
-  const sparkles = [];
-  for (let i = 0; i < 30; i++) {
-    sparkles.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      r: 0.8 + Math.random() * 1.5,
-      color: ['rgba(167,139,250,', 'rgba(34,211,238,', 'rgba(244,114,182,', 'rgba(52,211,153,'][Math.floor(Math.random() * 4)],
-      phase: Math.random() * Math.PI * 2,
-      speed: 0.3 + Math.random() * 0.7
-    });
-  }
-  
-  let time = 0;
-  function drawSparkles() {
-    requestAnimationFrame(drawSparkles);
-    time += 0.016;
-    octx.clearRect(0, 0, ow, oh);
-    sparkles.forEach(s => {
-      const pulse = 0.3 + 0.7 * Math.abs(Math.sin(time * s.speed + s.phase));
-      octx.beginPath();
-      octx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2);
-      octx.fillStyle = s.color + (pulse * 0.08) + ')';
-      octx.fill();
-      octx.beginPath();
-      octx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      octx.fillStyle = s.color + pulse + ')';
-      octx.fill();
-    });
-  }
-  drawSparkles();
-})();
-
-/* --- 6. Floating Badge Parallax Micro-motion --- */
-(() => {
-  const badges = document.querySelectorAll('.float-badge');
-  if (!badges.length) return;
-  window.addEventListener('scroll', () => {
-    const sy = window.scrollY;
-    badges.forEach((b, i) => {
-      const offset = Math.sin(sy * 0.003 + i * 1.5) * 8;
-      b.style.transform = `translateY(${offset}px) rotate(${offset * 0.2}deg)`;
-    });
-  }, { passive: true });
-})();
-
-/* --- 7. Glow Line Intersection Trigger --- */
-(() => {
-  const lines = document.querySelectorAll('.glow-line');
-  if (!lines.length) return;
-  lines.forEach(l => { l.style.opacity = '0'; l.style.transition = 'opacity 1s ease'; });
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.style.opacity = '1'; });
-  }, { threshold: 0.5 });
-  lines.forEach(l => obs.observe(l));
-})();
-</script>
-
-<script>
-/* ================================================================
-   HERO WORD ROTATION — cycles "fluent" through 6 languages
-   ================================================================ */
-(() => {
-  const em = document.querySelector('.hero h1 em, #main h1 em');
-  if (!em) return;
-  const words = [
-    { text: 'fluent', lang: 'en' },
-    { text: 'fluido', lang: 'es' },
-    { text: '流暢', lang: 'ja' },
-    { text: 'بطلاقة', lang: 'ar' },
-    { text: 'fließend', lang: 'de' },
-    { text: 'couramment', lang: 'fr' },
-  ];
-  let idx = 0;
-  const isRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (isRM) return;
-
-  function cycle() {
-    em.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-    em.style.opacity = '0';
-    em.style.transform = 'translateY(8px)';
-    setTimeout(() => {
-      idx = (idx + 1) % words.length;
-      em.textContent = words[idx].text;
-      em.style.direction = words[idx].lang === 'ar' ? 'rtl' : 'ltr';
-      em.style.opacity = '1';
-      em.style.transform = 'translateY(0)';
-    }, 400);
-  }
-  setInterval(cycle, 3000);
-})();
-
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.body.classList.add('loaded');
-    const reveal = document.getElementById('page-reveal');
-    if (reveal) reveal.classList.add('hidden');
-  }, 6500);
-});
 </script>
 <script src="main.js"></script>
 
