@@ -1937,6 +1937,8 @@ function generateSitemapXML(posts) {
   const urls = [
     `  <url><loc>${DOMAIN}/</loc><lastmod>${latestDate}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
     `  <url><loc>${DOMAIN}/blog/</loc><lastmod>${latestDate}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`,
+    `  <url><loc>${DOMAIN}/privacy.html</loc><lastmod>${latestDate}</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>`,
+    `  <url><loc>${DOMAIN}/terms.html</loc><lastmod>${latestDate}</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>`,
     ...posts.map(p => `  <url><loc>${DOMAIN}/blog/${p.slug}.html</loc><lastmod>${p.dateISO}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`;
