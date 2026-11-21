@@ -602,33 +602,7 @@ window.addEventListener('pointermove', (e) => {
   mouseY = e.clientY;
 }, { passive: true });
 
-// Spotlight cards
-document.querySelectorAll('.service-card').forEach(card => {
-  card.addEventListener('mousemove', (e) => {
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-    card.style.setProperty('--my', (e.clientY - r.top) + 'px');
-  });
-});
-
-// Realistic 3D Tilt Interaction for Cards
-if (!reduceMotion && !isCoarsePointer) {
-  document.querySelectorAll('.tilt-card, .service-card, .case-card, .industry-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -6;
-      const rotateY = ((x - centerX) / centerX) * 6;
-      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
-    });
-  });
-}
+// Card spotlight and tilt managed smoothly in unified engine below
 
 // Lens hover state
 if (lensWrap) {
@@ -1049,26 +1023,7 @@ if (blogGridEl) {
     glare.className = 'card-glare';
     card.appendChild(glare);
 
-    if (!isTouch && !isReducedMotion) {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        // Calculate tilt (-15 to 15 deg)
-        const tiltX = ((x / rect.width) - 0.5) * 30;
-        const tiltY = ((y / rect.height) - 0.5) * -30;
-        
-        card.style.setProperty('--tilt-x', `${tiltX}deg`);
-        card.style.setProperty('--tilt-y', `${tiltY}deg`);
-        card.style.setProperty('--glare-x', `${x}px`);
-        card.style.setProperty('--glare-y', `${y}px`);
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.setProperty('--tilt-x', `0deg`);
-        card.style.setProperty('--tilt-y', `0deg`);
-      });
-    }
+    // Glare and tilt coordinated smoothly in unified engine
   });
 
   // 3. Staggered Scroll Reveal (IntersectionObserver)
@@ -1365,19 +1320,7 @@ if (blogGridEl) {
   }
 })();
 
-/* --- 3. Conic Gradient Card Angle (follows mouse on hover) --- */
-(() => {
-  const cards = document.querySelectorAll('.service-card, .industry-card, .case-card, .blog-card');
-  cards.forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const angle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI);
-      card.style.setProperty('--card-angle', angle + 'deg');
-    });
-  });
-})();
+// Conic gradient angle merged into unified engine below
 
 /* --- 4. Section Depth Parallax on Scroll --- */
 (() => {
@@ -1894,54 +1837,44 @@ window.addEventListener('load', () => {
 
 
 /* ================================================================
-   MAGNETIC ICON PHYSICS & LIQUID GLASS SPECULAR ENGINE
+   HIGH-PERFORMANCE SILKY GLARE & STABLE ICON ENGINE (ZERO VIBRATION)
    ================================================================ */
 (() => {
   const isTouch = window.matchMedia('(pointer: coarse)').matches;
   const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (isTouch || isReducedMotion) return;
 
-  const cards = document.querySelectorAll('.service-card, .industry-card, .bento-card, .iso-card');
+  const cards = document.querySelectorAll('.service-card, .industry-card, .case-card, .bento-card, .iso-card, .tilt-card');
 
   cards.forEach(card => {
-    const icon = card.querySelector('.dim-icon-wrap, .ind-emblem-wrap, .iso-badge-icon');
-    if (!icon) return;
+    // Ensure smooth glare layer is present
+    if (!card.querySelector('.card-glare')) {
+      const glare = document.createElement('div');
+      glare.className = 'card-glare';
+      card.appendChild(glare);
+    }
+
+    let ticking = false;
 
     card.addEventListener('mousemove', (e) => {
-      const rect = icon.getBoundingClientRect();
-      const iconCx = rect.left + rect.width / 2;
-      const iconCy = rect.top + rect.height / 2;
-      const dx = e.clientX - iconCx;
-      const dy = e.clientY - iconCy;
-      const dist = Math.hypot(dx, dy);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty('--gx', `${x.toFixed(1)}px`);
+          card.style.setProperty('--gy', `${y.toFixed(1)}px`);
 
-      // Specular glare tracking percentage
-      const gx = Math.min(Math.max(((e.clientX - rect.left) / rect.width) * 100, 0), 100);
-      const gy = Math.min(Math.max(((e.clientY - rect.top) / rect.height) * 100, 0), 100);
-      icon.style.setProperty('--icon-gx', `${gx.toFixed(1)}%`);
-      icon.style.setProperty('--icon-gy', `${gy.toFixed(1)}%`);
-      icon.style.setProperty('--emblem-gx', `${gx.toFixed(1)}%`);
-      icon.style.setProperty('--emblem-gy', `${gy.toFixed(1)}%`);
+          const cx = rect.width / 2;
+          const cy = rect.height / 2;
+          const angle = Math.atan2(y - cy, x - cx) * (180 / Math.PI);
+          card.style.setProperty('--card-angle', `${angle.toFixed(1)}deg`);
 
-      // Fluid magnetic attraction when cursor approaches icon
-      if (dist < 180) {
-        const pull = (1 - dist / 180) * 14;
-        const pullX = (dx / (dist || 1)) * pull;
-        const pullY = (dy / (dist || 1)) * pull;
-        const tiltX = (dy / 90) * -12;
-        const tiltY = (dx / 90) * 12;
-        icon.style.transform = `translate3d(${pullX.toFixed(1)}px, ${pullY.toFixed(1)}px, 28px) rotateX(${tiltX.toFixed(1)}deg) rotateY(${tiltY.toFixed(1)}deg) scale(1.14)`;
-        icon.classList.add('is-magnetized');
-      } else {
-        icon.style.transform = 'translate3d(0, 0, 16px) rotateX(6deg) rotateY(-4deg) scale(1.06)';
-        icon.classList.remove('is-magnetized');
+          ticking = false;
+        });
+        ticking = true;
       }
-    });
-
-    card.addEventListener('mouseleave', () => {
-      icon.style.transform = 'translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg) scale(1)';
-      icon.classList.remove('is-magnetized');
-    });
+    }, { passive: true });
   });
 })();
 
@@ -1973,12 +1906,10 @@ window.addEventListener('load', () => {
 
   function renderCursor() {
     if (isActive) {
-      curX += (targetX - curX) * 0.16;
-      curY += (targetY - curY) * 0.16;
-      follower.style.left = `${curX.toFixed(1)}px`;
-      follower.style.top = `${curY.toFixed(1)}px`;
-      dot.style.left = `${targetX}px`;
-      dot.style.top = `${targetY}px`;
+      curX += (targetX - curX) * 0.18;
+      curY += (targetY - curY) * 0.18;
+      follower.style.transform = `translate3d(${curX.toFixed(1)}px, ${curY.toFixed(1)}px, 0) translate(-50%, -50%)`;
+      dot.style.transform = `translate3d(${targetX}px, ${targetY}px, 0) translate(-50%, -50%)`;
     }
     requestAnimationFrame(renderCursor);
   }
