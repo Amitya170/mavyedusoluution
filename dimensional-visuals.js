@@ -291,17 +291,53 @@
       this.globeGroup = null;
       this.isDragging = false;
       this.prevMouse = { x: 0, y: 0 };
-      this.rotationVelocity = { x: 0, y: 0.003 };
+      this.rotationVelocity = { x: 0, y: 0.0025 };
+      this.targetRotation = null;
+      this.raycaster = new THREE.Raycaster();
+      this.mouse = new THREE.Vector2(-999, -999);
+      this.hoveredCity = null;
 
+      // 28 Global Strategic Country Hubs Across All Continents
       this.cities = [
-        { name: 'Tokyo', lat: 35.6762, lon: 139.6503, hub: 'JP-APAC Hub', throughput: '4.2M tokens/s', color: 0xd4af37 },
-        { name: 'London', lat: 51.5074, lon: -0.1278, hub: 'EMEA Core', throughput: '6.1M tokens/s', color: 0x38bdf8 },
-        { name: 'San Francisco', lat: 37.7749, lon: -122.4194, hub: 'AI Labs Node', throughput: '8.4M tokens/s', color: 0x10b981 },
-        { name: 'Berlin', lat: 52.5200, lon: 13.4050, hub: 'EU Regulatory Node', throughput: '3.8M tokens/s', color: 0xd4af37 },
-        { name: 'Dubai', lat: 25.2048, lon: 55.2708, hub: 'MENA RTL Nexus', throughput: '2.9M tokens/s', color: 0xe2b887 },
-        { name: 'Singapore', lat: 1.3521, lon: 103.8198, hub: 'SEA Multilingual', throughput: '3.5M tokens/s', color: 0x38bdf8 },
-        { name: 'São Paulo', lat: -23.5505, lon: -46.6333, hub: 'LATAM Gateway', throughput: '2.1M tokens/s', color: 0x10b981 },
-        { name: 'Bengaluru', lat: 12.9716, lon: 77.5946, hub: 'Indic Dialect Center', throughput: '5.2M tokens/s', color: 0xd4af37 }
+        // North America
+        { name: 'San Francisco', country: 'United States', flag: '🇺🇸', lat: 37.7749, lon: -122.4194, hub: 'AI Labs Node', throughput: '8.4M tokens/s', color: 0x10b981, region: 'americas', langs: 'EN-US · Multimodal RLHF' },
+        { name: 'New York', country: 'United States', flag: '🇺🇸', lat: 40.7128, lon: -74.0060, hub: 'Financial & SEC Core', throughput: '7.1M tokens/s', color: 0xd4af37, region: 'americas', langs: 'EN-US · SEC Disclosures' },
+        { name: 'Toronto', country: 'Canada', flag: '🇨🇦', lat: 43.6532, lon: -79.3832, hub: 'Bilingual EN/FR Gateway', throughput: '3.8M tokens/s', color: 0x38bdf8, region: 'americas', langs: 'EN-CA, FR-CA' },
+        { name: 'Mexico City', country: 'Mexico', flag: '🇲🇽', lat: 19.4326, lon: -99.1332, hub: 'LATAM Spanish Core', throughput: '4.2M tokens/s', color: 0x10b981, region: 'americas', langs: 'ES-MX · Latin American' },
+
+        // South America
+        { name: 'São Paulo', country: 'Brazil', flag: '🇧🇷', lat: -23.5505, lon: -46.6333, hub: 'Portuguese LATAM Hub', throughput: '4.5M tokens/s', color: 0x10b981, region: 'americas', langs: 'PT-BR · Enterprise FinTech' },
+        { name: 'Buenos Aires', country: 'Argentina', flag: '🇦🇷', lat: -34.6037, lon: -58.3816, hub: 'Southern Cone Spanish', throughput: '2.8M tokens/s', color: 0x38bdf8, region: 'americas', langs: 'ES-AR · Gaming & E-Learning' },
+        { name: 'Bogotá', country: 'Colombia', flag: '🇨🇴', lat: 4.7110, lon: -74.0721, hub: 'Andean Spanish Center', throughput: '2.4M tokens/s', color: 0xd4af37, region: 'americas', langs: 'ES-CO · SaaS Localization' },
+
+        // Europe
+        { name: 'London', country: 'United Kingdom', flag: '🇬🇧', lat: 51.5074, lon: -0.1278, hub: 'EMEA Central Hub', throughput: '7.8M tokens/s', color: 0x38bdf8, region: 'europe', langs: 'EN-GB · Cross-Border M&A' },
+        { name: 'Berlin', country: 'Germany', flag: '🇩🇪', lat: 52.5200, lon: 13.4050, hub: 'DACH & EU Regulatory', throughput: '5.6M tokens/s', color: 0xd4af37, region: 'europe', langs: 'DE-DE, DE-AT, DE-CH' },
+        { name: 'Paris', country: 'France', flag: '🇫🇷', lat: 48.8566, lon: 2.3522, hub: 'Francophone Standards', throughput: '4.9M tokens/s', color: 0x38bdf8, region: 'europe', langs: 'FR-FR · Luxury Transcreation' },
+        { name: 'Madrid', country: 'Spain', flag: '🇪🇸', lat: 40.4168, lon: -3.7038, hub: 'Iberian Linguistic Node', throughput: '4.1M tokens/s', color: 0x10b981, region: 'europe', langs: 'ES-ES, CA, EU, GL' },
+        { name: 'Stockholm', country: 'Sweden', flag: '🇸🇪', lat: 59.3293, lon: 18.0686, hub: 'Nordic Languages Core', throughput: '3.1M tokens/s', color: 0x38bdf8, region: 'europe', langs: 'SV, NO, DA, FI' },
+        { name: 'Warsaw', country: 'Poland', flag: '🇵🇱', lat: 52.2297, lon: 21.0122, hub: 'CEE Languages Hub', throughput: '3.5M tokens/s', color: 0xd4af37, region: 'europe', langs: 'PL, CS, SK, HU' },
+        { name: 'Zurich', country: 'Switzerland', flag: '🇨🇭', lat: 47.3769, lon: 8.5417, hub: 'Multilingual FinTech', throughput: '3.7M tokens/s', color: 0x10b981, region: 'europe', langs: 'DE, FR, IT, RM' },
+
+        // Middle East & North Africa (MENA)
+        { name: 'Dubai', country: 'United Arab Emirates', flag: '🇦🇪', lat: 25.2048, lon: 55.2708, hub: 'Gulf Arabic RTL Nexus', throughput: '5.2M tokens/s', color: 0xd4af37, region: 'mena', langs: 'AR-AE, Gulf Dialects' },
+        { name: 'Riyadh', country: 'Saudi Arabia', flag: '🇸🇦', lat: 24.7136, lon: 46.6753, hub: 'Arabian Peninsula Core', throughput: '4.3M tokens/s', color: 0x10b981, region: 'mena', langs: 'AR-SA · Vision 2030 Disclosures' },
+        { name: 'Cairo', country: 'Egypt', flag: '🇪🇬', lat: 30.0444, lon: 31.2357, hub: 'North African Arabic Center', throughput: '3.6M tokens/s', color: 0xd4af37, region: 'mena', langs: 'AR-EG · Media Subtitling' },
+        { name: 'Istanbul', country: 'Turkey', flag: '🇹🇷', lat: 41.0082, lon: 28.9784, hub: 'Eurasian Gateway', throughput: '3.9M tokens/s', color: 0x38bdf8, region: 'mena', langs: 'TR-TR · Turkic Languages' },
+
+        // Sub-Saharan Africa
+        { name: 'Nairobi', country: 'Kenya', flag: '🇰🇪', lat: -1.2921, lon: 36.8219, hub: 'East African Swahili Hub', throughput: '2.5M tokens/s', color: 0x10b981, region: 'africa', langs: 'SW, EN-KE · Mobile EdTech' },
+        { name: 'Johannesburg', country: 'South Africa', flag: '🇿🇦', lat: -26.2041, lon: 28.0473, hub: 'Sub-Saharan Multi-Official', throughput: '3.2M tokens/s', color: 0xd4af37, region: 'africa', langs: 'ZU, XH, AF, EN-ZA' },
+        { name: 'Lagos', country: 'Nigeria', flag: '🇳🇬', lat: 6.5244, lon: 3.3792, hub: 'West African Market Gateway', throughput: '2.9M tokens/s', color: 0x38bdf8, region: 'africa', langs: 'YO, HA, IG, EN-NG' },
+
+        // Asia-Pacific (APAC)
+        { name: 'Tokyo', country: 'Japan', flag: '🇯🇵', lat: 35.6762, lon: 139.6503, hub: 'APAC Core Gateway', throughput: '7.5M tokens/s', color: 0xd4af37, region: 'apac', langs: 'JA-JP · Gaming LQA & Keigo' },
+        { name: 'Seoul', country: 'South Korea', flag: '🇰🇷', lat: 37.5665, lon: 126.9780, hub: 'CJK Tech & Gaming', throughput: '5.8M tokens/s', color: 0x38bdf8, region: 'apac', langs: 'KO-KR · Webtoons & AAA Games' },
+        { name: 'Singapore', country: 'Singapore', flag: '🇸🇬', lat: 1.3521, lon: 103.8198, hub: 'SEA Multilingual Nexus', throughput: '6.2M tokens/s', color: 0x10b981, region: 'apac', langs: 'EN-SG, ZH-SG, MS, TA' },
+        { name: 'Bengaluru', country: 'India', flag: '🇮🇳', lat: 12.9716, lon: 77.5946, hub: 'Indic & Dravidian Center', throughput: '7.9M tokens/s', color: 0xd4af37, region: 'apac', langs: 'HI, BN, TE, MR, TA, KN' },
+        { name: 'Sydney', country: 'Australia', flag: '🇦🇺', lat: -33.8688, lon: 151.2093, hub: 'Oceania Regional Node', throughput: '3.6M tokens/s', color: 0x38bdf8, region: 'apac', langs: 'EN-AU · Indigenous Locales' },
+        { name: 'Jakarta', country: 'Indonesia', flag: '🇮🇩', lat: -6.2088, lon: 106.8456, hub: 'Bahasa SEA Gateway', throughput: '3.4M tokens/s', color: 0x10b981, region: 'apac', langs: 'ID-ID, JV, SU' },
+        { name: 'Bangkok', country: 'Thailand', flag: '🇹🇭', lat: 13.7563, lon: 100.5018, hub: 'Complex Script Node', throughput: '2.8M tokens/s', color: 0xd4af37, region: 'apac', langs: 'TH-TH · Tone-Mark Font Rendering' }
       ];
 
       this.init();
@@ -334,23 +370,22 @@
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       this.container.appendChild(this.renderer.domElement);
 
-      const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+      const ambient = new THREE.AmbientLight(0xffffff, 0.9);
       this.scene.add(ambient);
 
-      const dirLight = new THREE.DirectionalLight(0xd4af37, 2.5);
+      const dirLight = new THREE.DirectionalLight(0xd4af37, 2.8);
       dirLight.position.set(5, 5, 5);
       this.scene.add(dirLight);
 
       this.globeGroup = new THREE.Group();
       this.scene.add(this.globeGroup);
 
-      // 1. Globe Base Sphere (Dark Obsidian with Soft Blue Atmospheric Fresnel)
+      // 1. Globe Base Sphere (Dark Obsidian)
       const baseGeo = new THREE.SphereGeometry(2.0, 48, 48);
       const baseMat = new THREE.MeshStandardMaterial({
         color: 0x080c18,
-        roughness: 0.4,
-        metalness: 0.85,
-        wireframe: false
+        roughness: 0.35,
+        metalness: 0.85
       });
       const globeMesh = new THREE.Mesh(baseGeo, baseMat);
       this.globeGroup.add(globeMesh);
@@ -361,18 +396,19 @@
         color: 0x1e293b,
         wireframe: true,
         transparent: true,
-        opacity: 0.35
+        opacity: 0.3
       });
       const gridMesh = new THREE.Mesh(gridGeo, gridMat);
       this.globeGroup.add(gridMesh);
 
-      // 3. Dense Continental Constellation Particles
-      const pCount = 2800;
+      // 3. Dense Continental Constellation Particles (4,200 points)
+      const pCount = 4200;
       const pGeo = new THREE.BufferGeometry();
       const pPos = new Float32Array(pCount * 3);
       const pCol = new Float32Array(pCount * 3);
       const gold = new THREE.Color(0xd4af37);
       const sapphire = new THREE.Color(0x38bdf8);
+      const emerald = new THREE.Color(0x10b981);
 
       for (let i = 0; i < pCount; i++) {
         const u = Math.random();
@@ -385,7 +421,8 @@
         pPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
         pPos[i * 3 + 2] = r * Math.cos(phi);
 
-        const c = Math.random() > 0.4 ? sapphire : gold;
+        const rand = Math.random();
+        const c = rand > 0.6 ? gold : (rand > 0.3 ? sapphire : emerald);
         pCol[i * 3] = c.r;
         pCol[i * 3 + 1] = c.g;
         pCol[i * 3 + 2] = c.b;
@@ -394,23 +431,23 @@
       pGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
 
       const pMat = new THREE.PointsMaterial({
-        size: 0.028,
+        size: 0.026,
         vertexColors: true,
         transparent: true,
-        opacity: 0.85
+        opacity: 0.8
       });
       const points = new THREE.Points(pGeo, pMat);
       this.globeGroup.add(points);
 
-      // 4. City Beacons & Illuminated Data Nodes
+      // 4. Country Beacons & Interactive Data Nodes
       this.cityNodes = [];
-      const nodeGeo = new THREE.SphereGeometry(0.045, 16, 16);
+      const nodeGeo = new THREE.SphereGeometry(0.042, 16, 16);
       this.cities.forEach(city => {
         const v = this.latLonToVector3(city.lat, city.lon, 2.06);
         const nodeMat = new THREE.MeshStandardMaterial({
           color: city.color,
           emissive: city.color,
-          emissiveIntensity: 0.9,
+          emissiveIntensity: 0.95,
           roughness: 0.1
         });
         const node = new THREE.Mesh(nodeGeo, nodeMat);
@@ -420,7 +457,7 @@
         this.cityNodes.push(node);
 
         // Pulsing Ring Beacon
-        const ringGeo = new THREE.RingGeometry(0.05, 0.09, 24);
+        const ringGeo = new THREE.RingGeometry(0.048, 0.082, 24);
         const ringMat = new THREE.MeshBasicMaterial({
           color: city.color,
           side: THREE.DoubleSide,
@@ -433,44 +470,118 @@
         this.globeGroup.add(ring);
       });
 
-      // 5. Connect Cities with Radiant Flight Arc Splines
+      // 5. Connect Cities with Radiant Global Flight Splines
       this.createFlightArcs();
 
+      // Tooltip Element
+      this.tooltip = document.getElementById('globeTooltip');
+      if (!this.tooltip) {
+        this.tooltip = document.createElement('div');
+        this.tooltip.id = 'globeTooltip';
+        this.tooltip.className = 'globe-tooltip hidden';
+        this.container.appendChild(this.tooltip);
+      }
+
       this.bindEvents();
+      this.setupHubBarControls();
       this.animate();
     }
 
     createFlightArcs() {
+      // Intercontinental flight connections
       const connections = [
-        [0, 2], // Tokyo <-> San Francisco
-        [1, 0], // London <-> Tokyo
-        [1, 3], // London <-> Berlin
-        [3, 4], // Berlin <-> Dubai
-        [4, 7], // Dubai <-> Bengaluru
-        [7, 5], // Bengaluru <-> Singapore
-        [2, 6], // San Francisco <-> Sao Paulo
-        [1, 6]  // London <-> Sao Paulo
+        // Trans-Pacific
+        [0, 21], // SF <-> Tokyo
+        [0, 22], // SF <-> Seoul
+        [0, 25], // SF <-> Sydney
+        // Trans-Atlantic
+        [1, 7],  // NY <-> London
+        [2, 7],  // Toronto <-> London
+        [9, 1],  // Paris <-> NY
+        [10, 3], // Madrid <-> Mexico City
+        [7, 4],  // London <-> Sao Paulo
+        // Pan-European
+        [7, 8],  // London <-> Berlin
+        [8, 9],  // Berlin <-> Paris
+        [9, 10], // Paris <-> Madrid
+        [8, 11], // Berlin <-> Stockholm
+        [8, 12], // Berlin <-> Warsaw
+        [9, 13], // Paris <-> Zurich
+        // Middle East & Eurasia
+        [8, 17], // Berlin <-> Istanbul
+        [17, 16],// Istanbul <-> Cairo
+        [16, 15],// Cairo <-> Riyadh
+        [15, 14],// Riyadh <-> Dubai
+        [14, 24],// Dubai <-> Bengaluru
+        // Pan-Asian
+        [24, 23],// Bengaluru <-> Singapore
+        [23, 27],// Singapore <-> Bangkok
+        [23, 26],// Singapore <-> Jakarta
+        [23, 21],// Singapore <-> Tokyo
+        [21, 22],// Tokyo <-> Seoul
+        [25, 23],// Sydney <-> Singapore
+        // Pan-African
+        [16, 18],// Cairo <-> Nairobi
+        [18, 19],// Nairobi <-> Johannesburg
+        [19, 20],// Johannesburg <-> Lagos
+        [20, 7], // Lagos <-> London
+        // Latin America
+        [3, 6],  // Mexico City <-> Bogota
+        [6, 4],  // Bogota <-> Sao Paulo
+        [4, 5],  // Sao Paulo <-> Buenos Aires
+        [0, 3]   // SF <-> Mexico City
       ];
 
       connections.forEach(([c1, c2]) => {
+        if (!this.cities[c1] || !this.cities[c2]) return;
         const p1 = this.latLonToVector3(this.cities[c1].lat, this.cities[c1].lon, 2.06);
         const p2 = this.latLonToVector3(this.cities[c2].lat, this.cities[c2].lon, 2.06);
 
-        // Arc mid-point lifted outwards into space
         const mid = p1.clone().add(p2).multiplyScalar(0.5);
         const dist = p1.distanceTo(p2);
-        mid.normalize().multiplyScalar(2.06 + dist * 0.28);
+        mid.normalize().multiplyScalar(2.06 + Math.min(dist * 0.28, 0.9));
 
         const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
-        const curvePoints = curve.getPoints(40);
+        const curvePoints = curve.getPoints(36);
         const arcGeo = new THREE.BufferGeometry().setFromPoints(curvePoints);
         const arcMat = new THREE.LineBasicMaterial({
           color: 0xd4af37,
           transparent: true,
-          opacity: 0.65
+          opacity: 0.55
         });
         const arcLine = new THREE.Line(arcGeo, arcMat);
         this.globeGroup.add(arcLine);
+      });
+    }
+
+    flyToCity(city) {
+      const targetY = -city.lon * (Math.PI / 180) - Math.PI / 2;
+      const targetX = city.lat * (Math.PI / 180) * 0.6;
+      this.targetRotation = { x: targetX, y: targetY };
+    }
+
+    setupHubBarControls() {
+      const hubPills = document.querySelectorAll('.hub-pill[data-city-idx]');
+      hubPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          const idx = parseInt(pill.getAttribute('data-city-idx'), 10);
+          if (this.cities[idx]) {
+            this.flyToCity(this.cities[idx]);
+            hubPills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+          }
+        });
+      });
+
+      const regionBtns = document.querySelectorAll('.globe-region-btn');
+      regionBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          regionBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const region = btn.getAttribute('data-region');
+          const matched = this.cities.find(c => c.region === region || region === 'all');
+          if (matched) this.flyToCity(matched);
+        });
       });
     }
 
@@ -479,15 +590,22 @@
 
       const onStart = (x, y) => {
         this.isDragging = true;
+        this.targetRotation = null;
         this.prevMouse = { x, y };
       };
 
       const onMove = (x, y) => {
-        if (!this.isDragging) return;
+        if (!this.isDragging) {
+          // Raycast for hover
+          const rect = dom.getBoundingClientRect();
+          this.mouse.x = ((x - rect.left) / rect.width) * 2 - 1;
+          this.mouse.y = -((y - rect.top) / rect.height) * 2 + 1;
+          return;
+        }
         const dx = x - this.prevMouse.x;
         const dy = y - this.prevMouse.y;
-        this.globeGroup.rotation.y += dx * 0.006;
-        this.globeGroup.rotation.x += dy * 0.006;
+        this.globeGroup.rotation.y += dx * 0.005;
+        this.globeGroup.rotation.x += dy * 0.005;
         this.prevMouse = { x, y };
       };
 
@@ -507,6 +625,45 @@
       }, { passive: true });
       window.addEventListener('touchend', onEnd);
 
+      // Tooltip Raycasting
+      dom.addEventListener('mousemove', (e) => {
+        const rect = dom.getBoundingClientRect();
+        const clientX = e.clientX - rect.left;
+        const clientY = e.clientY - rect.top;
+
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+        const intersects = this.raycaster.intersectObjects(this.cityNodes);
+
+        if (intersects.length > 0) {
+          const hit = intersects[0].object;
+          const city = hit.userData;
+          dom.style.cursor = 'pointer';
+
+          if (this.tooltip) {
+            this.tooltip.innerHTML = `
+              <div class="tooltip-country">${city.flag} ${city.name}, ${city.country}</div>
+              <div class="tooltip-hub">${city.hub} · ${city.throughput}</div>
+              <div class="tooltip-meta">${city.langs} · 🛡️ ISO 9001 / 27001 Gateway</div>
+            `;
+            this.tooltip.style.left = `${clientX}px`;
+            this.tooltip.style.top = `${clientY}px`;
+            this.tooltip.classList.remove('hidden');
+          }
+        } else {
+          dom.style.cursor = this.isDragging ? 'grabbing' : 'grab';
+          if (this.tooltip) this.tooltip.classList.add('hidden');
+        }
+      });
+
+      dom.addEventListener('click', () => {
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+        const intersects = this.raycaster.intersectObjects(this.cityNodes);
+        if (intersects.length > 0) {
+          const city = intersects[0].object.userData;
+          this.flyToCity(city);
+        }
+      });
+
       window.addEventListener('resize', () => {
         const w = this.container.clientWidth;
         const h = this.container.clientHeight;
@@ -520,9 +677,18 @@
 
     animate() {
       requestAnimationFrame(() => this.animate());
-      if (!this.isDragging) {
+
+      if (this.targetRotation) {
+        // Smooth lerp to target country
+        this.globeGroup.rotation.y += (this.targetRotation.y - this.globeGroup.rotation.y) * 0.05;
+        this.globeGroup.rotation.x += (this.targetRotation.x - this.globeGroup.rotation.x) * 0.05;
+        if (Math.abs(this.targetRotation.y - this.globeGroup.rotation.y) < 0.01) {
+          this.targetRotation = null;
+        }
+      } else if (!this.isDragging) {
         this.globeGroup.rotation.y += this.rotationVelocity.y;
       }
+
       this.renderer.render(this.scene, this.camera);
     }
   }
