@@ -12,398 +12,70 @@
   // 1. DEFAULT DATA SEEDING (CLIENT-SIDE DATABASE VIA LOCALSTORAGE)
   // =========================================================================
 
-  const SEED_USERS = [
-    {
-      id: 'usr-admin',
-      name: 'Vikram Malhotra',
-      email: 'admin@mavyedu.com',
-      password: 'MavyAdmin@2026',
-      role: 'admin',
-      company: 'Mavy EduSolutions Global',
-      title: 'Chief Operations Officer',
-      phone: '+1 (800) 582-9014',
-      location: 'Global Operations Hub · London / San Francisco',
-      speciality: 'Platform Governance, Enterprise Solutions Architecture & Global PM',
-      certifications: 'ISO 9001 Lead Auditor, PMP Certified, Scrum Master',
-      avatar: 'VM',
-      joinedDate: 'Jan 2024',
-      status: 'Active Executive'
-    },
-    {
-      id: 'usr-client-1',
-      name: 'Sarah Chen',
-      email: 'sarah.chen@novaglobal.com',
-      password: 'client123',
-      role: 'client',
-      company: 'NovaGlobal Enterprises Inc.',
-      title: 'VP Product Localization',
-      phone: '+1 (415) 890-4421',
-      location: 'San Francisco, CA, USA',
-      speciality: 'FinTech Mobile Apps, Cross-Border Payments, iOS/Android String Extraction',
-      tier: 'Tier-1 Enterprise Corporate Client',
-      activeProjectsCount: 2,
-      totalVolume: '240,000 strings',
-      avatar: 'SC',
-      joinedDate: 'Mar 2024',
-      status: 'Active Corporate Client'
-    },
-    {
-      id: 'usr-client-2',
-      name: 'Dr. Jennifer Vance',
-      email: 'jennifer@apexhealth.com',
-      password: 'client123',
-      role: 'client',
-      company: 'Apex Health Technologies Ltd.',
-      title: 'Head of Regulatory Affairs & Clinical Documentation',
-      phone: '+44 20 7946 0912',
-      location: 'Cambridge, United Kingdom',
-      speciality: 'Life Sciences, CE-MDR Compliance, Clinical Evaluation Reports (CER)',
-      tier: 'Medical Device Enterprise Partner',
-      activeProjectsCount: 1,
-      totalVolume: '165,000 words',
-      avatar: 'JV',
-      joinedDate: 'May 2024',
-      status: 'Active Corporate Client'
-    },
-    {
-      id: 'usr-free-1',
-      name: 'Mateo Silva',
-      email: 'mateo.silva@linguist.io',
-      password: 'free123',
-      role: 'freelancer',
-      company: 'Independent Senior Linguist & Reviewer',
-      title: 'ES/PT Neural Translation & FinTech Specialist',
-      phone: '+34 91 582 3910',
-      location: 'Madrid, Spain (UTC+1)',
-      languages: 'English → Spanish (Castilian/LATAM), Portuguese (Brazil)',
-      speciality: 'FinTech Banking UI, Payment Rails, Smartling/Crowdin, Legal Contracts, Pluralization QA',
-      catTools: 'Trados Studio, Smartling, Crowdin, memoQ, Phrase',
-      certifications: 'ATA Certified (English-Spanish), ISO 17100 Verified, DipTrans CIOL',
-      experienceYears: '9+ Years Professional Enterprise Experience',
-      completedJobs: 48,
-      reliabilityScore: '99.4% On-Time Delivery',
-      avatar: 'MS',
-      joinedDate: 'Feb 2024',
-      status: 'Verified Native Linguist'
-    },
-    {
-      id: 'usr-free-2',
-      name: 'Aiko Tanaka',
-      email: 'aiko.tanaka@tokyoloc.jp',
-      password: 'free123',
-      role: 'freelancer',
-      company: 'Tokyo Localization Atelier',
-      title: 'Japanese & Korean E-Learning / Multimedia Lead',
-      phone: '+81 3 5555 0148',
-      location: 'Tokyo, Japan (JST / UTC+9)',
-      languages: 'English → Japanese (Native), Korean',
-      speciality: 'Articulate Storyline SCORM, Interactive STEM Modules, Subtitling/Dubbing QA, Gaming UI',
-      catTools: 'memoQ, Aegisub, Subtitle Edit, Lokalise, Figma',
-      certifications: 'JAT Certified Translator, JLPT N1 Examiner, ISO 17100 Verified',
-      experienceYears: '7+ Years In-Country Localization Specialist',
-      completedJobs: 34,
-      reliabilityScore: '98.8% First-Pass QC',
-      avatar: 'AT',
-      joinedDate: 'Apr 2024',
-      status: 'Verified Native Linguist'
-    },
-    {
-      id: 'usr-free-3',
-      name: 'Dr. Tariq Al-Mansoor',
-      email: 'tariq.mansoor@lingua-mena.ae',
-      password: 'free123',
-      role: 'freelancer',
-      company: 'MENA Medical & Technical Linguistics',
-      title: 'Arabic Medical Transcreation & IFU Specialist',
-      phone: '+971 4 391 2280',
-      location: 'Dubai, UAE (GST / UTC+4)',
-      languages: 'English, French → Modern Standard Arabic (Native)',
-      speciality: 'Surgical IFU, Clinical Trial Protocols, Healthcare LMS, BioPharma Regulatory Filings',
-      catTools: 'Trados Enterprise, XTM Cloud, Wordfast Pro',
-      certifications: 'MBBS Medical Degree, Arab Translators Association Fellow, ISO 17100',
-      experienceYears: '11+ Years Life Sciences Translation',
-      completedJobs: 62,
-      reliabilityScore: '99.8% Medical Accuracy Score',
-      avatar: 'TA',
-      joinedDate: 'Jan 2024',
-      status: 'Verified Subject Matter Expert'
-    },
-    {
-      id: 'usr-vendor-1',
-      name: 'Polyglot Enterprises LLC',
-      email: 'ops@polyglotenterprises.com',
-      password: 'vendor123',
-      role: 'vendor',
-      company: 'Polyglot Global Language Partners LLC',
-      title: 'Enterprise Language Agency Partner',
-      phone: '+49 30 8920 1140',
-      location: 'HQ: Berlin, Germany · Regional Hub: Tokyo',
-      languages: '40+ Global Language Pairs (Tier-1 Western & Eastern European, CJK)',
-      speciality: 'High-Volume Document Translation, CE-MDR Compliance, Continuous Repo Sync, Dual-Linguist QC',
-      dailyCapacity: '75,000 Words / Day',
-      certifications: 'ISO 9001:2015, ISO 17100:2015, ISO 13485:2016 (Medical Devices), SOC 2 Type II',
-      msaStatus: 'Master Service Agreement Active (Tier-1 Enterprise)',
-      keyContact: 'Helena Lindqvist · Senior Director of Operations',
-      avatar: 'PE',
-      joinedDate: 'Dec 2023',
-      status: 'Certified Tier-1 Vendor Agency'
-    },
-    {
-      id: 'usr-vendor-2',
-      name: 'AetherData Cognitive Systems',
-      email: 'partnerships@aetherdata.ai',
-      password: 'vendor123',
-      role: 'vendor',
-      company: 'AetherData Cognitive AI Labs Pvt Ltd',
-      title: 'Multimodal AI Training Data & Annotation Agency',
-      phone: '+91 80 4912 3000',
-      location: 'Bengaluru, India · Global Remote Annotator Network',
-      languages: 'Indic Dialects (Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati) + Southeast Asian',
-      speciality: 'Conversational Audio Recording, Phonetic Alignment, RLHF Model Preference Ranking, Safety QC',
-      dailyCapacity: '500+ Audio Hours / Month · 100k Multi-Turn Prompts',
-      certifications: 'ISO/IEC 27001:2022 (ISMS Enclave), GDPR Compliant Data Enclave, SOC 2 Type II',
-      msaStatus: 'Master Service Agreement Active (AI Data Services)',
-      keyContact: 'Rajesh K. Varma · VP of Global Annotator Operations',
-      avatar: 'AD',
-      joinedDate: 'Feb 2024',
-      status: 'Certified AI Data Partner'
-    }
-  ];
+  // Master Administrator Profile
+  const MASTER_ADMIN = {
+    id: 'usr-admin',
+    name: 'Mavy Administrator',
+    email: 'admin@mavyedusolutions.co.in',
+    password: 'Mahitya9501@',
+    role: 'admin',
+    company: 'Mavy EduSolutions Global',
+    title: 'Platform Administrator & Chief Operations Governance',
+    phone: '+91 (0) 80 4912 3000',
+    location: 'Global Operations Headquarters',
+    speciality: 'Platform Administration, Quality Governance & Enterprise Project Routing',
+    certifications: 'ISO 9001:2015, ISO/IEC 27001:2022, ISO 17100:2015',
+    avatar: 'MA',
+    joinedDate: 'Nov 2026',
+    status: 'Master Administrator'
+  };
 
-  const SEED_PROJECTS = [
-    {
-      id: 'prj-101',
-      title: 'Next-Gen FinTech Mobile App UI Strings Localization',
-      category: 'Software Localization',
-      clientName: 'NovaGlobal Enterprises Inc.',
-      clientId: 'usr-client-1',
-      targetRoles: 'freelancer', // 'freelancer', 'vendor', or 'all'
-      languages: 'EN → ES, PT-BR, FR, DE',
-      wordCount: '28,500 strings',
-      budget: '$3,800 USD',
-      deadline: '2026-12-15',
-      description: 'Comprehensive UI string translation, pluralization rules, and mobile layout QA for iOS and Android payment apps. Requires experience with JSON key-value localization and i18n placeholders.',
-      status: 'open',
-      assignedTo: null,
-      createdAt: '2026-11-20'
-    },
-    {
-      id: 'prj-102',
-      title: 'Enterprise Medical Device IFU & CE-MDR Compliance Filing',
-      category: 'Document Translation',
-      clientName: 'BioHealth Instruments',
-      clientId: 'usr-client-ext',
-      targetRoles: 'vendor',
-      languages: 'EN → DE, FR, IT, NL, SV',
-      wordCount: '165,000 words',
-      budget: '$18,500 USD',
-      deadline: '2026-12-30',
-      description: 'High-precision surgical instruction manual for class III diagnostic devices. Requires ISO 17100 and ISO 13485 certified translation vendor with dual-linguist review and back-translation verification.',
-      status: 'open',
-      assignedTo: null,
-      createdAt: '2026-11-19'
-    },
-    {
-      id: 'prj-103',
-      title: 'Multilingual Conversational AI Speech Annotation & RLHF',
-      category: 'AI Training Data',
-      clientName: 'CognitiveCore AI',
-      clientId: 'usr-client-ext2',
-      targetRoles: 'all',
-      languages: 'Hindi, Tamil, Bengali, Telugu, English',
-      wordCount: '120 Audio Hours / 45k prompts',
-      budget: '$12,000 USD',
-      deadline: '2027-01-10',
-      description: 'Audio transcription, phoneme timestamping, and safety/toxicity alignment for LLM fine-tuning. Open to certified vendors and specialized NLP speech annotators.',
-      status: 'open',
-      assignedTo: null,
-      createdAt: '2026-11-21'
-    },
-    {
-      id: 'prj-104',
-      title: 'K-12 STEM Interactive E-Learning Module Adaptation',
-      category: 'E-Learning Solutions',
-      clientName: 'EduSphere Global',
-      clientId: 'usr-client-ext3',
-      targetRoles: 'freelancer',
-      languages: 'EN → Arabic, Japanese',
-      wordCount: '18 SCORM Modules / 64k words',
-      budget: '$6,400 USD',
-      deadline: '2026-12-24',
-      description: 'Translating Articulate Storyline e-learning modules, cultural adaptation of math/science graphics, and localized voiceover subtitle integration.',
-      status: 'open',
-      assignedTo: null,
-      createdAt: '2026-11-18'
-    }
-  ];
-
-  const SEED_INQUIRIES = [
-    {
-      id: 'inq-901',
-      name: 'David Armstrong',
-      email: 'd.armstrong@zenithtech.de',
-      service: 'Software localization',
-      message: 'Looking for full localization of our SaaS billing platform into French, German, Spanish, and Japanese. Approximately 42,000 strings in JSON. Need delivery before end of Q4.',
-      timestamp: '2026-11-21T09:14:00Z',
-      dateFormatted: 'Nov 21, 2026, 09:14 AM',
-      status: 'new'
-    },
-    {
-      id: 'inq-902',
-      name: 'Dr. Priya Sundaram',
-      email: 'priya.s@aetherbio.com',
-      service: 'AI data collection',
-      message: 'We require 500 hours of conversational dialect audio in Indian languages (Hindi, Kannada, Marathi) with native speaker demographic tags for voice assistant training.',
-      timestamp: '2026-11-20T16:30:00Z',
-      dateFormatted: 'Nov 20, 2026, 04:30 PM',
-      status: 'in_review'
-    },
-    {
-      id: 'inq-903',
-      name: 'Marc Fontaine',
-      email: 'fontaine@edulabs.fr',
-      service: 'E-learning localization',
-      message: 'Seeking SCORM package localization and French/German native dubbing for 24 micro-learning modules.',
-      timestamp: '2026-11-19T11:45:00Z',
-      dateFormatted: 'Nov 19, 2026, 11:45 AM',
-      status: 'contacted'
-    }
-  ];
-
-  const SEED_PROPOSALS = [
-    {
-      id: 'prop-501',
-      projectId: 'prj-101',
-      projectTitle: 'Next-Gen FinTech Mobile App UI Strings Localization',
-      userId: 'usr-free-1',
-      userName: 'Mateo Silva',
-      userRole: 'freelancer',
-      userEmail: 'mateo.silva@linguist.io',
-      bidAmount: '$3,600 USD',
-      deliveryDays: 8,
-      coverLetter: 'Experienced native Spanish & Portuguese localization specialist with 9+ years translating FinTech banking interfaces. Familiar with Smartling, Crowdin, and Figma string management.',
-      status: 'pending',
-      submittedAt: '2026-11-20T14:20:00Z'
-    },
-    {
-      id: 'prop-502',
-      projectId: 'prj-102',
-      projectTitle: 'Enterprise Medical Device IFU & CE-MDR Compliance Filing',
-      userId: 'usr-vendor-1',
-      userName: 'Polyglot Enterprises',
-      userRole: 'vendor',
-      userEmail: 'ops@polyglotenterprises.com',
-      bidAmount: '$17,200 USD',
-      deliveryDays: 14,
-      coverLetter: 'Certified EN ISO 17100:2015 and ISO 13485 language agency. Our medical translation division includes 14 MD linguists for EU MDR conformity assessments.',
-      status: 'pending',
-      submittedAt: '2026-11-20T18:10:00Z'
-    }
-  ];
-
-  const SEED_MESSAGES = [
-    {
-      id: 'msg-1',
-      threadId: 'thread_usr-admin_usr-client-1',
-      senderId: 'usr-client-1',
-      senderName: 'Sarah Chen',
-      senderRole: 'client',
-      recipientId: 'usr-admin',
-      recipientRole: 'admin',
-      message: 'Hi Vikram, we have uploaded the latest Figma wireframes for the FinTech project. Can we ensure the Portuguese QA covers Brazilian banking terminology specifically?',
-      timestamp: '2026-11-21T10:05:00Z'
-    },
-    {
-      id: 'msg-2',
-      threadId: 'thread_usr-admin_usr-client-1',
-      senderId: 'usr-admin',
-      senderName: 'Vikram Malhotra',
-      senderRole: 'admin',
-      recipientId: 'usr-client-1',
-      recipientRole: 'client',
-      message: 'Hello Sarah! Absolutely. We have assigned Mateo Silva, who specializes strictly in Brazilian Portuguese FinTech compliance. We will run the automated termbase check first.',
-      timestamp: '2026-11-21T10:08:00Z'
-    },
-    {
-      id: 'msg-3',
-      threadId: 'thread_usr-admin_usr-free-1',
-      senderId: 'usr-free-1',
-      senderName: 'Mateo Silva',
-      senderRole: 'freelancer',
-      recipientId: 'usr-admin',
-      recipientRole: 'admin',
-      message: 'Good morning Vikram, I submitted my proposal for the FinTech UI string project. I have open capacity this week to complete the Spanish and Portuguese batches.',
-      timestamp: '2026-11-21T11:15:00Z'
-    },
-    {
-      id: 'msg-4',
-      threadId: 'thread_usr-admin_usr-free-1',
-      senderId: 'usr-admin',
-      senderName: 'Vikram Malhotra',
-      senderRole: 'admin',
-      recipientId: 'usr-free-1',
-      recipientRole: 'freelancer',
-      message: 'Thanks Mateo! We reviewed your sample strings from the previous banking sprint; they look spot-on. Final approval will be confirmed shortly.',
-      timestamp: '2026-11-21T11:22:00Z'
-    },
-    {
-      id: 'msg-5',
-      threadId: 'thread_usr-admin_usr-vendor-1',
-      senderId: 'usr-vendor-1',
-      senderName: 'Polyglot Enterprises',
-      senderRole: 'vendor',
-      recipientId: 'usr-admin',
-      recipientRole: 'admin',
-      message: 'Hello Mavy Operations Team, we submitted our RFP response for the 165k word Medical IFU project with our MDR ISO 13485 audit certificate attached.',
-      timestamp: '2026-11-20T19:00:00Z'
-    },
-    {
-      id: 'msg-6',
-      threadId: 'thread_usr-admin_usr-vendor-1',
-      senderId: 'usr-admin',
-      senderName: 'Vikram Malhotra',
-      senderRole: 'admin',
-      recipientId: 'usr-vendor-1',
-      recipientRole: 'vendor',
-      message: 'Received, thank you. Our life-sciences QA director is validating the subject-matter expert roster today.',
-      timestamp: '2026-11-21T08:30:00Z'
-    }
-  ];
+  const SEED_USERS = [MASTER_ADMIN];
+  const SEED_PROJECTS = [];
+  const SEED_INQUIRIES = [];
+  const SEED_PROPOSALS = [];
+  const SEED_MESSAGES = [];
 
   function initDatabase() {
-    let users = localStorage.getItem('mavy_users') ? JSON.parse(localStorage.getItem('mavy_users')) : [];
-    
-    // Merge seed profiles to ensure comprehensive directory metadata (speciality, contact, location)
-    SEED_USERS.forEach(seedUser => {
-      const existingIdx = users.findIndex(u => u.email.toLowerCase() === seedUser.email.toLowerCase());
-      if (existingIdx !== -1) {
-        users[existingIdx] = { ...seedUser, ...users[existingIdx] };
-      } else {
-        users.push(seedUser);
-      }
-    });
+    const CLEAN_VERSION = 'mavy_v6_clean_admin_20261121';
+    if (localStorage.getItem('mavy_clean_version') !== CLEAN_VERSION) {
+      localStorage.removeItem('mavy_users');
+      localStorage.removeItem('mavy_projects');
+      localStorage.removeItem('mavy_inquiries');
+      localStorage.removeItem('mavy_proposals');
+      localStorage.removeItem('mavy_chat_messages');
+      localStorage.removeItem('mavy_current_user');
+      localStorage.setItem('mavy_clean_version', CLEAN_VERSION);
+    }
 
-    const adminIdx = users.findIndex(u => u.role === 'admin');
+    let users = localStorage.getItem('mavy_users') ? JSON.parse(localStorage.getItem('mavy_users')) : [];
+    const adminIdx = users.findIndex(u => u.role === 'admin' || u.email.toLowerCase() === 'admin@mavyedusolutions.co.in');
     if (adminIdx !== -1) {
-      users[adminIdx].email = 'admin@mavyedu.com';
-      users[adminIdx].password = 'MavyAdmin@2026';
+      users[adminIdx] = { ...MASTER_ADMIN, ...users[adminIdx], email: 'admin@mavyedusolutions.co.in', password: 'Mahitya9501@', role: 'admin' };
     } else {
-      users.unshift(SEED_USERS[0]);
+      users.unshift(MASTER_ADMIN);
     }
     localStorage.setItem('mavy_users', JSON.stringify(users));
 
     if (!localStorage.getItem('mavy_projects')) {
-      localStorage.setItem('mavy_projects', JSON.stringify(SEED_PROJECTS));
+      localStorage.setItem('mavy_projects', JSON.stringify([]));
     }
     if (!localStorage.getItem('mavy_inquiries')) {
-      localStorage.setItem('mavy_inquiries', JSON.stringify(SEED_INQUIRIES));
+      localStorage.setItem('mavy_inquiries', JSON.stringify([]));
     }
     if (!localStorage.getItem('mavy_proposals')) {
-      localStorage.setItem('mavy_proposals', JSON.stringify(SEED_PROPOSALS));
+      localStorage.setItem('mavy_proposals', JSON.stringify([]));
     }
     if (!localStorage.getItem('mavy_chat_messages')) {
-      localStorage.setItem('mavy_chat_messages', JSON.stringify(SEED_MESSAGES));
+      localStorage.setItem('mavy_chat_messages', JSON.stringify([]));
     }
+  }
+
+  function getAdminName() {
+    const cur = getCurrentUser();
+    if (cur && cur.role === 'admin') return cur.name;
+    const admin = getUsers().find(u => u.role === 'admin');
+    return admin ? admin.name : 'Mavy Administrator';
   }
 
   // Helper getters/setters
@@ -526,8 +198,8 @@
     const users = getUsers();
     const user = users.find(u => {
       const isEmailMatch = u.email.toLowerCase() === email;
-      const isAdminAlias = u.role === 'admin' && (email === 'admin' || email === 'admin@mavyedusolutions.co.in' || email === 'admin@mavyedu.com');
-      const isPassMatch = u.password === pass || (u.role === 'admin' && (pass === 'MavyAdmin@2026' || pass === 'mavyadmin123'));
+      const isAdminAlias = u.role === 'admin' && (email === 'admin' || email === 'admin@mavyedusolutions.co.in');
+      const isPassMatch = u.password === pass || (u.role === 'admin' && pass === 'Mahitya9501@');
       return (isEmailMatch || isAdminAlias) && isPassMatch;
     });
 
@@ -897,9 +569,25 @@
 
   function renderProjectsGrid(projects, container, user) {
     if (projects.length === 0) {
+      if (user.role === 'admin') {
+        container.innerHTML = `
+          <div style="background:var(--portal-card);border:1px dashed var(--portal-border-gold);border-radius:16px;padding:3.5rem 2rem;text-align:center;">
+            <div style="font-size:2.8rem;margin-bottom:1rem;">📂</div>
+            <h3 style="color:#fff;margin-bottom:0.5rem;font-size:1.25rem;">Global Project Pipeline is Clear</h3>
+            <p style="color:var(--text-muted);font-size:0.9rem;max-width:520px;margin:0 auto 1.6rem;line-height:1.6;">
+              The portal is fresh and ready. Post your first enterprise project to invite applications from verified specialists and certified vendors, or wait for client project submissions.
+            </p>
+            <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
+              <button class="btn-portal btn-portal-primary" onclick="openModal('postProjectModal')">+ Post First Enterprise Project</button>
+              <button class="btn-portal btn-portal-outline" onclick="openModal('inviteMemberModal')">✉️ Invite Staff / Specialists</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
       container.innerHTML = `
         <div style="background:var(--portal-card);border:1px solid var(--portal-border);border-radius:16px;padding:3rem;text-align:center;color:var(--text-muted);">
-          No projects found in this category at this time.
+          No projects currently available in this category. Check back soon for new postings.
         </div>
       `;
       return;
@@ -1542,7 +1230,7 @@
         id: 'msg-' + Date.now(),
         threadId,
         senderId: 'usr-admin',
-        senderName: 'Vikram Malhotra',
+        senderName: getAdminName(),
         senderRole: 'admin',
         recipientId: leadUser.id,
         recipientRole: 'client',
@@ -1715,7 +1403,7 @@
       id: 'msg-' + Date.now(),
       threadId,
       senderId: 'usr-admin',
-      senderName: 'Vikram Malhotra',
+      senderName: getAdminName(),
       senderRole: 'admin',
       recipientId: prop.userId,
       recipientRole: prop.userRole,
@@ -1864,7 +1552,7 @@
         {
           threadId,
           partnerId: 'usr-admin',
-          partnerName: 'Vikram Malhotra · Mavy PM',
+          partnerName: `${getAdminName()} · Mavy Operations`,
           partnerRole: 'Platform Operations & Project Manager',
           partnerOrg: 'Mavy EduSolutions Global',
           lastMessage: lastMsg ? lastMsg.message : 'Start a direct conversation with your dedicated PM',
@@ -1885,6 +1573,30 @@
     // If no active thread selected, pick the first
     if (!activeChatThreadId || !threads.some(t => t.threadId === activeChatThreadId)) {
       activeChatThreadId = threads.length > 0 ? threads[0].threadId : null;
+    }
+
+    if (threads.length === 0) {
+      threadsListEl.innerHTML = `
+        <div style="padding:2rem 1rem;text-align:center;color:var(--text-muted);font-size:0.8rem;line-height:1.6;">
+          <div style="font-size:1.8rem;margin-bottom:0.6rem;">💬</div>
+          No active communication channels yet. As clients, freelancers, and vendors register or are invited, direct private channels will appear here automatically.
+        </div>
+      `;
+      const headerName = document.getElementById('chatPartnerName');
+      const headerRole = document.getElementById('chatPartnerRole');
+      const msgContainer = document.getElementById('chatMessagesContainer');
+      if (headerName) headerName.textContent = 'Enclave Communications Hub';
+      if (headerRole) headerRole.textContent = 'Awaiting member connections';
+      if (msgContainer) {
+        msgContainer.innerHTML = `
+          <div style="text-align:center;padding:4rem 1.5rem;color:var(--text-muted);font-size:0.88rem;line-height:1.6;">
+            <div style="font-size:2.5rem;margin-bottom:1rem;">🛡️</div>
+            <strong style="color:#fff;display:block;margin-bottom:0.4rem;font-size:1.05rem;">End-to-End Encrypted Communications Ready</strong>
+            Invite staff members or wait for client and partner signups to initiate live messaging.
+          </div>
+        `;
+      }
+      return;
     }
 
     threadsListEl.innerHTML = '';
@@ -1983,7 +1695,7 @@
           id: 'msg-' + (Date.now() + 1),
           threadId: activeChatThreadId,
           senderId: 'usr-admin',
-          senderName: 'Vikram Malhotra',
+          senderName: getAdminName(),
           senderRole: 'admin',
           recipientId: user.id,
           recipientRole: user.role,
@@ -2225,7 +1937,7 @@
       id: 'msg-' + Date.now(),
       threadId: `thread_usr-admin_${newStaff.id}`,
       senderId: 'usr-admin',
-      senderName: 'Vikram Malhotra · Chief Operations',
+      senderName: `${getAdminName()} · Chief Operations`,
       senderRole: 'admin',
       recipientId: newStaff.id,
       recipientRole: 'admin',
