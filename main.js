@@ -255,10 +255,46 @@ function getDimIcon(type, num) {
       <line x1="4" y1="16" x2="28" y2="16" stroke="${emerald}" stroke-width="1.5"/>
       <line x1="16" y1="4" x2="16" y2="28" stroke="${emerald}" stroke-width="1.5"/>
       <circle cx="16" cy="16" r="2.5" fill="${gold}"/>
+    </svg>`,
+    "edu-01": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <rect x="4" y="6" width="24" height="17" rx="3" stroke="${gold}" stroke-width="1.8"/>
+      <polygon points="13,10 20,14.5 13,19" fill="${sapphire}" stroke="${sapphire}" stroke-width="1.2"/>
+      <line x1="8" y1="27" x2="24" y2="27" stroke="${gold}" stroke-width="2" stroke-linecap="round"/>
+      <line x1="16" y1="23" x2="16" y2="27" stroke="${gold}" stroke-width="1.8"/>
+      <circle cx="24" cy="10" r="1.5" fill="${emerald}"/>
+    </svg>`,
+    "edu-02": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <rect x="5" y="5" width="10" height="9" rx="2" stroke="${gold}" stroke-width="1.6"/>
+      <rect x="17" y="5" width="10" height="9" rx="2" stroke="${sapphire}" stroke-width="1.6"/>
+      <rect x="5" y="17" width="10" height="9" rx="2" stroke="${sapphire}" stroke-width="1.6"/>
+      <rect x="17" y="17" width="10" height="9" rx="2" stroke="${emerald}" stroke-width="1.6"/>
+      <path d="M10 9.5L11.5 11L14 8" stroke="${emerald}" stroke-width="1.4" stroke-linecap="round"/>
+      <circle cx="22" cy="9.5" r="2" fill="${sapphire}" fill-opacity="0.3"/>
+    </svg>`,
+    "edu-03": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <path d="M7 6H21C23 6 25 8 25 10V26H9C7 26 5 24 5 22V8C5 6.9 5.9 6 7 6Z" stroke="${gold}" stroke-width="1.8"/>
+      <path d="M5 22C5 20.3 6.3 19 8 19H25" stroke="${sapphire}" stroke-width="1.5"/>
+      <line x1="10" y1="11" x2="20" y2="11" stroke="${emerald}" stroke-width="1.5"/>
+      <line x1="10" y1="15" x2="17" y2="15" stroke="${gold}" stroke-width="1.5"/>
+      <circle cx="21" cy="22" r="2.5" fill="${gold}"/>
+    </svg>`,
+    "edu-04": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <polygon points="16,4 28,10 16,16 4,10" stroke="${gold}" stroke-width="1.8" fill="${gold}" fill-opacity="0.15"/>
+      <path d="M8 13.5V20C8 23 11.5 25.5 16 25.5C20.5 25.5 24 23 24 20V13.5" stroke="${sapphire}" stroke-width="1.8"/>
+      <line x1="28" y1="11" x2="28" y2="22" stroke="${emerald}" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="28" cy="23" r="1.5" fill="${emerald}"/>
+    </svg>`,
+    "edu-05": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="8" r="3.5" stroke="${gold}" stroke-width="1.8" fill="${gold}" fill-opacity="0.2"/>
+      <circle cx="8" cy="22" r="3.5" stroke="${sapphire}" stroke-width="1.8" fill="${sapphire}" fill-opacity="0.2"/>
+      <circle cx="24" cy="22" r="3.5" stroke="${emerald}" stroke-width="1.8" fill="${emerald}" fill-opacity="0.2"/>
+      <line x1="13.5" y1="10.5" x2="10" y2="19" stroke="${gold}" stroke-width="1.5" stroke-dasharray="2 2"/>
+      <line x1="18.5" y1="10.5" x2="22" y2="19" stroke="${gold}" stroke-width="1.5" stroke-dasharray="2 2"/>
+      <line x1="11.5" y1="22" x2="20.5" y2="22" stroke="${sapphire}" stroke-width="1.5"/>
     </svg>`
   };
 
-  const key = type === "serv" ? `serv-${num}` : `ai-${num}`;
+  const key = type === "serv" ? `serv-${num}` : (type === "edu" ? `edu-${num}` : `ai-${num}`);
   return icons[key] || icons["serv-01"];
 }
 
@@ -311,12 +347,12 @@ function getIndEmblem(name) {
 function renderCardGrid(containerId, items) {
   const el = document.getElementById(containerId);
   if (!el || !items) return;
-  const isServ = containerId === 'servicesGrid';
+  const cardType = containerId === 'servicesGrid' ? 'serv' : (containerId === 'eduGrid' ? 'edu' : 'ai');
   el.innerHTML = items.map((s) => `
     <div class="service-card tilt-card">
       <div class="service-card-header">
         <div class="dim-icon-wrap">
-          ${getDimIcon(isServ ? 'serv' : 'ai', s.num)}
+          ${getDimIcon(cardType, s.num)}
         </div>
         <div class="service-num">${s.num}</div>
       </div>
@@ -1855,3 +1891,413 @@ window.addEventListener('load', () => {
   });
 })();
 
+
+
+/* ================================================================
+   MAGNETIC ICON PHYSICS & LIQUID GLASS SPECULAR ENGINE
+   ================================================================ */
+(() => {
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (isTouch || isReducedMotion) return;
+
+  const cards = document.querySelectorAll('.service-card, .industry-card, .bento-card, .iso-card');
+
+  cards.forEach(card => {
+    const icon = card.querySelector('.dim-icon-wrap, .ind-emblem-wrap, .iso-badge-icon');
+    if (!icon) return;
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = icon.getBoundingClientRect();
+      const iconCx = rect.left + rect.width / 2;
+      const iconCy = rect.top + rect.height / 2;
+      const dx = e.clientX - iconCx;
+      const dy = e.clientY - iconCy;
+      const dist = Math.hypot(dx, dy);
+
+      // Specular glare tracking percentage
+      const gx = Math.min(Math.max(((e.clientX - rect.left) / rect.width) * 100, 0), 100);
+      const gy = Math.min(Math.max(((e.clientY - rect.top) / rect.height) * 100, 0), 100);
+      icon.style.setProperty('--icon-gx', `${gx.toFixed(1)}%`);
+      icon.style.setProperty('--icon-gy', `${gy.toFixed(1)}%`);
+      icon.style.setProperty('--emblem-gx', `${gx.toFixed(1)}%`);
+      icon.style.setProperty('--emblem-gy', `${gy.toFixed(1)}%`);
+
+      // Fluid magnetic attraction when cursor approaches icon
+      if (dist < 180) {
+        const pull = (1 - dist / 180) * 14;
+        const pullX = (dx / (dist || 1)) * pull;
+        const pullY = (dy / (dist || 1)) * pull;
+        const tiltX = (dy / 90) * -12;
+        const tiltY = (dx / 90) * 12;
+        icon.style.transform = `translate3d(${pullX.toFixed(1)}px, ${pullY.toFixed(1)}px, 28px) rotateX(${tiltX.toFixed(1)}deg) rotateY(${tiltY.toFixed(1)}deg) scale(1.14)`;
+        icon.classList.add('is-magnetized');
+      } else {
+        icon.style.transform = 'translate3d(0, 0, 16px) rotateX(6deg) rotateY(-4deg) scale(1.06)';
+        icon.classList.remove('is-magnetized');
+      }
+    });
+
+    card.addEventListener('mouseleave', () => {
+      icon.style.transform = 'translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg) scale(1)';
+      icon.classList.remove('is-magnetized');
+    });
+  });
+})();
+
+/* ================================================================
+   LUXURY FLUID SMOOTH CURSOR AURA (GPU ACCELERATED LERP)
+   ================================================================ */
+(() => {
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (isTouch || isReducedMotion) return;
+
+  const follower = document.getElementById('luxuryCursorFollower');
+  const dot = document.getElementById('luxuryCursorDot');
+  if (!follower || !dot) return;
+
+  let curX = -100, curY = -100;
+  let targetX = -100, targetY = -100;
+  let isActive = false;
+
+  window.addEventListener('mousemove', (e) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+    if (!isActive) {
+      curX = targetX;
+      curY = targetY;
+      isActive = true;
+    }
+  }, { passive: true });
+
+  function renderCursor() {
+    if (isActive) {
+      curX += (targetX - curX) * 0.16;
+      curY += (targetY - curY) * 0.16;
+      follower.style.left = `${curX.toFixed(1)}px`;
+      follower.style.top = `${curY.toFixed(1)}px`;
+      dot.style.left = `${targetX}px`;
+      dot.style.top = `${targetY}px`;
+    }
+    requestAnimationFrame(renderCursor);
+  }
+  requestAnimationFrame(renderCursor);
+
+  // Magnetic hover classes on icons & interactives
+  const interactiveIcons = document.querySelectorAll('.dim-icon-wrap, .ind-emblem-wrap, .iso-badge-icon, .badge-icon-glow');
+  interactiveIcons.forEach(ic => {
+    ic.addEventListener('mouseenter', () => follower.classList.add('is-hovering-icon'));
+    ic.addEventListener('mouseleave', () => follower.classList.remove('is-hovering-icon'));
+  });
+
+  const clickables = document.querySelectorAll('.btn, .filter-chip, .ide-tab, .ide-locale-btn, .portal-tab-btn, a, button');
+  clickables.forEach(c => {
+    c.addEventListener('mouseenter', () => follower.classList.add('is-hovering-clickable'));
+    c.addEventListener('mouseleave', () => follower.classList.remove('is-hovering-clickable'));
+  });
+})();
+
+/* ================================================================
+   INTERACTIVE DEVELOPER & LINGUIST STUDIO CONSOLE (macOS IDE)
+   ================================================================ */
+(() => {
+  const studio = document.getElementById('ideStudio');
+  if (!studio) return;
+
+  const localeData = {
+    en: {
+      code: `{\n  <span class="syn-key">"locale"</span>: <span class="syn-str">"en-US"</span>,\n  <span class="syn-key">"checkout.cta.enroll_now"</span>: <span class="syn-str">"Enroll Now & Start Learning"</span>,\n  <span class="syn-key">"course.difficulty.badge"</span>: <span class="syn-str">"{level, select, beginner {Foundation Track} other {Mastery Enclave}}"</span>,\n  <span class="syn-key">"security.badge.iso"</span>: <span class="syn-str">"ISO 9001 & 27001 Certified Enclave"</span>,\n  <span class="syn-key">"guarantee.refund.days"</span>: <span class="syn-str">"{count, plural, one {# Day Review} other {# Days Unconditional Guarantee}}"</span>,\n  <span class="syn-key">"lqa.dqf_status"</span>: <span class="syn-bool">true</span>,\n  <span class="syn-key">"lqa.mqm_score"</span>: <span class="syn-num">99.8</span>\n}`,
+      badge: "Mastery Enclave",
+      secPill: "🛡️ ISO 9001 / 27001",
+      title: "Global Enterprise AI & Localization Architecture",
+      desc: "Master-tier translation memory, RLHF human evaluation, and culturally adapted e-learning modules across 150+ global locales.",
+      metric1: "150+",
+      metricLbl1: "Living Locales",
+      metric2: "99.8%",
+      metricLbl2: "DQF Metric",
+      metric3: "24hr",
+      metricLbl3: "SLA Turnaround",
+      cta: "Enroll Now & Start Learning →",
+      guarantee: "🔒 14-day ISO 9001 unconditional revision guarantee",
+      directionTag: "LTR · Latn",
+      isRtl: false
+    },
+    ja: {
+      code: `{\n  <span class="syn-key">"locale"</span>: <span class="syn-str">"ja-JP"</span>,\n  <span class="syn-key">"checkout.cta.enroll_now"</span>: <span class="syn-str">"今すぐ受講を開始する"</span>,\n  <span class="syn-key">"course.difficulty.badge"</span>: <span class="syn-str">"{level, select, beginner {基礎トラック} other {マスター専攻コース}}"</span>,\n  <span class="syn-key">"security.badge.iso"</span>: <span class="syn-str">"ISO 9001・27001 認証セキュリティ"</span>,\n  <span class="syn-key">"guarantee.refund.days"</span>: <span class="syn-str">"{count, plural, other {#日間無償修正保証}}"</span>,\n  <span class="syn-key">"lqa.dqf_status"</span>: <span class="syn-bool">true</span>,\n  <span class="syn-key">"lqa.mqm_score"</span>: <span class="syn-num">99.8</span>\n}`,
+      badge: "マスター専攻コース",
+      secPill: "🛡️ ISO 9001 / 27001 認証",
+      title: "グローバルエンタープライズAI・多言語ローカリゼーション",
+      desc: "150以上の言語に対応。高精度翻訳メモリ、RLHF人間評価、文化適合型eラーニング教材をワンストップで提供。",
+      metric1: "150+",
+      metricLbl1: "対応言語",
+      metric2: "99.8%",
+      metricLbl2: "品質適合率",
+      metric3: "24時間",
+      metricLbl3: "標準納期",
+      cta: "今すぐ受講を開始する →",
+      guarantee: "🔒 ISO 9001準拠 14日間無償修正保証",
+      directionTag: "LTR · Japanese Typography",
+      isRtl: false
+    },
+    ar: {
+      code: `{\n  <span class="syn-key">"locale"</span>: <span class="syn-str">"ar-SA"</span>,\n  <span class="syn-key">"checkout.cta.enroll_now"</span>: <span class="syn-str">"سجّل الآن وابدأ التعلّم"</span>,\n  <span class="syn-key">"course.difficulty.badge"</span>: <span class="syn-str">"{level, select, beginner {المسار الأساسي} other {مسار الاحتراف المتقدم}}"</span>,\n  <span class="syn-key">"security.badge.iso"</span>: <span class="syn-str">"بيئة معتمدة وفق معايير ISO 9001 و 27001"</span>,\n  <span class="syn-key">"guarantee.refund.days"</span>: <span class="syn-str">"{count, plural, one {يوم واحد} two {يومان} few {# أيام} other {# يوماً}}"</span>,\n  <span class="syn-key">"lqa.dqf_status"</span>: <span class="syn-bool">true</span>,\n  <span class="syn-key">"lqa.mqm_score"</span>: <span class="syn-num">99.8</span>\n}`,
+      badge: "مسار الاحتراف المتقدم",
+      secPill: "🔒 معتمد ISO 9001 / 27001",
+      title: "هندسة الذكاء الاصطناعي والتوطين اللغوي للمؤسسات العالمية",
+      desc: "ذاكرة ترجمة فائقة الدقة، تقييم بشري لبيانات RLHF، ومناهج تعليمية متوافقة ثقافياً لأكثر من 150 لغة حية.",
+      metric1: "+150",
+      metricLbl1: "لغة حية",
+      metric2: "99.8%",
+      metricLbl2: "معدل دقة DQF",
+      metric3: "24 ساعة",
+      metricLbl3: "متوسط التسليم",
+      cta: "← سجّل الآن وابدأ التعلّم",
+      guarantee: "🔒 ضمان مراجعة غير مشروط لمدة 14 يوماً معتمد بمعيار ISO 9001",
+      directionTag: "RTL · Arabic (العربية)",
+      isRtl: true
+    },
+    de: {
+      code: `{\n  <span class="syn-key">"locale"</span>: <span class="syn-str">"de-DE"</span>,\n  <span class="syn-key">"checkout.cta.enroll_now"</span>: <span class="syn-str">"Jetzt verbindlich einschreiben"</span>,\n  <span class="syn-key">"course.difficulty.badge"</span>: <span class="syn-str">"{level, select, beginner {Grundlagenkurs} other {Master-Exzellenzprogramm}}"</span>,\n  <span class="syn-key">"security.badge.iso"</span>: <span class="syn-str">"ISO 9001 & 27001 Sicherheitsenklave"</span>,\n  <span class="syn-key">"guarantee.refund.days"</span>: <span class="syn-str">"{count, plural, one {# Tag Überprüfung} other {# Tage Revisionsgarantie}}"</span>,\n  <span class="syn-key">"lqa.dqf_status"</span>: <span class="syn-bool">true</span>,\n  <span class="syn-key">"lqa.mqm_score"</span>: <span class="syn-num">99.8</span>\n}`,
+      badge: "Master-Exzellenzprogramm",
+      secPill: "🛡️ ISO 9001 / 27001",
+      title: "Globale Enterprise-KI & Lokalisierungsarchitektur",
+      desc: "Unternehmensweite Translation-Memorys, menschliche RLHF-Präferenzdatensätze und akkreditierte E-Learning-Module.",
+      metric1: "150+",
+      metricLbl1: "Zielsprachen",
+      metric2: "99.8%",
+      metricLbl2: "DQF-Prüfwert",
+      metric3: "24 Std.",
+      metricLbl3: "Durchlaufzeit",
+      cta: "Jetzt verbindlich einschreiben →",
+      guarantee: "🔒 14 Tage ISO-zertifizierte Revisionsgarantie",
+      directionTag: "LTR · Auto-Hyphenation",
+      isRtl: false
+    },
+    es: {
+      code: `{\n  <span class="syn-key">"locale"</span>: <span class="syn-str">"es-ES"</span>,\n  <span class="syn-key">"checkout.cta.enroll_now"</span>: <span class="syn-str">"Inscribirse ahora y comenzar"</span>,\n  <span class="syn-key">"course.difficulty.badge"</span>: <span class="syn-str">"{level, select, beginner {Ruta Inicial} other {Módulo de Maestría}}"</span>,\n  <span class="syn-key">"security.badge.iso"</span>: <span class="syn-str">"Enclave Certificado ISO 9001 y 27001"</span>,\n  <span class="syn-key">"guarantee.refund.days"</span>: <span class="syn-str">"{count, plural, one {# Día de Revisión} other {# Días de Garantía Incondicional}}"</span>,\n  <span class="syn-key">"lqa.dqf_status"</span>: <span class="syn-bool">true</span>,\n  <span class="syn-key">"lqa.mqm_score"</span>: <span class="syn-num">99.8</span>\n}`,
+      badge: "Módulo de Maestría",
+      secPill: "🛡️ ISO 9001 / 27001",
+      title: "Arquitectura de IA y Localización Empresarial Global",
+      desc: "Memoria de traducción certificada, evaluación humana RLHF y módulos de aprendizaje culturalmente adaptados.",
+      metric1: "150+",
+      metricLbl1: "Idiomas Activos",
+      metric2: "99.8%",
+      metricLbl2: "Puntaje DQF",
+      metric3: "24hr",
+      metricLbl3: "Tiempo Entrega",
+      cta: "¡Inscribirse ahora y comenzar! →",
+      guarantee: "🔒 Garantía de revisión incondicional de 14 días (ISO 9001)",
+      directionTag: "LTR · Español",
+      isRtl: false
+    }
+  };
+
+  const codeBlock = document.getElementById('ideCodeBlock');
+  const appCard = document.getElementById('ideAppCard');
+  const cardBadge = document.getElementById('ideCardBadge');
+  const secPill = document.getElementById('ideSecPill');
+  const cardTitle = document.getElementById('ideCardTitle');
+  const cardDesc = document.getElementById('ideCardDesc');
+  const metric1 = document.getElementById('ideMetric1');
+  const metricLbl1 = document.getElementById('ideMetricLbl1');
+  const metric2 = document.getElementById('ideMetric2');
+  const metricLbl2 = document.getElementById('ideMetricLbl2');
+  const metric3 = document.getElementById('ideMetric3');
+  const metricLbl3 = document.getElementById('ideMetricLbl3');
+  const cardCta = document.getElementById('ideCardCta');
+  const cardGuarantee = document.getElementById('ideCardGuarantee');
+  const directionBadge = document.getElementById('ideDirectionBadge');
+  const btnRunAudit = document.getElementById('btnRunAudit');
+
+  function applyLocale(lang) {
+    const data = localeData[lang] || localeData.en;
+    if (codeBlock) codeBlock.innerHTML = data.code;
+    if (cardBadge) cardBadge.textContent = data.badge;
+    if (secPill) secPill.textContent = data.secPill;
+    if (cardTitle) cardTitle.textContent = data.title;
+    if (cardDesc) cardDesc.textContent = data.desc;
+    if (metric1) metric1.textContent = data.metric1;
+    if (metricLbl1) metricLbl1.textContent = data.metricLbl1;
+    if (metric2) metric2.textContent = data.metric2;
+    if (metricLbl2) metricLbl2.textContent = data.metricLbl2;
+    if (metric3) metric3.textContent = data.metric3;
+    if (metricLbl3) metricLbl3.textContent = data.metricLbl3;
+    if (cardCta) cardCta.textContent = data.cta;
+    if (cardGuarantee) cardGuarantee.textContent = data.guarantee;
+    if (directionBadge) directionBadge.textContent = data.directionTag;
+
+    if (appCard) {
+      if (data.isRtl) {
+        appCard.classList.add('rtl-mode');
+        appCard.setAttribute('dir', 'rtl');
+      } else {
+        appCard.classList.remove('rtl-mode');
+        appCard.setAttribute('dir', 'ltr');
+      }
+    }
+  }
+
+  // Locale button listeners
+  const localeBtns = studio.querySelectorAll('.ide-locale-btn');
+  localeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      localeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyLocale(btn.getAttribute('data-lang'));
+    });
+  });
+
+  // Tab listeners
+  const tabs = studio.querySelectorAll('.ide-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Audit scan trigger
+  if (btnRunAudit && appCard) {
+    btnRunAudit.addEventListener('click', () => {
+      appCard.classList.remove('is-scanning');
+      void appCard.offsetWidth; // force reflow
+      appCard.classList.add('is-scanning');
+      btnRunAudit.textContent = "⚡ Verifying DQF-MQM & Cryptographic Enclave...";
+
+      setTimeout(() => {
+        btnRunAudit.textContent = "✓ ISO 9001 / 27001 Audit Passed (Zero Defects)";
+        btnRunAudit.style.borderColor = "#10b981";
+        btnRunAudit.style.color = "#10b981";
+        btnRunAudit.style.background = "rgba(16, 185, 129, 0.15)";
+      }, 1200);
+
+      setTimeout(() => {
+        btnRunAudit.textContent = "⚡ Run Enterprise DQF-MQM & ISO Audit";
+        btnRunAudit.style.borderColor = "";
+        btnRunAudit.style.color = "";
+        btnRunAudit.style.background = "";
+      }, 4000);
+    });
+  }
+
+  // Initial load
+  applyLocale('en');
+})();
+
+/* ================================================================
+   INTERACTIVE ISO 9001 & 27001 ENCLAVE EXPLORER
+   ================================================================ */
+(() => {
+  const portal = document.getElementById('isoPortal');
+  const body = document.getElementById('enclavePortalBody');
+  if (!portal || !body) return;
+
+  const enclaveViews = {
+    qms: `
+      <div class="portal-pipeline-grid">
+        <div class="portal-stage-card">
+          <div class="stage-num-tag">STAGE 01 · INTAKE</div>
+          <h4>Source Code & AST Parsing</h4>
+          <p>Automated extraction of strings from git repositories. Placeholder locking, ICU token verification, and pseudo-localization pass to prevent UI truncation.</p>
+        </div>
+        <div class="portal-stage-card">
+          <div class="stage-num-tag">STAGE 02 · SME MATCH</div>
+          <h4>Subject Matter Pairing</h4>
+          <p>Native linguists certified in the specific target domain (medical, legal, gaming, software). Glossary synchronization and pre-translation memory parity check.</p>
+        </div>
+        <div class="portal-stage-card">
+          <div class="stage-num-tag">STAGE 03 · DUAL REVIEW</div>
+          <h4>DQF-MQM Metric Scoring</h4>
+          <p>Independent dual-pass verification by a second certified linguist. Statistical defect tracking classifying errors into Critical, Major, and Minor categories.</p>
+        </div>
+        <div class="portal-stage-card">
+          <div class="stage-num-tag">STAGE 04 · REGRESSION</div>
+          <h4>Continuous CI/CD Delivery</h4>
+          <p>Automated regression tests verify layout geometry, character encoding (UTF-8 / UTF-16), and bi-directional RTL text flow before PR merge.</p>
+        </div>
+      </div>
+    `,
+    isms: `
+      <div class="portal-security-grid">
+        <div class="security-enclave-diagram">
+          <div class="security-node-row">
+            <div class="node-info">
+              <h5>Air-Gapped Secure Annotation Enclave</h5>
+              <span>Isolated zero-trust virtual desktop environments with hardware token authentication.</span>
+            </div>
+            <span class="node-lock-tag">ISO/IEC 27001</span>
+          </div>
+          <div class="security-node-row">
+            <div class="node-info">
+              <h5>Non-Training Intellectual Property Guarantee</h5>
+              <span>Strict contractual and cryptographic guarantee: Client data is never used to train public models.</span>
+            </div>
+            <span class="node-lock-tag">Zero Model Leak</span>
+          </div>
+          <div class="security-node-row">
+            <div class="node-info">
+              <h5>End-to-End Cryptographic Audit Trail</h5>
+              <span>AES-256 encryption at rest, TLS 1.3 in transit, and immutable SHA-256 access logging.</span>
+            </div>
+            <span class="node-lock-tag">Cryptographic Hash</span>
+          </div>
+        </div>
+        <div class="security-stats-card">
+          <div class="sec-metric-item">
+            <div class="sec-metric-num">0%</div>
+            <div class="sec-metric-label">Data Retention in Public AI Models</div>
+          </div>
+          <div class="sec-metric-item">
+            <div class="sec-metric-num">AES-256</div>
+            <div class="sec-metric-label">Enclave Storage Encryption Standard</div>
+          </div>
+          <div class="sec-metric-item">
+            <div class="sec-metric-num">100%</div>
+            <div class="sec-metric-label">SOC 2 Type II &amp; ISO 27001 Audit Compliance</div>
+          </div>
+        </div>
+      </div>
+    `,
+    trans: `
+      <div class="portal-pipeline-grid">
+        <div class="portal-stage-card">
+          <div class="stage-num-tag">STANDARD 01</div>
+          <h4>Certified Native Linguists</h4>
+          <p>Translators must hold formal university degrees in translation or 5+ years of verified industry specialization in the target culture.</p>
+        </div>
+        <div class="portal-stage-card">
+          <div class="stage-num-tag">STANDARD 02</div>
+          <h4>Mandatory Dual-Linguist Pass</h4>
+          <p>Translation is strictly decoupled from revision: a second independent linguist evaluates every sentence against the source author intent.</p>
+        </div>
+        <div class="portal-stage-card">
+          <div class="stage-num-tag">STANDARD 03</div>
+          <h4>Centralized Term Base (TB)</h4>
+          <p>Controlled brand glossary and translation memory prevent conflicting synonyms across distributed software releases.</p>
+        </div>
+        <div class="portal-stage-card">
+          <div class="stage-num-tag">STANDARD 04</div>
+          <h4>Post-Delivery Warranty</h4>
+          <p>14-day formal revision window with direct access to lead linguist notes and concordance query logs.</p>
+        </div>
+      </div>
+    `
+  };
+
+  function renderEnclaveTab(tabKey) {
+    body.innerHTML = enclaveViews[tabKey] || enclaveViews.qms;
+  }
+
+  const tabBtns = portal.querySelectorAll('.portal-tab-btn');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderEnclaveTab(btn.getAttribute('data-tab'));
+    });
+  });
+
+  // Initial render
+  renderEnclaveTab('qms');
+})();
