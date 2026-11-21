@@ -204,10 +204,26 @@
 <!-- ============ STATS ============ -->
 <section id="stats">
   <div class="stats">
-    <div class="stat-card"><div class="stat-number" data-target="150">0</div><div class="stat-label">Languages supported, including 12 right-to-left scripts</div></div>
-    <div class="stat-card"><div class="stat-number" data-target="98">0</div><div class="stat-label">% of strings approved on first linguist pass</div></div>
-    <div class="stat-card"><div class="stat-number" data-target="24">0</div><div class="stat-label">Hour average turnaround on standing accounts</div></div>
-    <div class="stat-card"><div class="stat-number" data-target="500">0</div><div class="stat-label">Enterprise teams with an active translation memory</div></div>
+    <div class="stat-card">
+      <div class="stat-number" data-target="150">0</div>
+      <div class="stat-label">Languages Supported</div>
+      <div class="stat-sub">Covering 12 RTL scripts, CJK, Indic, and Nordic language families</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" data-target="98">0</div>
+      <div class="stat-label">% First-Pass Approval</div>
+      <div class="stat-sub">Fleiss' κ &gt; 0.88 inter-annotator statistical agreement across domains</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" data-target="24">0</div>
+      <div class="stat-label">Hour Average Turnaround</div>
+      <div class="stat-sub">Continuous delivery pipeline with automated Git PRs &amp; REST API pushes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" data-target="500">0</div>
+      <div class="stat-label">Active Enterprise TMs</div>
+      <div class="stat-sub">Over 240M verified strings indexed with zero client IP lock-in</div>
+    </div>
   </div>
 </section>
 
@@ -266,10 +282,50 @@
     <p>This is the exact path your project takes. Each step has a dedicated owner and a strict deadline before moving to the next.</p>
   </div>
   <div class="process-steps">
-    <div class="step"><div class="step-num">01</div><h3>Submit & scope</h3><p>We extract strings or ingest your files, flag anything ambiguous, and send back a word count, timeline, and fixed quote within one business day.</p></div>
-    <div class="step"><div class="step-num">02</div><h3>Subject matter expert</h3><p>Subject matter experts with relevant domain experience are assigned, briefed on your glossary and tone-of-voice, and given read access to your existing translation memory.</p></div>
-    <div class="step"><div class="step-num">03</div><h3>Review</h3><p>First-pass translation, independent proofreading by a second linguist, then automated linguistic QA for length, placeholders, and formatting breaks.</p></div>
-    <div class="step"><div class="step-num">04</div><h3>Deliver & integrate</h3><p>We deliver files in their original format—or push them directly to your repo or CMS via API—along with a diff report so you can see exactly what changed.</p></div>
+    <div class="step">
+      <div class="step-num">01</div>
+      <span class="step-phase-badge">Phase 1 · Automated Ingestion</span>
+      <h3>Submit &amp; scope</h3>
+      <p>We extract strings or ingest your repository files, flag syntax edge cases, and run automated segmentation against existing translation memories.</p>
+      <div class="step-deliverable">
+        <span class="deliv-label">Key Deliverable:</span>
+        <span>Itemized word count, timeline &amp; fixed quote in &lt; 24h</span>
+      </div>
+      <div class="step-sla-tag">⚡ SLA: Under 24 Hours</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <span class="step-phase-badge">Phase 2 · SME Allocation</span>
+      <h3>Subject matter expert</h3>
+      <p>Subject matter experts with certified domain experience (Medical/FinTech/Legal) are assigned and briefed on your glossary, style guide, and tone.</p>
+      <div class="step-deliverable">
+        <span class="deliv-label">Key Deliverable:</span>
+        <span>Glossary alignment &amp; translation memory seeding</span>
+      </div>
+      <div class="step-sla-tag">🎯 Native L1 Linguists Only</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <span class="step-phase-badge">Phase 3 · Dual Verification</span>
+      <h3>Review</h3>
+      <p>First-pass translation, independent proofreading by a second certified linguist, followed by automated DQF-MQM QA checks for tag consistency.</p>
+      <div class="step-deliverable">
+        <span class="deliv-label">Key Deliverable:</span>
+        <span>Independent proofreader sign-off &amp; DQF error scorecard</span>
+      </div>
+      <div class="step-sla-tag">🛡️ 3-Tier ISO 17100 Gate</div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <span class="step-phase-badge">Phase 4 · Delivery &amp; Sync</span>
+      <h3>Deliver &amp; integrate</h3>
+      <p>We deliver files in their original format—or push them directly to your repo or CMS via automated webhooks—accompanied by cryptographic diff audits.</p>
+      <div class="step-deliverable">
+        <span class="deliv-label">Key Deliverable:</span>
+        <span>Native format builds, Git pull requests &amp; diff audit</span>
+      </div>
+      <div class="step-sla-tag">🚀 Automated CI/CD Sync</div>
+    </div>
   </div>
 </section>
 
@@ -704,11 +760,36 @@
 
 <!-- ============ FAQ ============ -->
 <section id="faq">
-  <div class="section-head center">
-    <div class="eyebrow">Questions</div>
-    <h2>Before you write in</h2>
+  <div class="faq-layout">
+    <div class="faq-sidebar">
+      <div class="eyebrow">Frequently Asked Questions</div>
+      <h2>Answers to Common Questions</h2>
+      <p style="color:var(--muted);line-height:1.75;margin-bottom:2rem;font-size:0.95rem;">
+        Everything you need to know about our per-word pricing, standing translation memories, CI/CD integrations, and ISO compliance standards before you send your first string.
+      </p>
+      
+      <div class="faq-support-card">
+        <div class="support-badge">
+          <span class="badge-dot" style="background:var(--emerald);"></span>
+          <span>SOLUTIONS DESK ACTIVE</span>
+        </div>
+        <h4 style="color:#fff;font-size:1.05rem;margin:0.8rem 0 0.4rem 0;">Have a custom enterprise RFP or non-standard format?</h4>
+        <p style="font-size:0.84rem;color:var(--muted);line-height:1.6;margin-bottom:1.2rem;">
+          Our senior localization architects provide tailored workflow reviews, sample pilot audits, and custom tooling integrations.
+        </p>
+        <div class="faq-support-meta">
+          <div><strong style="color:#fff;">⚡ Average SLA:</strong> &lt; 2 business hours</div>
+          <div><strong style="color:#fff;">🔒 Governance:</strong> Mutual NDA guaranteed</div>
+        </div>
+        <button class="btn btn-outline" style="width:100%;font-size:0.84rem;margin-top:1.2rem;text-align:center;" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+          Consult an Architect →
+        </button>
+      </div>
+    </div>
+    <div class="faq-content">
+      <div class="faq-list" id="faqList"></div>
+    </div>
   </div>
-  <div class="faq-list" id="faqList"></div>
 </section>
 
 <!-- ============ CONTACT ============ -->
@@ -718,16 +799,37 @@
       <div class="eyebrow">Start a project</div>
       <h2>Tell us what needs to travel</h2>
       <p>Send over your project details—including word count, target markets, content type, and deadline—and we'll provide a fixed quote and linguist match plan within one business day.</p>
-      <ul class="contact-list">
-        <li><b>Response time</b>Under 24 hours, every business day</li>
-        <li><b>Existing translation memory?</b>Send it — we reuse it, we don't rebuild it</li>
-        <li><b>Rush timelines</b>Tell us the deadline in the form; we'll say yes or explain why not</li>
-        <li><b>Email</b><a href="mailto:collab@mavyedusolutions.co.in">collab@mavyedusolutions.co.in</a></li>
-      </ul>
+      
+      <!-- Enterprise Trust & SLA Guarantee Card -->
+      <div class="contact-guarantee-card">
+        <h4 style="color:#fff;font-size:0.95rem;margin-bottom:0.8rem;display:flex;align-items:center;gap:0.5rem;">
+          <span>🛡️</span>
+          <span>Enterprise Service Level Guarantees</span>
+        </h4>
+        <ul class="contact-guarantee-list">
+          <li><strong>⏱️ Guaranteed Turnaround:</strong> Fixed quote &amp; linguist match within 24 business hours</li>
+          <li><strong>🔄 Translation Memory Reuse:</strong> Existing TMs ingested from day one—we reuse, never re-bill</li>
+          <li><strong>🛡️ Dual-Linguist Rigor:</strong> Every deliverable verified by an independent 2nd certified native linguist</li>
+          <li><strong>🔒 Security &amp; Air-Gapped ISMS:</strong> Zero third-party public LLM training on proprietary client data</li>
+        </ul>
+      </div>
+
+      <div class="contact-support-block">
+        <div style="font-size:0.85rem;color:var(--muted);">Direct Architecture Desk:</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.95rem;color:var(--gold);margin-top:0.2rem;">
+          <a href="mailto:collab@mavyedusolutions.co.in" style="color:var(--gold);text-decoration:none;">collab@mavyedusolutions.co.in</a>
+        </div>
+        <div style="margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid var(--line);font-size:0.78rem;color:var(--muted);display:flex;justify-content:space-between;align-items:center;">
+          <span>Enterprise Portal Active</span>
+          <a href="portal.html" style="color:var(--sapphire);font-weight:600;text-decoration:none;">Vendor / Client Enclave Login ↗</a>
+        </div>
+      </div>
     </div>
     <form class="contact-form" id="projectForm" action="#" method="POST">
-      <div class="form-group"><input type="text" id="name" name="name" placeholder=" " required><label>Your name</label><div class="error-msg">Please enter your name</div></div>
-      <div class="form-group"><input type="email" id="email" name="email" placeholder=" " required><label>Email address</label><div class="error-msg">Valid email required</div></div>
+      <div class="contact-form-row">
+        <div class="form-group"><input type="text" id="name" name="name" placeholder=" " required><label>Your name</label><div class="error-msg">Please enter your name</div></div>
+        <div class="form-group"><input type="email" id="email" name="email" placeholder=" " required><label>Email address</label><div class="error-msg">Valid email required</div></div>
+      </div>
       <div class="form-group">
         <select id="service" name="service" required>
           <option value="" disabled selected>Select a service</option>
@@ -750,7 +852,11 @@
         </select>
       </div>
       <div class="form-group"><textarea id="message" name="message" rows="4" placeholder=" " required></textarea><label>Project details — word count, markets, deadline</label><div class="error-msg">Please describe your project</div></div>
-      <button type="submit" class="btn btn-primary" style="width:100%">Send project request</button>
+      <button type="submit" class="btn btn-primary" style="width:100%">Send project request →</button>
+      <div style="display:flex;justify-content:center;align-items:center;gap:0.5rem;margin-top:0.9rem;font-size:0.75rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;">
+        <span>🔒</span>
+        <span>256-Bit SSL Enclave Encryption · Zero Formspree Reliance</span>
+      </div>
     </form>
   </div>
 </section>

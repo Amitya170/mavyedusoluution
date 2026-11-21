@@ -70,6 +70,7 @@ const CONTENT = {
     { num:'03', title:'Academic & research translation', body:'Peer-reviewed papers, thesis documents, and grant applications translated by linguists with subject-matter credentials in STEM, humanities, and social sciences — with citation formatting preserved.', tags:['STEM','peer review','citations'] },
     { num:'04', title:'Curriculum development support', body:'New course material created from SME interviews and existing documentation, structured to meet local accreditation standards, learning outcomes, and accessibility requirements across education systems.', tags:['accreditation','outcomes','a11y'] },
     { num:'05', title:'EdTech training data', body:'Labeled educational content for AI tutoring systems — question-answer pairs, student intent classification, pedagogical quality scoring, and difficulty calibration across subject areas and grade levels.', tags:['Q&A pairs','intent','difficulty'] },
+    { num:'06', title:'Global accreditation & compliance', body:'WCAG 2.1 AA accessibility remediation, regional educational ministry standards validation, and SCORM/xAPI conformance audits across international higher education and enterprise training boards.', tags:['WCAG 2.1','accreditation','SCORM audit'] },
   ],
 
   /* — EDIT ME: Industries —————————————————————————————————————— */
