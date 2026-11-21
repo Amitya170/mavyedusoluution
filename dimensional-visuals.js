@@ -451,28 +451,28 @@
       const atmosMesh = new THREE.Mesh(atmosGeo, atmosMat);
       this.scene.add(atmosMesh);
 
-      // 4. Country Beacons & Sovereign Gateway Hubs (Refined Micro-Beacons)
+      // 4. Country Beacons & Sovereign Gateway Hubs (Ultra-Refined Luminous Micro-Pins)
       this.cityNodes = [];
       this.cityHitTargets = [];
       this.ringMeshes = [];
-      const nodeGeo = new THREE.SphereGeometry(0.024, 16, 16);
-      const auraGeo = new THREE.SphereGeometry(0.042, 16, 16);
+      const nodeGeo = new THREE.SphereGeometry(0.018, 16, 16);
+      const auraGeo = new THREE.SphereGeometry(0.032, 16, 16);
       const hitGeo = new THREE.SphereGeometry(0.08, 8, 8);
-      const stemGeo = new THREE.CylinderGeometry(0.003, 0.003, 0.045, 8);
+      const stemGeo = new THREE.CylinderGeometry(0.002, 0.002, 0.035, 8);
 
       this.cities.forEach(city => {
         const surfPos = this.latLonToVector3(city.lat, city.lon, 2.00);
-        const pinPos = this.latLonToVector3(city.lat, city.lon, 2.045);
+        const pinPos = this.latLonToVector3(city.lat, city.lon, 2.035);
 
-        // Vertical pin stem (Cylinder pointing outward from Earth center)
-        const stemMat = new THREE.MeshBasicMaterial({ color: city.color, transparent: true, opacity: 0.75 });
+        // Delicate vertical pin stem
+        const stemMat = new THREE.MeshBasicMaterial({ color: city.color, transparent: true, opacity: 0.60 });
         const stemMesh = new THREE.Mesh(stemGeo, stemMat);
         const midStem = surfPos.clone().add(pinPos).multiplyScalar(0.5);
         stemMesh.position.copy(midStem);
         stemMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), surfPos.clone().normalize());
         this.globeGroup.add(stemMesh);
 
-        // Luminous Pin Head (Bright glowing refined beacon dot)
+        // Luminous Pin Head (Crisp, refined micro-beacon jewel)
         const nodeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
         const node = new THREE.Mesh(nodeGeo, nodeMat);
         node.position.copy(pinPos);
@@ -488,11 +488,11 @@
         this.globeGroup.add(hitMesh);
         this.cityHitTargets.push(hitMesh);
 
-        // Glowing Color Aura
+        // Soft Glowing Color Aura (Airy, non-solid optical halo)
         const auraMat = new THREE.MeshBasicMaterial({
           color: city.color,
           transparent: true,
-          opacity: 0.45,
+          opacity: 0.35,
           blending: THREE.AdditiveBlending,
           depthWrite: false
         });
@@ -500,13 +500,13 @@
         aura.position.copy(pinPos);
         this.globeGroup.add(aura);
 
-        // Pulsing Wave Ring Beacon on surface (subtle & refined)
-        const ringGeo = new THREE.RingGeometry(0.022, 0.050, 24);
+        // Subtle Surface Resonance Ring (Refined ripple)
+        const ringGeo = new THREE.RingGeometry(0.016, 0.038, 24);
         const ringMat = new THREE.MeshBasicMaterial({
           color: city.color,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.4
+          opacity: 0.30
         });
         const ring = new THREE.Mesh(ringGeo, ringMat);
         ring.position.copy(surfPos.clone().multiplyScalar(1.006));
@@ -580,55 +580,55 @@
 
       connections.forEach(([c1, c2], idx) => {
         if (!this.cities[c1] || !this.cities[c2]) return;
-        const p1 = this.latLonToVector3(this.cities[c1].lat, this.cities[c1].lon, 2.045);
-        const p2 = this.latLonToVector3(this.cities[c2].lat, this.cities[c2].lon, 2.045);
+        const p1 = this.latLonToVector3(this.cities[c1].lat, this.cities[c1].lon, 2.035);
+        const p2 = this.latLonToVector3(this.cities[c2].lat, this.cities[c2].lon, 2.035);
 
         const mid = p1.clone().add(p2).multiplyScalar(0.5);
         const dist = p1.distanceTo(p2);
-        mid.normalize().multiplyScalar(2.045 + Math.min(dist * 0.28, 0.85));
+        mid.normalize().multiplyScalar(2.035 + Math.min(dist * 0.28, 0.85));
 
         const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
         const isGold = idx % 2 === 0;
 
-        // 1. Delicate, luminous optical fiber arc (ultra-fine & glowing)
-        const tubeGeo = new THREE.TubeGeometry(curve, 48, 0.0045, 6, false);
+        // 1. Delicate, luminous optical fiber arc (ultra-fine & soft glowing)
+        const tubeGeo = new THREE.TubeGeometry(curve, 52, 0.0025, 6, false);
         const tubeMat = new THREE.MeshBasicMaterial({
           color: isGold ? 0xf59e0b : 0x06b6d4,
           transparent: true,
-          opacity: 0.45,
+          opacity: 0.35,
           blending: THREE.AdditiveBlending,
           depthWrite: false
         });
         const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
         this.globeGroup.add(tubeMesh);
 
-        // 2. Soft luminous center filament (no harsh solid white line)
+        // 2. Soft luminous center filament (subtle translucent light spine)
         const curvePoints = curve.getPoints(42);
         const coreGeo = new THREE.BufferGeometry().setFromPoints(curvePoints);
         const coreMat = new THREE.LineBasicMaterial({
           color: isGold ? 0xfef08a : 0xbae6fd,
           transparent: true,
-          opacity: 0.50,
+          opacity: 0.35,
           blending: THREE.AdditiveBlending
         });
         const coreLine = new THREE.Line(coreGeo, coreMat);
         this.globeGroup.add(coreLine);
 
         // 3. Refined photon signal packet cruising along the arc
-        const pulseGeo = new THREE.SphereGeometry(0.016, 12, 12);
+        const pulseGeo = new THREE.SphereGeometry(0.012, 10, 10);
         const pulseMat = new THREE.MeshBasicMaterial({
           color: 0xffffff,
           transparent: true,
-          opacity: 0.85
+          opacity: 0.80
         });
         const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
         this.globeGroup.add(pulseMesh);
 
-        const pulseAuraGeo = new THREE.SphereGeometry(0.034, 12, 12);
+        const pulseAuraGeo = new THREE.SphereGeometry(0.024, 10, 10);
         const pulseAuraMat = new THREE.MeshBasicMaterial({
           color: isGold ? 0xfbbf24 : 0x38bdf8,
           transparent: true,
-          opacity: 0.45,
+          opacity: 0.35,
           blending: THREE.AdditiveBlending,
           depthWrite: false
         });
@@ -788,7 +788,7 @@
         this.ringMeshes.forEach((ring, idx) => {
           const s = 1.0 + Math.sin(time + idx * 0.4) * 0.35;
           ring.scale.set(s, s, s);
-          ring.material.opacity = Math.max(0.10, 0.45 - (s - 0.7) * 0.4);
+          ring.material.opacity = Math.max(0.06, 0.30 - (s - 0.7) * 0.3);
         });
       }
 
