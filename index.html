@@ -72,315 +72,16 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=1784942933">
-<!-- Three.js removed — Canvas2D constellation used instead -->
-<!-- GSAP for Scrollytelling -->
-<!-- GSAP removed — not used -->
-
-<!-- Three.js CDN for WebGL 4D Interactive Engine -->
+<!-- Three.js CDN & Mathematical 4D WebGL Engine -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-<script>
-function init4DLogoEngine() {
-  if (typeof THREE === 'undefined') return;
-
-  const containers = document.querySelectorAll('#webgl-reveal-container, .webgl-logo-container');
-
-  containers.forEach(container => {
-    if (container.dataset.webglInited) return;
-    container.dataset.webglInited = 'true';
-
-    const isReveal = container.id === 'webgl-reveal-container';
-    const width = isReveal ? window.innerWidth : 44;
-    const height = isReveal ? window.innerHeight : 44;
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.z = isReveal ? 9.0 : 4.5;
-
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0); 
-    container.appendChild(renderer.domElement);
-
-    const mainGroup = new THREE.Group();
-    scene.add(mainGroup);
-
-    // --- 2. THE RIGID "ME" SKELETON ---
-    const shapeM = new THREE.Shape();
-    shapeM.moveTo(-1, -1);
-    shapeM.lineTo(-1, 1);
-    shapeM.lineTo(-0.2, 0.2);
-    shapeM.lineTo(0.2, 0.2); 
-    shapeM.lineTo(1, 1);
-    shapeM.lineTo(1, -1);
-    shapeM.lineTo(0.5, -1);
-    shapeM.lineTo(0.5, 0.5);
-    shapeM.lineTo(0, 0);
-    shapeM.lineTo(-0.5, 0.5);
-    shapeM.lineTo(-0.5, -1);
-    shapeM.lineTo(-1, -1);
-
-    const shapeE = new THREE.Shape();
-    shapeE.moveTo(1.4, -1);
-    shapeE.lineTo(2.8, -1);
-    shapeE.lineTo(2.8, -0.5);
-    shapeE.lineTo(1.9, -0.5);
-    shapeE.lineTo(1.9, -0.2);
-    shapeE.lineTo(2.5, -0.2);
-    shapeE.lineTo(2.5, 0.2);
-    shapeE.lineTo(1.9, 0.2);
-    shapeE.lineTo(1.9, 0.5);
-    shapeE.lineTo(2.8, 0.5);
-    shapeE.lineTo(2.8, 1);
-    shapeE.lineTo(1.4, 1);
-    shapeE.lineTo(1.4, -1);
-
-    const extrudeSettings = {
-      depth: 0.4,
-      bevelEnabled: true,
-      bevelSegments: 2, 
-      bevelSteps: 2,
-      bevelThickness: 0.05,
-      bevelSize: 0.05
-    };
-    const mGeo = new THREE.ExtrudeGeometry([shapeM, shapeE], extrudeSettings);
-    mGeo.computeBoundingBox();
-    const offset = mGeo.boundingBox.getCenter(new THREE.Vector3());
-    mGeo.translate(-offset.x, -offset.y, -offset.z);
-    
-    if(!isReveal) {
-        mGeo.scale(1.0, 1.0, 1.0); // Nav bar needs to fit 44x44
-    } else {
-        mGeo.scale(1.8, 1.8, 1.8); // Hero section needs to be large around the 0.7 core
-    }
-
-    // Extract precise edges for the swarm to outline
-    const edgesGeo = new THREE.EdgesGeometry(mGeo);
-    const edgePositions = edgesGeo.attributes.position.array;
-    const edgeCount = edgePositions.length / 6; // 2 vertices per edge
-
-    // --- 3. DYNAMIC FLUID PARTICLE SWARM ---
-    const pCount = isReveal ? 7500 : 2000;
-    const pGeo = new THREE.BufferGeometry();
-    const pPos = new Float32Array(pCount * 3);
-    const pEdgesArr = new Int32Array(pCount); 
-    const pLerps = new Float32Array(pCount); 
-
-    for(let i=0; i<pCount; i++) {
-      pPos[i*3] = (Math.random() - 0.5) * 5;
-      pPos[i*3+1] = (Math.random() - 0.5) * 5;
-      pPos[i*3+2] = (Math.random() - 0.5) * 5;
-      pEdgesArr[i] = Math.floor(Math.random() * edgeCount);
-      pLerps[i] = Math.random();
-    }
-    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-    const pMat = new THREE.PointsMaterial({
-      color: 0xc084fc, // Purple (Left Swarm)
-      size: isReveal ? 0.04 : 0.02,
-      transparent: true,
-      opacity: 0.9,
-      blending: THREE.AdditiveBlending
-    });
-    const swarm = new THREE.Points(pGeo, pMat);
-    mainGroup.add(swarm);
-    
-    // Add a second cyan swarm for extreme density
-    const swarm2Geo = new THREE.BufferGeometry();
-    const swarm2Pos = new Float32Array(pPos); // Copy initial positions
-    swarm2Geo.setAttribute('position', new THREE.BufferAttribute(swarm2Pos, 3));
-    const swarm2Mat = new THREE.PointsMaterial({
-      color: 0x22d3ee, // Cyan (Right Swarm)
-      size: isReveal ? 0.03 : 0.015,
-      transparent: true,
-      opacity: 0.9,
-      blending: THREE.AdditiveBlending
-    });
-    const swarm2 = new THREE.Points(swarm2Geo, swarm2Mat);
-    mainGroup.add(swarm2);
-
-    let mouseX = 0, mouseY = 0;
-    let targetX = 0, targetY = 0;
-    
-    if (isReveal) {
-      window.addEventListener('mousemove', (e) => {
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
-        mouseX = (e.clientX - windowHalfX) / windowHalfX;
-        mouseY = (e.clientY - windowHalfY) / windowHalfY;
-      });
-    }
-
-    const clock = new THREE.Clock();
-    const introDuration = 4.0;
-
-    function animate() {
-      requestAnimationFrame(animate);
-      const time = clock.getElapsedTime();
-
-      // Animation Timeline logic
-      let animProgress = 1.0;
-      if (isReveal) {
-        animProgress = Math.min(time / introDuration, 1.0);
-      }
-      
-      const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-      const ease = easeOutCubic(animProgress);
-      
-      const chaos = Math.sin(animProgress * Math.PI) * (isReveal ? 5.0 : 0.0); // Spikes at middle of animation
-
-      const leftOffset = -15.0 * (1.0 - ease);
-      const rightOffset = 15.0 * (1.0 - ease);
-
-      // Update Swarm 1 (Purple - from Left)
-      const positions = swarm.geometry.attributes.position.array;
-      for(let i=0; i<pCount; i++) {
-        const edgeIdx = pEdgesArr[i];
-        
-        const p1x = edgePositions[edgeIdx*6];
-        const p1y = edgePositions[edgeIdx*6 + 1];
-        const p1z = edgePositions[edgeIdx*6 + 2];
-        const p2x = edgePositions[edgeIdx*6 + 3];
-        const p2y = edgePositions[edgeIdx*6 + 4];
-        const p2z = edgePositions[edgeIdx*6 + 5];
-
-        const lerp = pLerps[i];
-        
-        // Liquid flow along edges
-        const flowLerp = (Math.sin(time * 3.0 + i) * 0.5 + 0.5 + lerp) % 1.0;
-        
-        // Slight 4D-style spatial distortion
-        const distort1Z = Math.sin(time * 2.0 + p1x) * 0.1;
-        const distort2Z = Math.sin(time * 2.0 + p2x) * 0.1;
-
-        let targetX = p1x + (p2x - p1x) * flowLerp;
-        let targetY = p1y + (p2y - p1y) * flowLerp;
-        let targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
-        
-        // Apply Intro Offset
-        targetX += leftOffset;
-        
-        // Tight Swarm turbulence for sharp ME edges + chaos on collision
-        const noiseMulti = 0.02 + chaos;
-        const noiseX = Math.sin(time * 8.0 + i) * noiseMulti;
-        const noiseY = Math.cos(time * 7.0 + i) * noiseMulti;
-        const noiseZ = Math.sin(time * 6.0 + i) * noiseMulti;
-        
-        positions[i*3] += (targetX + noiseX - positions[i*3]) * 0.2;
-        positions[i*3+1] += (targetY + noiseY - positions[i*3+1]) * 0.2;
-        positions[i*3+2] += (targetZ + noiseZ - positions[i*3+2]) * 0.2;
-      }
-      swarm.geometry.attributes.position.needsUpdate = true;
-      
-      // Update Swarm 2 (Cyan - from Right)
-      const pos2 = swarm2.geometry.attributes.position.array;
-      for(let i=0; i<pCount; i++) {
-        const edgeIdx = pEdgesArr[i];
-        
-        const p1x = edgePositions[edgeIdx*6];
-        const p1y = edgePositions[edgeIdx*6 + 1];
-        const p1z = edgePositions[edgeIdx*6 + 2];
-        const p2x = edgePositions[edgeIdx*6 + 3];
-        const p2y = edgePositions[edgeIdx*6 + 4];
-        const p2z = edgePositions[edgeIdx*6 + 5];
-
-        const flowLerp = (Math.cos(time * 2.5 + i) * 0.5 + 0.5 + pLerps[i]) % 1.0;
-        
-        const distort1Z = Math.sin(time * 2.0 + p1x) * 0.1;
-        const distort2Z = Math.sin(time * 2.0 + p2x) * 0.1;
-
-        let targetX = p1x + (p2x - p1x) * flowLerp;
-        let targetY = p1y + (p2y - p1y) * flowLerp;
-        let targetZ = (p1z + distort1Z) + ((p2z + distort2Z) - (p1z + distort1Z)) * flowLerp;
-
-        // Apply Intro Offset
-        targetX += rightOffset;
-
-        const noiseMulti = 0.02 + chaos;
-        const noiseX = Math.sin(time * 7.0 + i) * noiseMulti;
-        const noiseY = Math.cos(time * 6.0 + i) * noiseMulti;
-        const noiseZ = Math.sin(time * 8.0 + i) * noiseMulti;
-
-        pos2[i*3] += (targetX + noiseX - pos2[i*3]) * 0.25;
-        pos2[i*3+1] += (targetY + noiseY - pos2[i*3+1]) * 0.25;
-        pos2[i*3+2] += (targetZ + noiseZ - pos2[i*3+2]) * 0.25;
-      }
-      swarm2.geometry.attributes.position.needsUpdate = true;
-
-      targetX += (mouseX - targetX) * 0.05;
-      targetY += (mouseY - targetY) * 0.05;
-      
-      if (isReveal) {
-        if (animProgress >= 1.0) {
-          mainGroup.rotation.y += 0.005 + (targetX * 0.01);
-          mainGroup.rotation.x += (targetY * 0.01);
-        } else {
-          mainGroup.rotation.y = 0;
-          mainGroup.rotation.x = 0;
-        }
-      } else {
-        mainGroup.rotation.y += 0.005;
-      }
-
-      renderer.render(scene, camera);
-    }
-
-    animate();
-  });
-}
-document.addEventListener('DOMContentLoaded', init4DLogoEngine);
-</script>
-
+<script src="four-dimensional-engine.js" defer></script>
 </head>
 <body>
-<div id="page-reveal">
-  <div class="reveal-logo" style="display:flex; justify-content:center; align-items:center; width: 100vw; height: 100vh;">
-    <div id="webgl-reveal-container" style="width: 100vw; height: 100vh; display: inline-flex; justify-content: center; align-items: center;"></div>
-  </div>
-</div>
-
+<div id="page-reveal" class="hidden"></div>
 
 <a href="#main" class="skip-link">Skip to content</a>
 
-<canvas id="charsCanvas" aria-hidden="true"></canvas>
-<!-- Ultra-Modern AI Holographic Cursor -->
-<div class="ai-cursor-dot" id="aiCursorDot"></div>
-<div class="ai-cursor-ring" id="aiCursorRing">
-  <div class="ai-cursor-label" id="aiCursorLabel">AI DATA</div>
-</div>
-
-<canvas id="bgCanvas" aria-hidden="true"></canvas>
-<!-- Ambient Glow Orbs -->
-<div class="ambient-orb ambient-orb--brass" aria-hidden="true"></div>
-<div class="ambient-orb ambient-orb--coral" aria-hidden="true"></div>
-<div class="ambient-orb ambient-orb--pink" aria-hidden="true"></div>
-<!-- Animated Mesh Gradient -->
-<div class="mesh-gradient" aria-hidden="true"></div>
-<!-- Aurora Progress Bar -->
-<div class="aurora-bar" aria-hidden="true"></div>
 <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-<!-- Floating Thematic Shapes (AI Data & Localization) -->
-<div class="float-shape float-shape--ring" aria-hidden="true" title="Data orbit"></div>
-<div class="float-shape float-shape--diamond" aria-hidden="true" title="Translation node"></div>
-<div class="float-shape float-shape--cross" aria-hidden="true" title="Neural connection"></div>
-<div class="float-shape float-shape--dot-cluster" aria-hidden="true" title="Data nodes">
-  <span></span><span></span><span></span><span></span>
-</div>
-<div class="float-shape float-shape--arc" aria-hidden="true" title="Language arc"></div>
-<!-- Floating Language Characters -->
-<div class="float-shape loaded" aria-hidden="true" style="position:fixed;top:22%;left:6%;font-family:'Fraunces',serif;font-size:2.2rem;color:rgba(167,139,250,0.12);animation:floatBob 10s ease-in-out infinite;pointer-events:none;z-index:1;">あ</div>
-<div class="float-shape loaded" aria-hidden="true" style="position:fixed;top:68%;right:6%;font-family:'Fraunces',serif;font-size:2rem;color:rgba(34,211,238,0.1);animation:floatBob 14s ease-in-out infinite reverse;pointer-events:none;z-index:1;">ع</div>
-<div class="float-shape loaded" aria-hidden="true" style="position:fixed;bottom:25%;left:12%;font-family:'Fraunces',serif;font-size:1.8rem;color:rgba(244,114,182,0.09);animation:floatBob 12s ease-in-out infinite;pointer-events:none;z-index:1;">文</div>
-<div class="float-shape loaded" aria-hidden="true" style="position:fixed;top:40%;right:15%;font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:rgba(52,211,153,0.12);animation:floatBob 18s ease-in-out infinite reverse;pointer-events:none;z-index:1;white-space:nowrap;">{ i18n }</div>
-<div class="float-shape loaded" aria-hidden="true" style="position:fixed;bottom:35%;right:20%;font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:rgba(167,139,250,0.1);animation:floatBob 16s ease-in-out infinite;pointer-events:none;z-index:1;white-space:nowrap;">&lt;lang=&quot;ja&quot;&gt;</div>
-
-
-
-
 
 <!-- ============ NAVIGATION ============ -->
 <nav>
@@ -414,9 +115,9 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
 <section class="hero" id="main">
   <div class="hero-grid">
     <div>
-      <div class="eyebrow">Localization · AI Data · Education</div>
-      <h1>Your product, <em>fluent</em> in every market you ship to.</h1>
-      <p class="subtitle">Mavy EduSolutions pairs native linguists with a translation memory engine so every string, screen, course, and subtitle lands the way it would if it were written there first — not translated to get there.</p>
+      <div class="eyebrow">Human Mastery · 4D Mathematical Rigor · Global Fluency</div>
+      <h1>Where Human Nuance Meets <em>Mathematical Precision</em>.</h1>
+      <p class="subtitle">Master-tier localization, multimodal AI training data, and e-learning adaptation across 150+ languages — calculated with higher-dimensional geometric rigor and crafted by native human minds.</p>
       <div class="cta-group">
         <button class="btn btn-primary magnetic-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Start a project</button>
         <button class="btn btn-outline" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">See what we do</button>
@@ -430,13 +131,16 @@ document.addEventListener('DOMContentLoaded', init4DLogoEngine);
       <div class="float-badge float-badge--2">⚡ AI-Powered MTPE</div>
       <div class="float-badge float-badge--3">🤖 RLHF Data Quality</div>
     </div>
-    <div class="lens-card">
-      <div class="cap"><span>LIVE LENS DEMO</span><span id="lensLangLabel">→ ES</span></div>
-      <div class="lens-wrap" id="lensWrap">
-        <div class="lens-original">Your product, fluent everywhere.</div>
-        <div class="lens-translated" id="lensTranslated">Tu producto, fluido en todas partes.</div>
+    <div class="four-d-hero-card tilt-card">
+      <div class="four-d-header">
+        <div class="four-d-title">
+          <span class="live-dot"></span>
+          <span>MATHEMATICAL 4D PROJECTION</span>
+        </div>
+        <span class="four-d-badge">R⁴ → R³ WEBGL</span>
       </div>
-      <div class="lens-foot"><span>Move your cursor over the line</span><span>same string, six markets</span></div>
+      <div id="fourDCanvasContainer" class="four-d-canvas-wrap"></div>
+      <div id="dimensionDeck" class="dimension-deck-wrap"></div>
     </div>
   </div>
 </section>

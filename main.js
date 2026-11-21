@@ -367,81 +367,55 @@ if (mobileClose) mobileClose.addEventListener('click', closeMobile);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
 
-/* ============ Ultra-Modern AI Holographic Cursor Engine ============ */
-const aiCursorDot = document.getElementById('aiCursorDot');
-const aiCursorRing = document.getElementById('aiCursorRing');
-const aiCursorLabel = document.getElementById('aiCursorLabel');
+/* ============ Natural Pointer & 3D Tilt Mechanics ============ */
 const lensWrap = document.getElementById('lensWrap');
 const lensTranslated = document.getElementById('lensTranslated');
 const lensLangLabel = document.getElementById('lensLangLabel');
 
 let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
-let ringX = mouseX, ringY = mouseY;
 let hoveringLens = false;
 
-if (aiCursorDot && aiCursorRing) {
-  // Set initial position at center before mouse movement
-  aiCursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-  aiCursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+window.addEventListener('pointermove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+}, { passive: true });
 
-  // Direct instantaneous dot position tracking
-  window.addEventListener('pointermove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    aiCursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-  }, { passive: true });
-
-  // Smooth 60fps LERP loop for trailing holographic ring
-  function animateCursorRing() {
-    ringX += (mouseX - ringX) * 0.22;
-    ringY += (mouseY - ringY) * 0.22;
-    aiCursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
-    requestAnimationFrame(animateCursorRing);
-  }
-  requestAnimationFrame(animateCursorRing);
-
-  // Interactive Hover States with contextual tech labels
-  document.querySelectorAll('a, button, .lang-tag, .case-card, .faq-q, .filter-chip, .service-card, .industry-card, .blog-card').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      aiCursorRing.classList.add('active');
-      aiCursorDot.classList.add('active');
-      if (aiCursorLabel) {
-        if (el.tagName === 'A' || el.tagName === 'BUTTON') aiCursorLabel.textContent = 'SELECT';
-        else if (el.classList.contains('service-card')) aiCursorLabel.textContent = 'SERVICE';
-        else if (el.classList.contains('case-card')) aiCursorLabel.textContent = 'IMPACT';
-        else if (el.classList.contains('industry-card')) aiCursorLabel.textContent = 'INDUSTRY';
-        else if (el.classList.contains('blog-card')) aiCursorLabel.textContent = 'READ';
-        else aiCursorLabel.textContent = 'EXPLORE';
-      }
-    });
-    el.addEventListener('mouseleave', () => {
-      aiCursorRing.classList.remove('active');
-      aiCursorDot.classList.remove('active');
-    });
+// Spotlight cards
+document.querySelectorAll('.service-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top) + 'px');
   });
+});
 
-  // Spotlight cards
-  document.querySelectorAll('.service-card').forEach(card => {
+// Realistic 3D Tilt Interaction for Cards
+if (!reduceMotion && !isCoarsePointer) {
+  document.querySelectorAll('.tilt-card, .service-card, .case-card, .industry-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -6;
+      const rotateY = ((x - centerX) / centerX) * 6;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
     });
   });
+}
 
-  // Lens hover state
-  if (lensWrap) {
-    lensWrap.addEventListener('mouseenter', () => {
-      hoveringLens = true;
-      aiCursorRing.classList.add('lens');
-      aiCursorDot.classList.add('active');
-    });
-    lensWrap.addEventListener('mouseleave', () => {
-      hoveringLens = false;
-      aiCursorRing.classList.remove('lens');
-      aiCursorDot.classList.remove('active');
-    });
-  }
+// Lens hover state
+if (lensWrap) {
+  lensWrap.addEventListener('mouseenter', () => {
+    hoveringLens = true;
+  });
+  lensWrap.addEventListener('mouseleave', () => {
+    hoveringLens = false;
+  });
 }
 
 /* language lens sweep */
