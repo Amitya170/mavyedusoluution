@@ -402,7 +402,7 @@ const caseMockups = {
   "Cobalt Games": { env: "In-Context String HUD Pass", label: "Game UI (EN ➔ JA)", preview: "QUEST: [Find the Ancient Forge] ➔ クエスト: [古代の鍛冶場を探せ] · 0 clipping defects" },
   "Fennel Health": { env: "MedDRA v27.0 Compliance", label: "Clinical App (EN ➔ AR)", preview: "Dosage Advisory: [Take twice daily after meals] ➔ [تناول مرتين يومياً بعد الوجبات] · RTL Validated" },
   "Atlas Robotics": { env: "10,000p Shared Term Base", label: "Technical Docs (EN ➔ 8x)", preview: "Actuator Protocol: [Emergency Override Torque] ➔ Synchronized cross-locale term consistency" },
-  "Solace EdTech": { env: "SCORM 2004 / cmi5 Packaging", label: "LMS Curriculum (5 Markets)", preview: "Interactive STEM Assessment adapted for MENA cultural paradigms · 100% Package QA" }
+  "Solace EdTech": { env: "SCORM 2004 / cmi5 Packaging", label: "LMS Curriculum (5 Markets)", preview: "STEM Assessment Courseware adapted for MENA cultural paradigms · 100% Package QA" }
 };
 
 function renderCaseStudies() {
@@ -1732,7 +1732,7 @@ window.addEventListener('load', () => {
       const msgBox = document.getElementById('message');
       if (msgBox) {
         msgBox.value = [
-          `[Scope Brief from Interactive AI Dataset Calculator]`,
+          `[Scope Brief from AI Dataset Calculator]`,
           `• Target Modality: ${modalityEl.options[modalityEl.selectedIndex].text}`,
           `• Target Languages: ${langs} locales`,
           `• Target Volume: ${parseInt(vol, 10).toLocaleString()} ${cfg.unit}`,

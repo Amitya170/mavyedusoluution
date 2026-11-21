@@ -2,7 +2,7 @@
  * MAVY EDUSOLUTIONS — HYPER-DIMENSIONAL VISUAL SUITE
  * 
  * 1. Hero 4D Morphing Crystal Orb & Gyroscopic Rings (Temporal 4D Displacement)
- * 2. Interactive 3D Neural Earth Globe with Global Routing Arcs & City Beacons
+ * 2. 3D Neural Earth Globe with Global Routing Arcs & City Beacons
  * 3. 4D Acoustic Voice Lab (Harmonic Waveform Ribbon + Multi-Band Frequency Spectrum EQ)
  */
 
@@ -279,7 +279,7 @@
     }
   }
 
-  // --- 2. INTERACTIVE 3D NEURAL EARTH GLOBE ---
+  // --- 2. 3D NEURAL EARTH GLOBE ---
   class Interactive3DGlobe {
     constructor(containerId) {
       this.container = document.getElementById(containerId);
@@ -359,7 +359,7 @@
 
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-      this.camera.position.set(0, 0, 6.2);
+      this.camera.position.set(0, 0, 5.8);
 
       this.renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -370,84 +370,94 @@
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       this.container.appendChild(this.renderer.domElement);
 
-      const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+      // Natural Celestial Lighting: Sun Key + Front Fill + Ambient
+      const ambient = new THREE.AmbientLight(0xffffff, 1.3);
       this.scene.add(ambient);
 
-      const dirLight = new THREE.DirectionalLight(0xd4af37, 2.8);
-      dirLight.position.set(5, 5, 5);
-      this.scene.add(dirLight);
+      const sunLight = new THREE.DirectionalLight(0xffffff, 2.2);
+      sunLight.position.set(3, 4, 6);
+      this.scene.add(sunLight);
+
+      const frontLight = new THREE.DirectionalLight(0xffffff, 1.2);
+      frontLight.position.set(0, 0, 8);
+      this.scene.add(frontLight);
+
+      const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.0);
+      rimLight.position.set(-5, -2, -4);
+      this.scene.add(rimLight);
 
       this.globeGroup = new THREE.Group();
+      // Natural terrestrial axial tilt (~18 degrees for dramatic perspective)
+      this.globeGroup.rotation.z = 0.22;
       this.scene.add(this.globeGroup);
 
-      // 1. Globe Base Sphere (Dark Obsidian)
-      const baseGeo = new THREE.SphereGeometry(2.0, 48, 48);
+      // Texture Assets for Authentic Planetary Earth
+      const textureLoader = new THREE.TextureLoader();
+      const earthTexture = textureLoader.load('earth-blue-marble.jpg');
+      const nightTexture = textureLoader.load('earth-night.jpg');
+      const bumpTexture = textureLoader.load('earth-topology.png');
+
+      // 1. Globe Base Sphere (Authentic Earth Continents, Oceans & Landmasses)
+      const baseGeo = new THREE.SphereGeometry(2.0, 64, 64);
       const baseMat = new THREE.MeshStandardMaterial({
-        color: 0x080c18,
-        roughness: 0.35,
-        metalness: 0.85
+        map: earthTexture,
+        bumpMap: bumpTexture,
+        bumpScale: 0.035,
+        emissiveMap: nightTexture,
+        emissive: new THREE.Color(0xfde68a),
+        emissiveIntensity: 0.6,
+        roughness: 0.55,
+        metalness: 0.05
       });
       const globeMesh = new THREE.Mesh(baseGeo, baseMat);
       this.globeGroup.add(globeMesh);
 
-      // 2. Latitude & Longitude Wireframe Grid
-      const gridGeo = new THREE.SphereGeometry(2.02, 24, 24);
+      // 2. Fine Cartographic Meridian Grid Lines (Equator, Tropics, Prime Meridian)
+      const gridGeo = new THREE.SphereGeometry(2.008, 36, 18);
       const gridMat = new THREE.MeshBasicMaterial({
-        color: 0x1e293b,
+        color: 0x38bdf8,
         wireframe: true,
         transparent: true,
-        opacity: 0.3
+        opacity: 0.07
       });
       const gridMesh = new THREE.Mesh(gridGeo, gridMat);
       this.globeGroup.add(gridMesh);
 
-      // 3. Dense Continental Constellation Particles (4,200 points)
-      const pCount = 4200;
-      const pGeo = new THREE.BufferGeometry();
-      const pPos = new Float32Array(pCount * 3);
-      const pCol = new Float32Array(pCount * 3);
-      const gold = new THREE.Color(0xd4af37);
-      const sapphire = new THREE.Color(0x38bdf8);
-      const emerald = new THREE.Color(0x10b981);
-
-      for (let i = 0; i < pCount; i++) {
-        const u = Math.random();
-        const v = Math.random();
-        const theta = u * 2.0 * Math.PI;
-        const phi = Math.acos(2.0 * v - 1.0);
-        const r = 2.04;
-
-        pPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-        pPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-        pPos[i * 3 + 2] = r * Math.cos(phi);
-
-        const rand = Math.random();
-        const c = rand > 0.6 ? gold : (rand > 0.3 ? sapphire : emerald);
-        pCol[i * 3] = c.r;
-        pCol[i * 3 + 1] = c.g;
-        pCol[i * 3 + 2] = c.b;
-      }
-      pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-      pGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
-
-      const pMat = new THREE.PointsMaterial({
-        size: 0.026,
-        vertexColors: true,
+      // 3. Realistic Atmosphere Horizon Limb Glow (Rayleigh Optical Scattering)
+      const atmosGeo = new THREE.SphereGeometry(2.055, 64, 64);
+      const atmosMat = new THREE.ShaderMaterial({
+        vertexShader: `
+          varying vec3 vNormal;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vNormal;
+          void main() {
+            float intensity = pow(0.66 - dot(vNormal, vec3(0, 0, 1.0)), 2.2);
+            gl_FragColor = vec4(0.22, 0.74, 0.97, 1.0) * intensity * 0.95;
+          }
+        `,
+        blending: THREE.AdditiveBlending,
+        side: THREE.BackSide,
         transparent: true,
-        opacity: 0.8
+        depthWrite: false
       });
-      const points = new THREE.Points(pGeo, pMat);
-      this.globeGroup.add(points);
+      const atmosMesh = new THREE.Mesh(atmosGeo, atmosMat);
+      this.scene.add(atmosMesh);
 
-      // 4. Country Beacons & Interactive Data Nodes
+      // 4. Country Beacons & Sovereign Gateway Hubs
       this.cityNodes = [];
-      const nodeGeo = new THREE.SphereGeometry(0.042, 16, 16);
+      this.ringMeshes = [];
+      const nodeGeo = new THREE.SphereGeometry(0.038, 16, 16);
       this.cities.forEach(city => {
-        const v = this.latLonToVector3(city.lat, city.lon, 2.06);
+        const v = this.latLonToVector3(city.lat, city.lon, 2.035);
         const nodeMat = new THREE.MeshStandardMaterial({
           color: city.color,
           emissive: city.color,
-          emissiveIntensity: 0.95,
+          emissiveIntensity: 1.1,
           roughness: 0.1
         });
         const node = new THREE.Mesh(nodeGeo, nodeMat);
@@ -456,8 +466,8 @@
         this.globeGroup.add(node);
         this.cityNodes.push(node);
 
-        // Pulsing Ring Beacon
-        const ringGeo = new THREE.RingGeometry(0.048, 0.082, 24);
+        // Pulsing Wave Ring Beacon
+        const ringGeo = new THREE.RingGeometry(0.042, 0.078, 24);
         const ringMat = new THREE.MeshBasicMaterial({
           color: city.color,
           side: THREE.DoubleSide,
@@ -468,9 +478,10 @@
         ring.position.copy(v);
         ring.lookAt(new THREE.Vector3(0, 0, 0));
         this.globeGroup.add(ring);
+        this.ringMeshes.push(ring);
       });
 
-      // 5. Connect Cities with Radiant Global Flight Splines
+      // 5. Connect Sovereign Gateways with 3D Arcs & Live Translation Packets
       this.createFlightArcs();
 
       // Tooltip Element
@@ -488,7 +499,8 @@
     }
 
     createFlightArcs() {
-      // Intercontinental flight connections
+      this.arcPulses = [];
+      // Intercontinental translation routing connections
       const connections = [
         // Trans-Pacific
         [0, 21], // SF <-> Tokyo
@@ -532,25 +544,39 @@
         [0, 3]   // SF <-> Mexico City
       ];
 
-      connections.forEach(([c1, c2]) => {
+      connections.forEach(([c1, c2], idx) => {
         if (!this.cities[c1] || !this.cities[c2]) return;
-        const p1 = this.latLonToVector3(this.cities[c1].lat, this.cities[c1].lon, 2.06);
-        const p2 = this.latLonToVector3(this.cities[c2].lat, this.cities[c2].lon, 2.06);
+        const p1 = this.latLonToVector3(this.cities[c1].lat, this.cities[c1].lon, 2.035);
+        const p2 = this.latLonToVector3(this.cities[c2].lat, this.cities[c2].lon, 2.035);
 
         const mid = p1.clone().add(p2).multiplyScalar(0.5);
         const dist = p1.distanceTo(p2);
-        mid.normalize().multiplyScalar(2.06 + Math.min(dist * 0.28, 0.9));
+        mid.normalize().multiplyScalar(2.035 + Math.min(dist * 0.26, 0.85));
 
         const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
-        const curvePoints = curve.getPoints(36);
+        const curvePoints = curve.getPoints(42);
         const arcGeo = new THREE.BufferGeometry().setFromPoints(curvePoints);
         const arcMat = new THREE.LineBasicMaterial({
-          color: 0xd4af37,
+          color: idx % 2 === 0 ? 0xd4af37 : 0x38bdf8,
           transparent: true,
-          opacity: 0.55
+          opacity: 0.52
         });
         const arcLine = new THREE.Line(arcGeo, arcMat);
         this.globeGroup.add(arcLine);
+
+        // Live Photon Signal Packet traveling on the arc
+        const pulseGeo = new THREE.SphereGeometry(0.024, 8, 8);
+        const pulseMat = new THREE.MeshBasicMaterial({
+          color: idx % 2 === 0 ? 0xffffff : 0x38bdf8
+        });
+        const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
+        this.globeGroup.add(pulseMesh);
+        this.arcPulses.push({
+          mesh: pulseMesh,
+          curve: curve,
+          progress: Math.random(),
+          speed: 0.003 + (idx % 5) * 0.001
+        });
       });
     }
 
@@ -687,6 +713,26 @@
         }
       } else if (!this.isDragging) {
         this.globeGroup.rotation.y += this.rotationVelocity.y;
+      }
+
+      // Animate pulsing beacon radar rings
+      if (this.ringMeshes && this.ringMeshes.length) {
+        const time = Date.now() * 0.003;
+        this.ringMeshes.forEach((ring, idx) => {
+          const s = 1.0 + Math.sin(time + idx * 0.4) * 0.28;
+          ring.scale.set(s, s, s);
+          ring.material.opacity = 0.45 + Math.sin(time + idx * 0.4) * 0.35;
+        });
+      }
+
+      // Animate neural translation signal packets
+      if (this.arcPulses && this.arcPulses.length) {
+        this.arcPulses.forEach(p => {
+          p.progress += p.speed;
+          if (p.progress > 1.0) p.progress = 0;
+          const pos = p.curve.getPoint(p.progress);
+          p.mesh.position.copy(pos);
+        });
       }
 
       this.renderer.render(this.scene, this.camera);

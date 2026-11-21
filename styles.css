@@ -860,15 +860,16 @@ section::before {
 }
 
 /* ================================================================
-   INTERACTIVE 3D NEURAL GLOBE SHOWCASE
+   3D NEURAL GLOBE SHOWCASE
    ================================================================ */
 .globe-showcase-container {
   margin: 2.4rem 0 3.5rem;
+  scroll-margin-top: 110px;
   background: var(--surface);
   backdrop-filter: var(--glass);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  padding: 2rem;
+  padding: 2.2rem;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow);
@@ -876,7 +877,7 @@ section::before {
 
 .globe-showcase-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
