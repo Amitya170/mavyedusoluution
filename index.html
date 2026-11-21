@@ -72,9 +72,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=1784942933">
-<!-- Three.js CDN & Mathematical 4D WebGL Engine -->
+<!-- Three.js CDN & Hyper-Dimensional 4D Visual Engine -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="four-dimensional-engine.js" defer></script>
+<script src="dimensional-visuals.js" defer></script>
 </head>
 <body>
 <div id="page-reveal" class="hidden"></div>
@@ -131,16 +131,37 @@
       <div class="float-badge float-badge--2">⚡ AI-Powered MTPE</div>
       <div class="float-badge float-badge--3">🤖 RLHF Data Quality</div>
     </div>
-    <div class="four-d-hero-card tilt-card">
-      <div class="four-d-header">
-        <div class="four-d-title">
-          <span class="live-dot"></span>
-          <span>MATHEMATICAL 4D PROJECTION</span>
+    <div class="hero-4d-showcase">
+      <div id="hero4DVisualContainer" class="hero-4d-canvas"></div>
+      <!-- Floating Frosted Glass 4D Data Badges -->
+      <div class="hero-floating-glass glass-badge-1">
+        <div class="badge-icon-glow">🌐</div>
+        <div>
+          <div class="badge-label">Active Network</div>
+          <div class="badge-val">150+ Living Locales</div>
         </div>
-        <span class="four-d-badge">R⁴ → R³ WEBGL</span>
       </div>
-      <div id="fourDCanvasContainer" class="four-d-canvas-wrap"></div>
-      <div id="dimensionDeck" class="dimension-deck-wrap"></div>
+      <div class="hero-floating-glass glass-badge-2">
+        <div class="badge-icon-glow">⚖️</div>
+        <div>
+          <div class="badge-label">Human Agreement</div>
+          <div class="badge-val">Fleiss' κ &gt; 0.88</div>
+        </div>
+      </div>
+      <div class="hero-floating-glass glass-badge-3">
+        <div class="badge-icon-glow">🎙️</div>
+        <div>
+          <div class="badge-label">Acoustic Purity</div>
+          <div class="badge-val">48kHz SNR Gates</div>
+        </div>
+      </div>
+      <div class="hero-floating-glass glass-badge-4">
+        <div class="badge-icon-glow">🛡️</div>
+        <div>
+          <div class="badge-label">Enterprise Rigor</div>
+          <div class="badge-val">ISO 17100 Certified</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -204,6 +225,22 @@
     <p>The same linguist network and QA discipline that ships your localized product also sources, labels, and validates the data behind your models — across text, audio, image, and video.</p>
   </div>
   <div class="bento-grid" id="aiDataGrid"></div>
+
+  <!-- Interactive 3D Acoustic Speech Waveform Visualizer -->
+  <div class="acoustic-wave-container tilt-card">
+    <div class="acoustic-wave-header">
+      <div class="acoustic-title">
+        <span class="wave-pulse-dot"></span>
+        <span>INTERACTIVE MULTILINGUAL ACOUSTIC SPECTROGRAM & WAVEFORM RIBBON</span>
+      </div>
+      <span class="acoustic-badge">48kHz High-SNR Voice Data</span>
+    </div>
+    <canvas id="acousticWaveCanvas" class="acoustic-canvas"></canvas>
+    <div class="acoustic-wave-footer">
+      <span>Hover horizontally across the waveform to modulate phonetic resonance & acoustic envelope</span>
+      <span>Wake-word · Synthetic Voice Cloning · Multilingual TTS · RLHF Audio Acceptance Gates</span>
+    </div>
+  </div>
 </section>
 
 <!-- ============ SERVICES: EDU SOLUTIONS ============ -->

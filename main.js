@@ -152,12 +152,171 @@ const CONTENT = {
 
 
 /* ============ Render helpers (Null-Safe) ============ */
+
+/* ================================================================
+   DIMENSIONAL 4D VECTOR ICON DEFINITIONS
+   ================================================================ */
+function getDimIcon(type, num) {
+  const gold = "#d4af37";
+  const sapphire = "#38bdf8";
+  const emerald = "#10b981";
+
+  const icons = {
+    "serv-01": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <path d="M16 3L28 9.5V22.5L16 29L4 22.5V9.5L16 3Z" stroke="${gold}" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M16 3V29M4 9.5L16 16L28 9.5M4 22.5L16 16L28 22.5" stroke="${sapphire}" stroke-width="1.2" stroke-opacity="0.6"/>
+      <circle cx="16" cy="16" r="3" fill="${gold}" fill-opacity="0.8"/>
+      <circle cx="9" cy="12" r="1.5" fill="${emerald}"/>
+      <circle cx="23" cy="12" r="1.5" fill="${sapphire}"/>
+    </svg>`,
+    "serv-02": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <rect x="6" y="4" width="16" height="22" rx="3" stroke="${gold}" stroke-width="1.8"/>
+      <rect x="10" y="8" width="16" height="20" rx="3" stroke="${sapphire}" stroke-width="1.2" stroke-opacity="0.6"/>
+      <line x1="10" y1="10" x2="18" y2="10" stroke="${gold}" stroke-width="1.5"/>
+      <line x1="10" y1="14" x2="18" y2="14" stroke="${gold}" stroke-width="1.5"/>
+      <line x1="10" y1="18" x2="15" y2="18" stroke="${gold}" stroke-width="1.5"/>
+      <circle cx="21" cy="22" r="4" fill="${gold}" fill-opacity="0.2" stroke="${gold}" stroke-width="1.2"/>
+    </svg>`,
+    "serv-03": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="12" stroke="${sapphire}" stroke-width="1.8" stroke-dasharray="3 3"/>
+      <path d="M7 16C7 16 11 9 16 9C21 9 25 16 25 16C25 16 21 23 16 23C11 23 7 16 7 16Z" stroke="${gold}" stroke-width="1.8"/>
+      <circle cx="16" cy="16" r="3.5" fill="${emerald}"/>
+      <line x1="12" y1="26" x2="20" y2="26" stroke="${gold}" stroke-width="1.5"/>
+    </svg>`,
+    "serv-04": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <path d="M16 4L22 10L12 26H6V20L16 4Z" stroke="${gold}" stroke-width="1.8" stroke-linejoin="round"/>
+      <circle cx="23" cy="9" r="3" fill="${sapphire}" fill-opacity="0.3" stroke="${sapphire}" stroke-width="1.2"/>
+      <path d="M19 19L27 23M23 15L29 17M15 23L21 27" stroke="${emerald}" stroke-width="1.4" stroke-linecap="round"/>
+    </svg>`,
+    "serv-05": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <path d="M4 8C8 6 13 7 16 10C19 7 24 6 28 8V24C24 22 19 23 16 26C13 23 8 22 4 24V8Z" stroke="${gold}" stroke-width="1.8" stroke-linejoin="round"/>
+      <line x1="16" y1="10" x2="16" y2="26" stroke="${sapphire}" stroke-width="1.5"/>
+      <circle cx="22" cy="14" r="1.5" fill="${emerald}"/>
+      <circle cx="10" cy="14" r="1.5" fill="${gold}"/>
+    </svg>`,
+    "serv-06": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <path d="M6 12H11L19 6V26L11 20H6V12Z" stroke="${gold}" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M22 11C24 13 24 19 22 21" stroke="${sapphire}" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M25 8C28 12 28 20 25 24" stroke="${emerald}" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`,
+    "serv-07": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="11" stroke="${sapphire}" stroke-width="1.8"/>
+      <ellipse cx="16" cy="16" rx="5" ry="11" stroke="${sapphire}" stroke-width="1.2" stroke-opacity="0.6"/>
+      <line x1="5" y1="16" x2="27" y2="16" stroke="${sapphire}" stroke-width="1.2" stroke-opacity="0.6"/>
+      <circle cx="21" cy="11" r="3" fill="${gold}" stroke="${gold}" stroke-width="1.5"/>
+      <path d="M23 13L27 17" stroke="${gold}" stroke-width="2" stroke-linecap="round"/>
+    </svg>`,
+    "serv-08": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <path d="M16 4L26 8V16C26 22 22 26 16 28C10 26 6 22 6 16V8L16 4Z" stroke="${gold}" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M11 16L14.5 19.5L21 13" stroke="${emerald}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+    "ai-01": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="4" fill="${gold}" fill-opacity="0.4" stroke="${gold}" stroke-width="1.8"/>
+      <circle cx="7" cy="9" r="2.5" stroke="${sapphire}" stroke-width="1.5"/>
+      <circle cx="25" cy="9" r="2.5" stroke="${sapphire}" stroke-width="1.5"/>
+      <circle cx="16" cy="27" r="2.5" stroke="${emerald}" stroke-width="1.5"/>
+      <line x1="9" y1="10" x2="13" y2="14" stroke="${gold}" stroke-width="1.2" stroke-dasharray="2 2"/>
+      <line x1="23" y1="10" x2="19" y2="14" stroke="${gold}" stroke-width="1.2" stroke-dasharray="2 2"/>
+      <line x1="16" y1="20" x2="16" y2="24" stroke="${emerald}" stroke-width="1.2" stroke-dasharray="2 2"/>
+    </svg>`,
+    "ai-02": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <rect x="6" y="6" width="20" height="20" rx="3" stroke="${gold}" stroke-width="1.8" stroke-dasharray="3 3"/>
+      <circle cx="6" cy="6" r="2" fill="${gold}"/>
+      <circle cx="26" cy="6" r="2" fill="${gold}"/>
+      <circle cx="6" cy="26" r="2" fill="${gold}"/>
+      <circle cx="26" cy="26" r="2" fill="${gold}"/>
+      <rect x="11" y="11" width="10" height="10" rx="2" fill="${sapphire}" fill-opacity="0.25" stroke="${sapphire}" stroke-width="1.5"/>
+    </svg>`,
+    "ai-03": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <line x1="16" y1="5" x2="16" y2="27" stroke="${gold}" stroke-width="2"/>
+      <line x1="7" y1="10" x2="25" y2="10" stroke="${gold}" stroke-width="2"/>
+      <path d="M7 10L4 18H10L7 10Z" stroke="${sapphire}" stroke-width="1.5" fill="${sapphire}" fill-opacity="0.2"/>
+      <path d="M25 10L22 18H28L25 10Z" stroke="${emerald}" stroke-width="1.5" fill="${emerald}" fill-opacity="0.2"/>
+      <rect x="12" y="27" width="8" height="2" rx="1" fill="${gold}"/>
+    </svg>`,
+    "ai-04": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <rect x="6" y="12" width="20" height="16" rx="4" stroke="${gold}" stroke-width="1.8"/>
+      <path d="M10 12V8C10 4.68 12.68 2 16 2C19.32 2 22 4.68 22 8V12" stroke="${sapphire}" stroke-width="2"/>
+      <circle cx="16" cy="20" r="2.5" fill="${emerald}"/>
+      <line x1="16" y1="22.5" x2="16" y2="25" stroke="${emerald}" stroke-width="2"/>
+    </svg>`,
+    "ai-05": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <path d="M6 14C6 8.5 10 4 15 4C20 4 24 8.5 24 14C24 19.5 20 24 15 24H11L5 28V20C5 18 6 16 6 14Z" stroke="${gold}" stroke-width="1.8"/>
+      <circle cx="11" cy="14" r="1.5" fill="${gold}"/>
+      <circle cx="15" cy="14" r="1.5" fill="${sapphire}"/>
+      <circle cx="19" cy="14" r="1.5" fill="${emerald}"/>
+    </svg>`,
+    "ai-06": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="12" stroke="${sapphire}" stroke-width="1.5" stroke-opacity="0.5"/>
+      <polygon points="16,4 26,16 16,28 6,16" stroke="${gold}" stroke-width="1.8"/>
+      <line x1="4" y1="16" x2="28" y2="16" stroke="${emerald}" stroke-width="1.5"/>
+      <line x1="16" y1="4" x2="16" y2="28" stroke="${emerald}" stroke-width="1.5"/>
+      <circle cx="16" cy="16" r="2.5" fill="${gold}"/>
+    </svg>`
+  };
+
+  const key = type === "serv" ? `serv-${num}` : `ai-${num}`;
+  return icons[key] || icons["serv-01"];
+}
+
+function getIndEmblem(name) {
+  const gold = "#d4af37";
+  const sapphire = "#38bdf8";
+  const emerald = "#10b981";
+
+  const map = {
+    "Gaming": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <rect x="5" y="9" width="22" height="14" rx="7" stroke="${gold}" stroke-width="1.8"/>
+      <path d="M10 13V19M7 16H13" stroke="${sapphire}" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="21" cy="14" r="1.5" fill="${emerald}"/>
+      <circle cx="24" cy="17" r="1.5" fill="${gold}"/>
+    </svg>`,
+    "Healthcare": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <path d="M13 5H19V13H27V19H19V27H13V19H5V13H13V5Z" stroke="${sapphire}" stroke-width="1.8" fill="${sapphire}" fill-opacity="0.15" stroke-linejoin="round"/>
+      <circle cx="16" cy="16" r="3" fill="${emerald}"/>
+    </svg>`,
+    "Legal & Finance": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <line x1="6" y1="28" x2="26" y2="28" stroke="${gold}" stroke-width="2"/>
+      <line x1="8" y1="10" x2="8" y2="26" stroke="${gold}" stroke-width="1.8"/>
+      <line x1="16" y1="10" x2="16" y2="26" stroke="${gold}" stroke-width="1.8"/>
+      <line x1="24" y1="10" x2="24" y2="26" stroke="${gold}" stroke-width="1.8"/>
+      <polygon points="16,4 4,10 28,10" stroke="${gold}" stroke-width="1.8" fill="${sapphire}" fill-opacity="0.2"/>
+    </svg>`,
+    "SaaS & Tech": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <rect x="5" y="5" width="22" height="7" rx="2" stroke="${gold}" stroke-width="1.8"/>
+      <rect x="5" y="14" width="22" height="7" rx="2" stroke="${sapphire}" stroke-width="1.8"/>
+      <rect x="5" y="23" width="22" height="5" rx="2" stroke="${emerald}" stroke-width="1.5"/>
+      <circle cx="9" cy="8.5" r="1.2" fill="${gold}"/>
+      <circle cx="9" cy="17.5" r="1.2" fill="${sapphire}"/>
+      <circle cx="9" cy="25.5" r="1.2" fill="${emerald}"/>
+    </svg>`,
+    "EdTech": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <polygon points="16,5 29,12 16,19 3,12" stroke="${gold}" stroke-width="1.8" fill="${gold}" fill-opacity="0.2"/>
+      <path d="M8 15V22C8 25 11.5 27 16 27C20.5 27 24 25 24 22V15" stroke="${sapphire}" stroke-width="1.8"/>
+      <line x1="26" y1="14" x2="26" y2="23" stroke="${emerald}" stroke-width="1.5"/>
+    </svg>`,
+    "E-commerce": `<svg class="dim-svg-icon" viewBox="0 0 32 32" fill="none">
+      <path d="M6 9H26L24 25H8L6 9Z" stroke="${gold}" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M11 12V7C11 4.5 13 3 16 3C19 3 21 4.5 21 7V12" stroke="${sapphire}" stroke-width="1.8"/>
+      <circle cx="16" cy="17" r="3" fill="${emerald}" fill-opacity="0.3" stroke="${emerald}" stroke-width="1.2"/>
+    </svg>`
+  };
+
+  return map[name] || map["Gaming"];
+}
+
 function renderCardGrid(containerId, items) {
   const el = document.getElementById(containerId);
   if (!el || !items) return;
-  el.innerHTML = items.map(s => `
-    <div class="service-card">
-      <div class="service-num">${s.num}</div>
+  const isServ = containerId === 'servicesGrid';
+  el.innerHTML = items.map((s) => `
+    <div class="service-card tilt-card">
+      <div class="service-card-header">
+        <div class="dim-icon-wrap">
+          ${getDimIcon(isServ ? 'serv' : 'ai', s.num)}
+        </div>
+        <div class="service-num">${s.num}</div>
+      </div>
       <h3>${s.title}</h3>
       <p>${s.body}</p>
       <div class="service-tags">${s.tags.map(t => `<span>${t}</span>`).join('')}</div>
@@ -169,8 +328,13 @@ if (typeof CONTENT !== 'undefined' && CONTENT.services) renderCardGrid('services
 const aiDataEl = document.getElementById('aiDataGrid');
 if (aiDataEl && typeof CONTENT !== 'undefined' && CONTENT.aiData) {
   aiDataEl.innerHTML = CONTENT.aiData.map((s, i) => `
-    <div class="service-card${i === 0 || i === CONTENT.aiData.length - 1 ? ' bento-featured' : ''}">
-      <div class="service-num">${s.num}</div>
+    <div class="service-card tilt-card${i === 0 || i === CONTENT.aiData.length - 1 ? ' bento-featured' : ''}">
+      <div class="service-card-header">
+        <div class="dim-icon-wrap">
+          ${getDimIcon('ai', s.num)}
+        </div>
+        <div class="service-num">${s.num}</div>
+      </div>
       <h3>${s.title}</h3>
       <p>${s.body}</p>
       <div class="service-tags">${s.tags.map(t => `<span>${t}</span>`).join('')}</div>
@@ -184,8 +348,10 @@ function renderIndustries() {
   const el = document.getElementById('industriesGrid');
   if (!el || typeof CONTENT === 'undefined' || !CONTENT.industries) return;
   el.innerHTML = CONTENT.industries.map(ind => `
-    <div class="industry-card">
-      <div class="industry-icon">${ind.icon}</div>
+    <div class="industry-card tilt-card">
+      <div class="ind-emblem-wrap">
+        ${getIndEmblem(ind.name)}
+      </div>
       <h3>${ind.name}</h3>
       <p>${ind.desc}</p>
     </div>`).join('');
@@ -193,17 +359,34 @@ function renderIndustries() {
 renderIndustries();
 
 /* ============ Render: case studies ============ */
+const caseMockups = {
+  "Cobalt Games": { env: "In-Context String HUD Pass", label: "Game UI (EN ➔ JA)", preview: "QUEST: [Find the Ancient Forge] ➔ クエスト: [古代の鍛冶場を探せ] · 0 clipping defects" },
+  "Fennel Health": { env: "MedDRA v27.0 Compliance", label: "Clinical App (EN ➔ AR)", preview: "Dosage Advisory: [Take twice daily after meals] ➔ [تناول مرتين يومياً بعد الوجبات] · RTL Validated" },
+  "Atlas Robotics": { env: "10,000p Shared Term Base", label: "Technical Docs (EN ➔ 8x)", preview: "Actuator Protocol: [Emergency Override Torque] ➔ Synchronized cross-locale term consistency" },
+  "Solace EdTech": { env: "SCORM 2004 / cmi5 Packaging", label: "LMS Curriculum (5 Markets)", preview: "Interactive STEM Assessment adapted for MENA cultural paradigms · 100% Package QA" }
+};
+
 function renderCaseStudies() {
   const grid = document.getElementById('caseGrid');
   if (!grid || typeof CONTENT === 'undefined' || !CONTENT.caseStudies) return;
-  grid.innerHTML = CONTENT.caseStudies.map(c => `
-    <div class="case-card" tabindex="0" role="button" aria-expanded="false">
+  grid.innerHTML = CONTENT.caseStudies.map(c => {
+    const mockup = caseMockups[c.name] || { env: "Production Pipeline", label: "Localized Deliverable", preview: "Verified zero-defect delivery across target markets" };
+    return `
+    <div class="case-card tilt-card" tabindex="0" role="button" aria-expanded="false">
       <span class="case-tag">${c.tag}</span>
       <h3>${c.name}</h3>
       <p class="result">${c.result}</p>
+      <div class="case-card-visual">
+        <div class="case-visual-header">
+          <span>${mockup.env}</span>
+          <span style="color:var(--champagne)">${mockup.label}</span>
+        </div>
+        <div class="case-visual-preview">${mockup.preview}</div>
+      </div>
       <span class="case-toggle">View metrics +</span>
       <div class="case-metrics">${c.metrics.map(m => `<div class="case-metric"><b>${m.n}</b><span>${m.l}</span></div>`).join('')}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   function toggleCase(card) {
     const wasOpen = card.classList.contains('open');
