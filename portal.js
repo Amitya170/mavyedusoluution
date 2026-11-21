@@ -422,6 +422,13 @@
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value.trim();
 
+    // Security Policy: Only client, freelancer, and vendor can self-register
+    const ALLOWED_PUBLIC_ROLES = ['client', 'freelancer', 'vendor'];
+    if (!ALLOWED_PUBLIC_ROLES.includes(role)) {
+      alert('Security Policy: Public self-registration is restricted to Clients, Freelancers, and Vendors only. Staff and internal profiles must be invited by an Administrator.');
+      return;
+    }
+
     const users = getUsers();
     if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
       alert('An account with this email address already exists in the Mavy Enclave.');
@@ -603,6 +610,9 @@
       subtitle.textContent = 'Publish enterprise projects, evaluate freelancer & vendor bids, and supervise deliverables.';
       
       actionArea.innerHTML = `
+        <button class="btn-portal btn-portal-outline" onclick="openModal('inviteMemberModal')">
+          ✉️ Invite Staff / Profile
+        </button>
         <button class="btn-portal btn-portal-primary" onclick="openModal('postProjectModal')">
           + Post New Project
         </button>
@@ -1703,6 +1713,68 @@
 
     alert('Your project request has been logged and assigned to the senior localization architecture team!');
     navigateTo('dashboard');
+  };
+
+  window.handleInviteMember = function (e) {
+    e.preventDefault();
+    const user = getCurrentUser();
+    if (!user || user.role !== 'admin') return;
+
+    const name = document.getElementById('inviteName').value.trim();
+    const email = document.getElementById('inviteEmail').value.trim().toLowerCase();
+    const role = document.getElementById('inviteRole').value;
+    const dept = document.getElementById('inviteDept').value.trim();
+    const password = document.getElementById('invitePassword').value.trim();
+
+    const users = getUsers();
+    if (users.some(u => u.email.toLowerCase() === email)) {
+      alert(`An account with email ${email} already exists in the Mavy Enclave.`);
+      return;
+    }
+
+    const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'ST';
+    const roleLabels = {
+      'pm': 'Project Manager (PM)',
+      'qa_lead': 'Linguistic QA Lead',
+      'solutions_architect': 'Solutions Architect',
+      'admin': 'Co-Administrator'
+    };
+
+    const newStaff = {
+      id: 'usr-staff-' + Date.now(),
+      name,
+      email,
+      password,
+      role: 'admin',
+      internalTitle: roleLabels[role] || 'Internal Staff Member',
+      company: 'Mavy EduSolutions Global',
+      title: `${roleLabels[role] || 'Staff'} · ${dept}`,
+      avatar: initials,
+      invitedBy: user.name,
+      invitedAt: new Date().toISOString()
+    };
+
+    users.push(newStaff);
+    saveUsers(users);
+
+    const messages = getMessages();
+    messages.push({
+      id: 'msg-' + Date.now(),
+      threadId: `thread_usr-admin_${newStaff.id}`,
+      senderId: 'usr-admin',
+      senderName: 'Vikram Malhotra · Chief Operations',
+      senderRole: 'admin',
+      recipientId: newStaff.id,
+      recipientRole: 'admin',
+      message: `Welcome to the Mavy Operations Enclave, ${name}! Your profile as ${newStaff.title} has been authorized. Please review current client briefs and milestone schedules.`,
+      timestamp: new Date().toISOString()
+    });
+    saveMessages(messages);
+
+    closeModal('inviteMemberModal');
+    document.getElementById('inviteMemberForm').reset();
+
+    alert(`Official invitation issued for ${name} (${email}) as ${roleLabels[role]}. Access credentials: [Email: ${email} | Password: ${password}].`);
   };
 
   // Utilities

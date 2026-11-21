@@ -79,6 +79,9 @@
             <option value="freelancer">Freelancer (Apply to Linguistic & AI Tasks)</option>
             <option value="vendor">Vendor / Agency (Submit Volume RFPs & Batches)</option>
           </select>
+          <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);background:rgba(212,175,55,0.06);border:1px solid var(--portal-border);padding:0.6rem 0.8rem;border-radius:8px;margin-top:0.4rem;line-height:1.4;">
+            🔒 <strong>Access Policy:</strong> Self-registration is restricted to Clients, Freelancers, and Vendors only. All internal staff profiles (Project Managers, QA Leads, Platform Administrators) must be invited directly by an Administrator.
+          </div>
         </div>
         <div class="portal-field">
           <label>Full Legal Name / Contact Person</label>
@@ -329,6 +332,53 @@
       <div style="display:flex;justify-content:flex-end;">
         <button type="button" class="btn-portal btn-portal-outline" onclick="closeModal('reviewBidsModal')">Close</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal 6: Admin Invite Staff / Internal Profile Modal -->
+  <div class="portal-modal" id="inviteMemberModal" style="display:none;">
+    <div class="modal-content" style="max-width:580px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="color:#fff;font-size:1.2rem;">Invite Staff / Internal Team Profile</h3>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem;">Grant administrative, PM, or linguistic review privileges.</p>
+        </div>
+        <button class="modal-close" onclick="closeModal('inviteMemberModal')">&times;</button>
+      </div>
+      <form id="inviteMemberForm" onsubmit="handleInviteMember(event)">
+        <div class="portal-field" style="margin-bottom:1rem;">
+          <label>Staff Member Full Name</label>
+          <input type="text" id="inviteName" class="portal-input" placeholder="e.g. Elena Rostova" required>
+        </div>
+        <div class="portal-field" style="margin-bottom:1rem;">
+          <label>Work Email Address</label>
+          <input type="email" id="inviteEmail" class="portal-input" placeholder="e.g. elena.rostova@mavyedu.com" required>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div class="portal-field">
+            <label>Internal Profile Role</label>
+            <select id="inviteRole" class="portal-select" required>
+              <option value="pm">Project Manager (PM)</option>
+              <option value="qa_lead">Linguistic QA Lead</option>
+              <option value="solutions_architect">Solutions Architect</option>
+              <option value="admin">Co-Administrator</option>
+            </select>
+          </div>
+          <div class="portal-field">
+            <label>Department / Specialty</label>
+            <input type="text" id="inviteDept" class="portal-input" placeholder="e.g. FinTech & AI Data" required>
+          </div>
+        </div>
+        <div class="portal-field" style="margin-bottom:1.5rem;">
+          <label>Initial Temporary Access Password</label>
+          <input type="text" id="invitePassword" class="portal-input" value="MavyStaff@2026" required>
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-top:0.3rem;">The invited member will be prompted to update this upon first login.</small>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:0.8rem;">
+          <button type="button" class="btn-portal btn-portal-outline" onclick="closeModal('inviteMemberModal')">Cancel</button>
+          <button type="submit" class="btn-portal btn-portal-primary">Issue Official Enclave Invite →</button>
+        </div>
+      </form>
     </div>
   </div>
 
