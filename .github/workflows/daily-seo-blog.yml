@@ -1,0 +1,34 @@
+name: Autonomous Daily Industry SEO Blogging
+
+on:
+  schedule:
+    # Runs every day at 00:00 UTC (05:30 IST)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  publish-daily-blog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Publish Today's Industry Technical Article & Refresh SEO Sitemaps
+        run: |
+          node auto-blog-engine.js --publish-today
+
+      - name: Commit & Push Daily Published Article
+        run: |
+          git config --global user.name "Mavy SEO Bot"
+          git config --global user.email "seo-bot@mavyedusolution.com"
+          git add -A
+          git commit -m "chore(seo): publish daily industry blog & update sitemap/rss [skip ci]" || echo "No changes to commit"
+          git push

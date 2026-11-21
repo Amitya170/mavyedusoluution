@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High-Agreement Human Preference Curation for Multilingual LLM Alignment | Mavy EduSolutions</title>
+<meta name="description" content="Establishing Fleiss’ kappa and Cohen’s kappa &gt; 0.85 in human feedback rater networks across 40+ languages to avoid reward model collapse.">
+<meta name="keywords" content="RLHF, human preference data, Fleiss kappa, LLM evaluation, multilingual AI alignment, reward model">
+<link rel="canonical" href="https://www.mavyedusolution.com/blog/ai-data-rlhf-multilingual-preference-agreement.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="High-Agreement Human Preference Curation for Multilingual LLM Alignment | Mavy EduSolutions">
+<meta property="og:description" content="Establishing Fleiss’ kappa and Cohen’s kappa &gt; 0.85 in human feedback rater networks across 40+ languages to avoid reward model collapse.">
+<meta property="og:url" content="https://www.mavyedusolution.com/blog/ai-data-rlhf-multilingual-preference-agreement.html">
+<meta property="og:site_name" content="Mavy EduSolutions">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="High-Agreement Human Preference Curation for Multilingual LLM Alignment | Mavy EduSolutions">
+<meta name="twitter:description" content="Establishing Fleiss’ kappa and Cohen’s kappa &gt; 0.85 in human feedback rater networks across 40+ languages to avoid reward model collapse.">
+<link rel="icon" type="image/svg+xml" href="/logo.svg">
+<meta name="theme-color" content="#07090e">
+<link rel="stylesheet" href="../styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "High-Agreement Human Preference Curation for Multilingual LLM Alignment",
+  "description": "Establishing Fleiss’ kappa and Cohen’s kappa &gt; 0.85 in human feedback rater networks across 40+ languages to avoid reward model collapse.",
+  "datePublished": "2026-11-21",
+  "dateModified": "2026-11-21T11:03:40.409Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.mavyedusolution.com/blog/ai-data-rlhf-multilingual-preference-agreement.html"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Mavy EduSolutions",
+    "url": "https://www.mavyedusolution.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mavy EduSolutions",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.mavyedusolution.com/logo.svg"
+    }
+  }
+}
+</script>
+</head>
+<body>
+<nav>
+  <a href="../index.html" class="logo"><img src="../logo.svg" alt="Mavy EduSolutions" class="logo-icon" width="32" height="32" style="margin-right: 8px; vertical-align: middle;">Mavy EduSolutions</a>
+  <div class="nav-links">
+    <a href="../index.html#services">Services</a>
+    <a href="../index.html#ai-data">AI Data</a>
+    <a href="../index.html#edu-solutions">EduSolutions</a>
+    <a href="index.html" class="active">Blog</a>
+    <a href="../index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<main style="max-width: 840px; margin: 7rem auto 4rem; padding: 0 5%;">
+  <a href="index.html" style="display:inline-block; margin-bottom:1.8rem; font-family:'IBM Plex Mono',monospace; font-size:0.78rem; color:var(--champagne);">← Back to All Articles</a>
+  
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:var(--champagne); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.8rem;">
+    AI Data &middot; 10 min read &middot; Published Daily Series
+  </div>
+  
+  <h1 style="font-family:'Fraunces',serif; font-size:clamp(2rem, 3.8vw, 2.9rem); line-height:1.15; margin-bottom:1.4rem; color:var(--text); font-weight:600;">
+    High-Agreement Human Preference Curation for Multilingual LLM Alignment
+  </h1>
+  
+  <p style="font-size:1.15rem; color:var(--muted); line-height:1.6; margin-bottom:2.2rem; border-left:3px solid var(--champagne); padding-left:1.2rem;">
+    Establishing Fleiss’ kappa and Cohen’s kappa &gt; 0.85 in human feedback rater networks across 40+ languages to avoid reward model collapse.
+  </p>
+  
+  <div class="article-content" style="color:var(--text); font-size:1.05rem; line-height:1.75;">
+    
+      <p>Reward models trained on low-agreement or noisy human preference data inevitably collapse into sycophancy or hallucination. When evaluating frontier LLMs across low-resource or non-English prompts, rater alignment is the primary determinant of model safety and reasoning quality.</p>
+
+      <h2>Mathematical Multi-Rater Consensus: Fleiss' Kappa</h2>
+      <p>Rather than relying on simple percentage agreement, high-performance rater pools establish formal inter-annotator agreement metrics that discount chance agreement:</p>
+
+      <div class="code-block" style="background:#090d16; border:1px solid rgba(212,175,55,0.25); border-radius:10px; padding:1.2rem; margin:1.5rem 0; font-family:'IBM Plex Mono',monospace; font-size:0.85rem; color:#f8fafc;">
+        <span style="color:#d4af37;">κ = (P̄ - P̄_e) / (1 - P̄_e)</span><br><br>
+        <span style="color:#94a3b8;">// Quality Tier Thresholds:</span><br>
+        κ &lt; 0.40 : Discard batch (High noise / Ambiguous rubric)<br>
+        0.60 ≤ κ &lt; 0.80 : Substantial agreement<br>
+        <strong>κ ≥ 0.85 : Gold-standard certified preference data (Production ready)</strong>
+      </div>
+
+      <h2>Adversarial Red-Teaming in Local Idioms</h2>
+      <p>Standard safety filters built in English often fail to recognize regional slang, cultural insults, and obfuscated jailbreak attempts in Arabic, Hindi, or Tagalog. Native specialist red-teamers stress-test model safeguards against cultural edge cases before weights are deployed.</p>
+    
+  </div>
+
+  <div style="margin-top:4rem; padding:2.2rem; background:var(--surface); border:1px solid var(--line); border-radius:16px; text-align:center;">
+    <h3 style="font-family:'Fraunces',serif; font-size:1.4rem; margin-bottom:0.6rem; color:var(--champagne);">Ready to Scale Your AI Data Infrastructure?</h3>
+    <p style="color:var(--muted); font-size:0.95rem; margin-bottom:1.4rem;">Connect with native linguists, AI data curators, and e-learning engineers specialized in your vertical.</p>
+    <a href="../index.html#contact" class="btn btn-primary" style="display:inline-block; padding:0.85rem 2rem; border-radius:8px; font-weight:600;">Schedule Project Scope &rarr;</a>
+  </div>
+</main>
+</body>
+</html>
