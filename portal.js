@@ -117,6 +117,42 @@
   let activeChatThreadId = null;
   let activeInquiryId = null;
 
+  function showPortalToast(msg) {
+    let t = document.getElementById('portalToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'portalToast';
+      t.style.position = 'fixed';
+      t.style.bottom = '24px';
+      t.style.right = '24px';
+      t.style.background = 'rgba(10, 16, 26, 0.95)';
+      t.style.border = '1px solid var(--portal-border-gold)';
+      t.style.color = '#fff';
+      t.style.padding = '0.9rem 1.4rem';
+      t.style.borderRadius = '12px';
+      t.style.boxShadow = '0 12px 36px rgba(0,0,0,0.6)';
+      t.style.zIndex = '999999';
+      t.style.fontFamily = 'var(--font-sans)';
+      t.style.fontSize = '0.86rem';
+      t.style.display = 'flex';
+      t.style.alignItems = 'center';
+      t.style.gap = '0.8rem';
+      t.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      t.style.backdropFilter = 'blur(12px)';
+      document.body.appendChild(t);
+    }
+    t.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+    t.style.opacity = '1';
+    t.style.transform = 'translateY(0)';
+    clearTimeout(window._portalToastTimer);
+    window._portalToastTimer = setTimeout(() => {
+      if (t) {
+        t.style.opacity = '0';
+        t.style.transform = 'translateY(12px)';
+      }
+    }, 4500);
+  }
+
   function init() {
     initDatabase();
     
@@ -133,8 +169,30 @@
       if (e.key === 'mavy_chat_messages' && activeSection === 'chat') {
         renderLiveChat();
       }
-      if (e.key === 'mavy_inquiries' && activeSection === 'inquiries') {
-        renderInquiriesInbox();
+      if (e.key === 'mavy_inquiries') {
+        const curUser = getCurrentUser();
+        if (curUser && curUser.role === 'admin') {
+          buildSidebarMenu(curUser);
+          if (activeSection === 'inquiries') {
+            renderInquiriesInbox();
+          } else if (activeSection === 'dashboard') {
+            navigateTo('dashboard');
+          }
+          showPortalToast('🔔 New "Start a Project" request submitted from website!');
+        }
+      }
+    });
+
+    window.addEventListener('mavy_inquiry_added', () => {
+      const curUser = getCurrentUser();
+      if (curUser && curUser.role === 'admin') {
+        buildSidebarMenu(curUser);
+        if (activeSection === 'inquiries') {
+          renderInquiriesInbox();
+        } else if (activeSection === 'dashboard') {
+          navigateTo('dashboard');
+        }
+        showPortalToast('🔔 New "Start a Project" request submitted from website!');
       }
     });
 
@@ -314,9 +372,9 @@
     if (user.role === 'admin') {
       const allUsers = getUsers();
       items = [
-        { id: 'dashboard', label: '📊 All Projects Pipeline', icon: '📁' },
+        { id: 'dashboard', label: '📊 Operations Dashboard', icon: '📁' },
+        { id: 'inquiries', label: '📥 "Start a Project" Requests', icon: '📬', badge: newInquiriesCount > 0 ? newInquiriesCount : null, badgeClass: 'badge-unread' },
         { id: 'directory', label: '👥 Enclave Directory', icon: '👥', badge: allUsers.length },
-        { id: 'inquiries', label: '📥 Inquiries Inbox', icon: '📬', badge: newInquiriesCount > 0 ? newInquiriesCount : null, badgeClass: 'badge-unread' },
         { id: 'proposals', label: '📑 Review All Bids', icon: '💼' },
         { id: 'chat', label: '💬 Integrated Live Chat', icon: '💬', badge: unreadMessagesCount, badgeClass: '' }
       ];
@@ -408,9 +466,12 @@
 
     if (user.role === 'admin') {
       heading.textContent = 'Global Project Operations Pipeline';
-      subtitle.textContent = 'Publish enterprise projects, evaluate freelancer & vendor bids, and supervise deliverables.';
+      subtitle.textContent = 'Supervise incoming "Start a Project" client requests, manage vendor/freelancer proposals, and post enterprise projects.';
       
       actionArea.innerHTML = `
+        <button class="btn-portal btn-portal-outline" onclick="createTestInquiry()">
+          + Simulate "Start a Project" Form
+        </button>
         <button class="btn-portal btn-portal-outline" onclick="openModal('inviteMemberModal')">
           ✉️ Invite Staff / Profile
         </button>
@@ -424,32 +485,36 @@
       const openCount = allProjects.filter(p => p.status === 'open').length;
       const bidsCount = proposals.length;
       const inqCount = inquiries.length;
+      const newInqCount = inquiries.filter(i => i.status === 'new').length;
 
       statsBanner.innerHTML = `
-        <div class="portal-stat-card">
+        <div class="portal-stat-card" style="cursor:pointer;" onclick="navigateTo('dashboard')">
           <div class="stat-icon">📂</div>
           <div class="stat-val">${allProjects.length}</div>
           <div class="stat-label">Total Projects in Enclave</div>
         </div>
-        <div class="portal-stat-card">
+        <div class="portal-stat-card" style="cursor:pointer;" onclick="navigateTo('dashboard')">
           <div class="stat-icon">⚡</div>
           <div class="stat-val" style="color:var(--gold);">${openCount}</div>
           <div class="stat-label">Active Open Projects</div>
         </div>
-        <div class="portal-stat-card">
+        <div class="portal-stat-card" style="cursor:pointer;" onclick="navigateTo('proposals')">
           <div class="stat-icon">📑</div>
           <div class="stat-val" style="color:var(--emerald);">${bidsCount}</div>
           <div class="stat-label">Proposals Received</div>
         </div>
-        <div class="portal-stat-card">
+        <div class="portal-stat-card" style="cursor:pointer;" onclick="navigateTo('inquiries')">
           <div class="stat-icon">📬</div>
-          <div class="stat-val" style="color:var(--sapphire);">${inqCount}</div>
-          <div class="stat-label">Website Inquiries (Zero-Formspree)</div>
+          <div class="stat-val" style="color:var(--sapphire);display:flex;align-items:center;gap:0.4rem;">
+            <span>${inqCount}</span>
+            ${newInqCount > 0 ? `<span style="font-size:0.68rem;background:rgba(56,189,248,0.2);color:var(--sapphire);padding:0.15rem 0.45rem;border-radius:10px;font-weight:600;">${newInqCount} NEW</span>` : ''}
+          </div>
+          <div class="stat-label">"Start a Project" Requests</div>
         </div>
       `;
 
-      // Projects Grid with admin bid review controls
-      renderProjectsGrid(allProjects, container, user);
+      // Render Admin Sections: 1) Incoming Form Requests Card + 2) Enclave Projects Grid
+      renderAdminDashboardSections(container, user, inquiries, allProjects);
 
     } else if (user.role === 'client') {
       heading.textContent = 'Client Localization & AI Workspace';
@@ -1022,8 +1087,138 @@
   };
 
   // =========================================================================
-  // 6. INQUIRIES INBOX (WEBSITE CONTACT FORM LEADS — ADMIN ONLY)
+  // 6. "START A PROJECT" FORM REQUESTS & INBOUND LEADS (ADMIN CONSOLE)
   // =========================================================================
+
+  let currentInquiryFilter = 'all';
+  let inquirySearchQuery = '';
+
+  function renderAdminDashboardSections(container, user, inquiries, allProjects) {
+    const newInquiriesCount = inquiries.filter(i => i.status === 'new').length;
+    
+    let html = `
+      <!-- SECTION 1: INCOMING START A PROJECT REQUESTS -->
+      <div class="admin-inquiries-card" style="background:var(--portal-card);border:1px solid var(--portal-border);border-radius:16px;padding:1.6rem;margin-bottom:2.2rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem;border-bottom:1px solid var(--portal-border);padding-bottom:1rem;">
+          <div>
+            <h3 style="color:#fff;font-size:1.15rem;display:flex;align-items:center;gap:0.6rem;margin-bottom:0.25rem;">
+              <span>📥 Incoming "Start a Project" Form Requests</span>
+              ${newInquiriesCount > 0 ? `<span class="status-badge status-new">${newInquiriesCount} NEW</span>` : ''}
+            </h3>
+            <p style="font-size:0.8rem;color:var(--text-muted);">Direct submissions from prospective clients via the website "Start a project" form.</p>
+          </div>
+          <div style="display:flex;gap:0.6rem;align-items:center;">
+            <button class="btn-portal btn-portal-outline" style="font-size:0.75rem;padding:0.4rem 0.8rem;" onclick="createTestInquiry()">
+              + Simulate Test Request
+            </button>
+            <button class="btn-portal btn-portal-primary" style="font-size:0.75rem;padding:0.4rem 0.8rem;" onclick="navigateTo('inquiries')">
+              View All Requests (${inquiries.length}) →
+            </button>
+          </div>
+        </div>
+    `;
+
+    if (inquiries.length === 0) {
+      html += `
+        <div style="text-align:center;padding:2.2rem 1rem;color:var(--text-muted);font-size:0.86rem;background:rgba(255,255,255,0.01);border-radius:12px;border:1px dashed var(--portal-border);">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">📬</div>
+          <div style="color:#fff;font-weight:600;margin-bottom:0.25rem;">No "Start a Project" Form Requests Received Yet</div>
+          <p style="max-width:520px;margin:0 auto 1.2rem auto;font-size:0.8rem;line-height:1.5;">
+            When clients fill out the <strong>Start a project</strong> form on the public website, their project scopes, volume specs, and contact details will appear here instantly.
+          </p>
+          <div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+            <button class="btn-portal btn-portal-outline" style="font-size:0.78rem;padding:0.45rem 0.9rem;" onclick="createTestInquiry()">
+              + Simulate Incoming Test Form Request
+            </button>
+            <a href="index.html#contact" target="_blank" class="btn-portal btn-portal-outline" style="font-size:0.78rem;padding:0.45rem 0.9rem;text-decoration:none;">
+              Open Website Contact Form ↗
+            </a>
+          </div>
+        </div>
+      `;
+    } else {
+      const recent = inquiries.slice(0, 5);
+      html += `
+        <div style="overflow-x:auto;">
+          <table class="inquiries-table" style="margin-top:0;">
+            <thead>
+              <tr>
+                <th>Date / Time</th>
+                <th>Client / Lead Name</th>
+                <th>Service Vertical</th>
+                <th>Project Scope Details</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+      recent.forEach(inq => {
+        let badgeClass = 'status-new';
+        if (inq.status === 'in_review') badgeClass = 'status-pending';
+        if (inq.status === 'contacted' || inq.status === 'converted') badgeClass = 'status-active';
+
+        html += `
+          <tr>
+            <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);white-space:nowrap;">
+              ${inq.dateFormatted || (inq.timestamp ? inq.timestamp.substring(0, 10) : 'Just now')}
+            </td>
+            <td>
+              <strong style="color:#fff;">${escapeHtml(inq.name)}</strong>
+              <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);">${escapeHtml(inq.email)}</div>
+            </td>
+            <td>
+              <span class="project-tag">${escapeHtml(inq.service)}</span>
+            </td>
+            <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-muted);font-size:0.82rem;">
+              ${escapeHtml(inq.message)}
+            </td>
+            <td>
+              <span class="status-badge ${badgeClass}">${inq.status}</span>
+            </td>
+            <td>
+              <div style="display:flex;gap:0.4rem;align-items:center;">
+                <button class="btn-portal btn-portal-outline" style="padding:0.3rem 0.65rem;font-size:0.72rem;" onclick="openInquiryModal('${inq.id}')">
+                  👁️ Details
+                </button>
+                <button class="btn-portal btn-portal-outline" style="padding:0.3rem 0.65rem;font-size:0.72rem;color:var(--gold);border-color:var(--portal-border-gold);" onclick="convertInquiryToProject('${inq.id}')">
+                  🚀 Convert
+                </button>
+                <button class="btn-portal btn-portal-primary" style="padding:0.3rem 0.65rem;font-size:0.72rem;" onclick="openChatWithLeadById('${inq.id}')">
+                  💬 Chat
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      html += `
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    html += `
+      </div>
+
+      <!-- SECTION 2: PUBLISHED ENTERPRISE PROJECTS & RFPS -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h3 style="color:#fff;font-size:1.15rem;">📁 Global Projects Pipeline (Published Enclave RFPs)</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);">Active projects open for specialist Freelancer linguists and Vendor agencies.</p>
+        </div>
+        <button class="btn-portal btn-portal-primary" onclick="openModal('postProjectModal')">
+          + Post New Project
+        </button>
+      </div>
+      <div id="adminProjectsContainer"></div>
+    `;
+
+    container.innerHTML = html;
+    const projContainer = document.getElementById('adminProjectsContainer');
+    renderProjectsGrid(allProjects, projContainer, user);
+  }
 
   function renderInquiriesInbox(heading, subtitle, actionArea) {
     const user = getCurrentUser();
@@ -1033,8 +1228,19 @@
       return;
     }
 
-    if (heading) heading.textContent = 'Website Contact Form Inquiries';
-    if (subtitle) subtitle.textContent = 'Live submissions captured directly from the index.html contact form (Zero Formspree).';
+    if (heading) heading.textContent = '"Start a Project" Form Requests';
+    if (subtitle) subtitle.textContent = 'Live submissions captured directly from the index.html "Start a project" form (Zero Formspree).';
+
+    if (actionArea) {
+      actionArea.innerHTML = `
+        <button class="btn-portal btn-portal-outline" onclick="createTestInquiry()">
+          + Simulate Test Request
+        </button>
+        <button class="btn-portal btn-portal-outline" style="color:#ff8577;border-color:rgba(255,133,119,0.3);" onclick="clearAllInquiries()">
+          🗑️ Clear Requests
+        </button>
+      `;
+    }
 
     const inquiries = getInquiries();
     const statsBanner = document.getElementById('statsBanner');
@@ -1042,13 +1248,13 @@
 
     const newCount = inquiries.filter(i => i.status === 'new').length;
     const reviewCount = inquiries.filter(i => i.status === 'in_review').length;
-    const contactedCount = inquiries.filter(i => i.status === 'contacted').length;
+    const contactedCount = inquiries.filter(i => i.status === 'contacted' || i.status === 'converted').length;
 
     statsBanner.innerHTML = `
       <div class="portal-stat-card">
         <div class="stat-icon">📬</div>
         <div class="stat-val" style="color:var(--sapphire);">${newCount}</div>
-        <div class="stat-label">New Incoming Inquiries</div>
+        <div class="stat-label">New Incoming Requests</div>
       </div>
       <div class="portal-stat-card">
         <div class="stat-icon">⏳</div>
@@ -1063,28 +1269,82 @@
       <div class="portal-stat-card">
         <div class="stat-icon">🔒</div>
         <div class="stat-val" style="font-size:1.1rem;color:var(--text-main);margin-top:0.4rem;">Direct Storage</div>
-        <div class="stat-label">No Formspree Dependency</div>
+        <div class="stat-label">Zero External Formspree</div>
+      </div>
+    `;
+
+    // Filter controls
+    let filtered = inquiries;
+    if (currentInquiryFilter === 'new') filtered = filtered.filter(i => i.status === 'new');
+    else if (currentInquiryFilter === 'in_review') filtered = filtered.filter(i => i.status === 'in_review');
+    else if (currentInquiryFilter === 'converted') filtered = filtered.filter(i => i.status === 'contacted' || i.status === 'converted');
+
+    if (inquirySearchQuery) {
+      const q = inquirySearchQuery.toLowerCase();
+      filtered = filtered.filter(i => 
+        (i.name && i.name.toLowerCase().includes(q)) ||
+        (i.email && i.email.toLowerCase().includes(q)) ||
+        (i.service && i.service.toLowerCase().includes(q)) ||
+        (i.message && i.message.toLowerCase().includes(q))
+      );
+    }
+
+    let filterControlsHtml = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;background:var(--portal-card);padding:1rem 1.4rem;border-radius:14px;border:1px solid var(--portal-border);">
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button class="dir-filter-btn ${currentInquiryFilter === 'all' ? 'active' : ''}" onclick="setInquiryFilter('all')">
+            All Requests (${inquiries.length})
+          </button>
+          <button class="dir-filter-btn ${currentInquiryFilter === 'new' ? 'active' : ''}" onclick="setInquiryFilter('new')">
+            New Leads (${newCount})
+          </button>
+          <button class="dir-filter-btn ${currentInquiryFilter === 'in_review' ? 'active' : ''}" onclick="setInquiryFilter('in_review')">
+            In Review (${reviewCount})
+          </button>
+          <button class="dir-filter-btn ${currentInquiryFilter === 'converted' ? 'active' : ''}" onclick="setInquiryFilter('converted')">
+            Contacted / Converted (${contactedCount})
+          </button>
+        </div>
+        <div>
+          <input type="text" class="portal-input" style="padding:0.45rem 0.9rem;font-size:0.82rem;width:260px;" placeholder="Search by name, email, or vertical..." value="${escapeHtml(inquirySearchQuery)}" oninput="handleInquirySearch(this.value)">
+        </div>
       </div>
     `;
 
     if (inquiries.length === 0) {
-      container.innerHTML = `
-        <div style="background:var(--portal-card);border:1px solid var(--portal-border);border-radius:16px;padding:3rem;text-align:center;color:var(--text-muted);">
-          No contact inquiries submitted yet. Submit a message on the main website to see it appear here live!
+      container.innerHTML = filterControlsHtml + `
+        <div style="background:var(--portal-card);border:1px solid var(--portal-border);border-radius:16px;padding:3.5rem 1.5rem;text-align:center;color:var(--text-muted);">
+          <div style="font-size:2.4rem;margin-bottom:0.6rem;">📬</div>
+          <h3 style="color:#fff;margin-bottom:0.4rem;">No "Start a Project" Form Requests Yet</h3>
+          <p style="max-width:500px;margin:0 auto 1.5rem auto;font-size:0.86rem;line-height:1.5;">
+            Inbound briefs submitted on the website's <strong>Start a project</strong> form will stream into this console automatically with zero external dependencies.
+          </p>
+          <button class="btn-portal btn-portal-primary" onclick="createTestInquiry()">
+            + Simulate Incoming Test Lead
+          </button>
         </div>
       `;
       return;
     }
 
-    let tableHtml = `
-      <div style="background:var(--portal-card);border:1px solid var(--portal-border);border-radius:16px;overflow:hidden;">
-        <table class="inquiries-table">
+    if (filtered.length === 0) {
+      container.innerHTML = filterControlsHtml + `
+        <div style="background:var(--portal-card);border:1px solid var(--portal-border);border-radius:16px;padding:2.5rem;text-align:center;color:var(--text-muted);">
+          No requests found matching your filter criteria.
+        </div>
+      `;
+      return;
+    }
+
+    let tableHtml = filterControlsHtml + `
+      <div style="background:var(--portal-card);border:1px solid var(--portal-border);border-radius:16px;overflow:hidden;border:1px solid var(--portal-border);">
+        <table class="inquiries-table" style="margin-top:0;">
           <thead>
             <tr>
               <th>Date / Time</th>
-              <th>Client / Lead Name</th>
+              <th>Client / Requester</th>
               <th>Service Vertical</th>
-              <th>Message Snippet</th>
+              <th>Project Scope / Specifications</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -1092,33 +1352,44 @@
           <tbody>
     `;
 
-    inquiries.forEach(inq => {
+    filtered.forEach(inq => {
       let badgeClass = 'status-new';
       if (inq.status === 'in_review') badgeClass = 'status-pending';
-      if (inq.status === 'contacted') badgeClass = 'status-active';
+      if (inq.status === 'contacted' || inq.status === 'converted') badgeClass = 'status-active';
 
       tableHtml += `
         <tr>
           <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);white-space:nowrap;">
-            ${inq.dateFormatted || inq.timestamp.substring(0, 10)}
+            ${inq.dateFormatted || (inq.timestamp ? inq.timestamp.substring(0, 10) : 'Just now')}
           </td>
           <td>
-            <strong>${escapeHtml(inq.name)}</strong>
+            <strong style="color:#fff;">${escapeHtml(inq.name)}</strong>
             <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);">${escapeHtml(inq.email)}</div>
           </td>
           <td>
             <span class="project-tag">${escapeHtml(inq.service)}</span>
           </td>
-          <td style="max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-muted);">
+          <td style="max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-muted);font-size:0.84rem;">
             ${escapeHtml(inq.message)}
           </td>
           <td>
             <span class="status-badge ${badgeClass}">${inq.status}</span>
           </td>
           <td>
-            <button class="btn-portal btn-portal-outline" style="padding:0.35rem 0.7rem;font-size:0.75rem;" onclick="openInquiryModal('${inq.id}')">
-              View &amp; Reply
-            </button>
+            <div style="display:flex;gap:0.4rem;align-items:center;">
+              <button class="btn-portal btn-portal-outline" style="padding:0.35rem 0.7rem;font-size:0.75rem;" onclick="openInquiryModal('${inq.id}')">
+                👁️ Details
+              </button>
+              <button class="btn-portal btn-portal-outline" style="padding:0.35rem 0.7rem;font-size:0.75rem;color:var(--gold);border-color:var(--portal-border-gold);" onclick="convertInquiryToProject('${inq.id}')">
+                🚀 Convert
+              </button>
+              <button class="btn-portal btn-portal-primary" style="padding:0.35rem 0.7rem;font-size:0.75rem;" onclick="openChatWithLeadById('${inq.id}')">
+                💬 Chat
+              </button>
+              <button class="btn-portal btn-portal-outline" style="padding:0.35rem 0.55rem;font-size:0.75rem;color:#ff8577;border-color:rgba(255,133,119,0.3);" title="Delete" onclick="deleteInquiry('${inq.id}')">
+                🗑️
+              </button>
+            </div>
           </td>
         </tr>
       `;
@@ -1133,6 +1404,16 @@
     container.innerHTML = tableHtml;
   }
 
+  window.setInquiryFilter = function(filter) {
+    currentInquiryFilter = filter;
+    renderInquiriesInbox();
+  };
+
+  window.handleInquirySearch = function(query) {
+    inquirySearchQuery = query;
+    renderInquiriesInbox();
+  };
+
   window.openInquiryModal = function (inqId) {
     const inquiries = getInquiries();
     const inq = inquiries.find(i => i.id === inqId);
@@ -1140,31 +1421,45 @@
 
     activeInquiryId = inqId;
     const metaHeader = document.getElementById('inqMetaHeader');
-    metaHeader.textContent = `Submitted ${inq.dateFormatted || inq.timestamp} · ID: ${inq.id}`;
+    metaHeader.textContent = `Submitted: ${inq.dateFormatted || inq.timestamp} · Lead ID: ${inq.id}`;
+
+    let badgeClass = 'status-new';
+    if (inq.status === 'in_review') badgeClass = 'status-pending';
+    if (inq.status === 'contacted' || inq.status === 'converted') badgeClass = 'status-active';
 
     const body = document.getElementById('inquiryDetailBody');
     body.innerHTML = `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;background:rgba(0,0,0,0.3);padding:1rem;border-radius:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;background:rgba(0,0,0,0.3);padding:1.2rem;border-radius:12px;border:1px solid var(--portal-border);">
         <div>
-          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Contact Person</small>
-          <div style="font-weight:600;font-size:0.95rem;color:#fff;">${escapeHtml(inq.name)}</div>
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Contact Name / Requester</small>
+          <div style="font-weight:600;font-size:1rem;color:#fff;margin-top:0.2rem;">${escapeHtml(inq.name)}</div>
         </div>
         <div>
-          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Email Address</small>
-          <div style="font-family:var(--font-mono);font-size:0.85rem;color:var(--gold);">${escapeHtml(inq.email)}</div>
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Direct Email</small>
+          <div style="font-family:var(--font-mono);font-size:0.85rem;color:var(--gold);margin-top:0.2rem;">
+            <a href="mailto:${escapeHtml(inq.email)}" style="color:var(--gold);text-decoration:none;">${escapeHtml(inq.email)}</a>
+          </div>
         </div>
         <div>
-          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Requested Service</small>
-          <div style="font-size:0.85rem;color:var(--sapphire);font-weight:600;">${escapeHtml(inq.service)}</div>
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Requested Service Vertical</small>
+          <div style="font-size:0.88rem;color:var(--sapphire);font-weight:600;margin-top:0.2rem;">${escapeHtml(inq.service)}</div>
         </div>
         <div>
           <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Current Lead Status</small>
-          <div><span class="status-badge ${inq.status === 'new' ? 'status-new' : (inq.status === 'in_review' ? 'status-pending' : 'status-active')}">${inq.status}</span></div>
+          <div style="margin-top:0.2rem;"><span class="status-badge ${badgeClass}">${inq.status}</span></div>
+        </div>
+        <div>
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Origin / Form</small>
+          <div style="font-size:0.8rem;color:#cbd5e1;margin-top:0.2rem;">${escapeHtml(inq.source || 'Website "Start a Project" Form')}</div>
+        </div>
+        <div>
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Submission Timestamp</small>
+          <div style="font-family:var(--font-mono);font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;">${inq.dateFormatted || inq.timestamp}</div>
         </div>
       </div>
       <div>
-        <small style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:0.4rem;">Full Project Specifications</small>
-        <div style="background:rgba(255,255,255,0.03);border:1px solid var(--portal-border);padding:1.2rem;border-radius:12px;font-size:0.88rem;color:#fff;line-height:1.6;">
+        <small style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:0.4rem;">Project Scope & Specifications</small>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid var(--portal-border);padding:1.2rem;border-radius:12px;font-size:0.88rem;color:#fff;line-height:1.6;white-space:pre-wrap;max-height:220px;overflow-y:auto;font-family:var(--font-sans);">
           ${escapeHtml(inq.message)}
         </div>
       </div>
@@ -1172,17 +1467,18 @@
 
     const statusBtn = document.getElementById('inqStatusBtn');
     if (inq.status === 'new') {
-      statusBtn.textContent = 'Mark "In Review"';
+      statusBtn.textContent = 'Set "In Review"';
     } else if (inq.status === 'in_review') {
-      statusBtn.textContent = 'Mark "Contacted"';
+      statusBtn.textContent = 'Set "Contacted"';
+    } else if (inq.status === 'contacted') {
+      statusBtn.textContent = 'Set "Converted"';
     } else {
-      statusBtn.textContent = 'Mark "New"';
+      statusBtn.textContent = 'Set "New"';
     }
 
     const startChatBtn = document.getElementById('inqStartChatBtn');
     startChatBtn.onclick = () => {
       closeModal('inquiryDetailModal');
-      // Create or locate thread for this lead
       openChatWithLead(inq);
     };
 
@@ -1197,11 +1493,132 @@
 
     if (inq.status === 'new') inq.status = 'in_review';
     else if (inq.status === 'in_review') inq.status = 'contacted';
+    else if (inq.status === 'contacted') inq.status = 'converted';
     else inq.status = 'new';
 
     saveInquiries(inquiries);
     openInquiryModal(activeInquiryId);
-    renderInquiriesInbox();
+    if (activeSection === 'inquiries') {
+      renderInquiriesInbox();
+    } else {
+      navigateTo('dashboard');
+    }
+    showPortalToast(`Lead status updated to "${inq.status}".`);
+  };
+
+  window.deleteInquiry = function(inqId) {
+    if (!confirm('Are you sure you want to remove this "Start a Project" request?')) return;
+    let inquiries = getInquiries();
+    inquiries = inquiries.filter(i => i.id !== inqId);
+    saveInquiries(inquiries);
+    closeModal('inquiryDetailModal');
+    if (activeSection === 'inquiries') {
+      renderInquiriesInbox();
+    } else {
+      navigateTo('dashboard');
+    }
+    showPortalToast('Inquiry removed from console.');
+  };
+
+  window.clearAllInquiries = function() {
+    if (!confirm('Are you sure you want to clear all "Start a Project" requests from the console?')) return;
+    saveInquiries([]);
+    if (activeSection === 'inquiries') {
+      renderInquiriesInbox();
+    } else {
+      navigateTo('dashboard');
+    }
+    showPortalToast('Inquiries inbox cleared.');
+  };
+
+  window.convertInquiryToProject = function(inqId) {
+    const inquiries = getInquiries();
+    const inq = inquiries.find(i => i.id === inqId);
+    if (!inq) return;
+
+    closeModal('inquiryDetailModal');
+
+    // Pre-populate Post Project Modal
+    document.getElementById('projTitle').value = `${inq.service} - ${inq.name}`;
+    document.getElementById('projTargetRoles').value = 'all';
+    document.getElementById('projLanguages').value = 'Target Locales specified in Client Scope';
+    document.getElementById('projVolume').value = 'Scope as per Client Submission';
+    document.getElementById('projBudget').value = '$3,500 - $6,500 USD (Negotiable)';
+    
+    // Set deadline 14 days ahead
+    const d = new Date();
+    d.setDate(d.getDate() + 14);
+    document.getElementById('projDeadline').value = d.toISOString().substring(0, 10);
+
+    document.getElementById('projDesc').value = [
+      `[CLIENT DIRECT "START A PROJECT" SPECIFICATIONS]`,
+      `Client Contact: ${inq.name} (${inq.email})`,
+      `Service Vertical: ${inq.service}`,
+      `Submission Date: ${inq.dateFormatted || inq.timestamp}`,
+      ``,
+      `Client Project Scope:`,
+      inq.message,
+      ``,
+      `--- Enclave Project Directives ---`,
+      `Open for certified Freelancer linguists and Vendor agencies to submit proposals.`
+    ].join('\n');
+
+    window._convertingInquiryId = inqId;
+    window._convertingClientName = inq.name;
+
+    openModal('postProjectModal');
+  };
+
+  window.createTestInquiry = function() {
+    const samples = [
+      {
+        name: 'Dr. Sarah Lin',
+        email: 'sarah.lin@tokyo-healthtech.jp',
+        service: 'Software localization',
+        message: 'Looking for medical-grade localization of our clinical telemetry portal into Japanese and Korean. Estimated 42,000 words across UI strings and regulatory manuals. Need ISO 17100 certified linguists.'
+      },
+      {
+        name: 'Marcus Vance',
+        email: 'mvance@synthetica-ai.com',
+        service: 'AI data collection',
+        message: 'Require 250 hours of spontaneous conversational audio recordings across Hindi, Tamil, and Telugu with demographic variance. Need 3-tier QA acoustic verification.'
+      },
+      {
+        name: 'Elena Rostova',
+        email: 'elena@novalearn.org',
+        service: 'E-learning localization',
+        message: 'Adapting 12 interactive STEM curriculum modules into German, French, and Spanish. Full SCORM 2004 compliance and voiceover dubbing needed.'
+      }
+    ];
+    const rand = samples[Math.floor(Math.random() * samples.length)];
+    const now = new Date();
+    const newInq = {
+      id: 'inq-' + Date.now(),
+      name: rand.name,
+      email: rand.email,
+      service: rand.service,
+      message: rand.message,
+      source: 'Website "Start a Project" Form',
+      timestamp: now.toISOString(),
+      dateFormatted: now.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }),
+      status: 'new'
+    };
+    const inquiries = getInquiries();
+    inquiries.unshift(newInq);
+    saveInquiries(inquiries);
+
+    if (activeSection === 'inquiries') {
+      renderInquiriesInbox();
+    } else {
+      navigateTo('dashboard');
+    }
+    showPortalToast(`✨ Simulated new "Start a Project" request from ${rand.name}!`);
+  };
+
+  window.openChatWithLeadById = function(inqId) {
+    const inquiries = getInquiries();
+    const inq = inquiries.find(i => i.id === inqId);
+    if (inq) openChatWithLead(inq);
   };
 
   function openChatWithLead(inq) {
@@ -1742,12 +2159,14 @@
     const deadline = document.getElementById('projDeadline').value;
     const desc = document.getElementById('projDesc').value.trim();
 
+    const clientName = window._convertingClientName || 'Mavy Enterprise Direct';
+
     const projects = getProjects();
     const newProject = {
       id: 'prj-' + Math.floor(100 + Math.random() * 900),
       title,
       category: 'Enterprise Localization & AI',
-      clientName: 'Mavy Enterprise Direct',
+      clientName,
       clientId: user.id,
       targetRoles,
       languages,
@@ -1762,10 +2181,22 @@
 
     projects.unshift(newProject);
     saveProjects(projects);
+
+    if (window._convertingInquiryId) {
+      const inquiries = getInquiries();
+      const inq = inquiries.find(i => i.id === window._convertingInquiryId);
+      if (inq) {
+        inq.status = 'converted';
+        saveInquiries(inquiries);
+      }
+      window._convertingInquiryId = null;
+      window._convertingClientName = null;
+    }
+
     closeModal('postProjectModal');
     document.getElementById('postProjectForm').reset();
 
-    alert(`Project "${title}" has been successfully published to the marketplace!`);
+    showPortalToast(`Project "${title}" published to marketplace!`);
     navigateTo('dashboard');
   };
 

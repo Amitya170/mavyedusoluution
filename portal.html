@@ -295,10 +295,10 @@
 
   <!-- Modal 4: Admin Inquiry Detail & Lead Response Modal -->
   <div class="portal-modal" id="inquiryDetailModal" style="display:none;">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width:680px;">
       <div class="modal-header">
         <div>
-          <h3 style="color:#fff;font-size:1.2rem;">Contact Form Lead Details</h3>
+          <h3 style="color:#fff;font-size:1.2rem;">📥 "Start a Project" Form Request Details</h3>
           <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem;" id="inqMetaHeader">Submitted from Website Form</p>
         </div>
         <button class="modal-close" onclick="closeModal('inquiryDetailModal')">&times;</button>
@@ -306,11 +306,15 @@
       <div id="inquiryDetailBody" style="display:flex;flex-direction:column;gap:1.2rem;margin-bottom:1.5rem;">
         <!-- Injected dynamically -->
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--portal-border);padding-top:1.2rem;">
-        <button type="button" class="btn-portal btn-portal-outline" id="inqStatusBtn" onclick="toggleInquiryStatus()">Mark Status</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--portal-border);padding-top:1.2rem;flex-wrap:wrap;gap:0.8rem;">
+        <div style="display:flex;gap:0.6rem;">
+          <button type="button" class="btn-portal btn-portal-outline" id="inqStatusBtn" onclick="toggleInquiryStatus()">Mark Status</button>
+          <button type="button" class="btn-portal btn-portal-outline" style="color:#ff8577;border-color:rgba(255,133,119,0.3);" onclick="deleteInquiry(activeInquiryId)">🗑️ Delete</button>
+        </div>
         <div style="display:flex;gap:0.8rem;">
           <button type="button" class="btn-portal btn-portal-outline" onclick="closeModal('inquiryDetailModal')">Close</button>
-          <button type="button" class="btn-portal btn-portal-primary" id="inqStartChatBtn">Open Direct Live Chat →</button>
+          <button type="button" class="btn-portal btn-portal-outline" id="inqConvertBtn" style="color:var(--gold);border-color:var(--portal-border-gold);" onclick="convertInquiryToProject(activeInquiryId)">🚀 Convert to Project</button>
+          <button type="button" class="btn-portal btn-portal-primary" id="inqStartChatBtn">💬 Open Live Chat →</button>
         </div>
       </div>
     </div>

@@ -910,6 +910,7 @@ if (form) {
           email: email.value.trim(),
           service: service.value,
           message: message.value.trim(),
+          source: 'Website "Start a Project" Form',
           timestamp: now.toISOString(),
           dateFormatted: now.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }),
           status: 'new'
@@ -930,9 +931,9 @@ if (form) {
           const h3 = toast.querySelector('h3');
           const p = toast.querySelector('p');
           if (h3) h3.textContent = 'Project Request Logged';
-          if (p) p.textContent = 'Thank you! Your specifications have been routed directly to the Mavy Operations Admin Console. A dedicated PM will contact you within 1 business day.';
+          if (p) p.innerHTML = 'Thank you! Your specifications have been routed directly to the Mavy Operations Admin Console. A dedicated PM will contact you within 1 business day. <a href="portal.html" style="color:var(--gold);text-decoration:underline;margin-left:6px;font-weight:600;">Open Portal →</a>';
           toast.classList.add('show');
-          setTimeout(() => toast.classList.remove('show'), 5000);
+          setTimeout(() => toast.classList.remove('show'), 6000);
         }
 
         form.reset();

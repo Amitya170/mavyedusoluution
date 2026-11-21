@@ -370,19 +370,22 @@
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       this.container.appendChild(this.renderer.domElement);
 
-      // Natural Celestial Lighting: Sun Key + Front Fill + Ambient
-      const ambient = new THREE.AmbientLight(0xffffff, 1.3);
+      // Natural Celestial Lighting: Calibrated for Clear Continents & Zero Glare
+      const ambient = new THREE.AmbientLight(0xffffff, 0.45);
       this.scene.add(ambient);
 
-      const sunLight = new THREE.DirectionalLight(0xffffff, 2.2);
-      sunLight.position.set(3, 4, 6);
+      // Main Sun Key Light positioned at an angle to create natural spherical depth
+      const sunLight = new THREE.DirectionalLight(0xfff6e8, 1.35);
+      sunLight.position.set(4, 3, 5);
       this.scene.add(sunLight);
 
-      const frontLight = new THREE.DirectionalLight(0xffffff, 1.2);
-      frontLight.position.set(0, 0, 8);
-      this.scene.add(frontLight);
+      // Very soft, non-glare fill light
+      const softFill = new THREE.DirectionalLight(0x93c5fd, 0.25);
+      softFill.position.set(-4, -1, 3);
+      this.scene.add(softFill);
 
-      const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.0);
+      // Subtle cyan rim back-light
+      const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.45);
       rimLight.position.set(-5, -2, -4);
       this.scene.add(rimLight);
 
@@ -397,17 +400,17 @@
       const nightTexture = textureLoader.load('earth-night.jpg');
       const bumpTexture = textureLoader.load('earth-topology.png');
 
-      // 1. Globe Base Sphere (Authentic Earth Continents, Oceans & Landmasses)
+      // 1. Globe Base Sphere (Authentic Earth Continents, Oceans & Landmasses - Anti-Glare)
       const baseGeo = new THREE.SphereGeometry(2.0, 64, 64);
       const baseMat = new THREE.MeshStandardMaterial({
         map: earthTexture,
         bumpMap: bumpTexture,
-        bumpScale: 0.035,
+        bumpScale: 0.045,
         emissiveMap: nightTexture,
-        emissive: new THREE.Color(0xfde68a),
-        emissiveIntensity: 0.6,
-        roughness: 0.55,
-        metalness: 0.05
+        emissive: new THREE.Color(0xfde047),
+        emissiveIntensity: 0.30,
+        roughness: 0.72,
+        metalness: 0.04
       });
       const globeMesh = new THREE.Mesh(baseGeo, baseMat);
       this.globeGroup.add(globeMesh);
@@ -436,8 +439,8 @@
         fragmentShader: `
           varying vec3 vNormal;
           void main() {
-            float intensity = pow(0.66 - dot(vNormal, vec3(0, 0, 1.0)), 2.2);
-            gl_FragColor = vec4(0.22, 0.74, 0.97, 1.0) * intensity * 0.95;
+            float intensity = pow(0.70 - dot(vNormal, vec3(0, 0, 1.0)), 3.0);
+            gl_FragColor = vec4(0.18, 0.62, 0.95, 1.0) * intensity * 0.65;
           }
         `,
         blending: THREE.AdditiveBlending,
@@ -448,34 +451,54 @@
       const atmosMesh = new THREE.Mesh(atmosGeo, atmosMat);
       this.scene.add(atmosMesh);
 
-      // 4. Country Beacons & Sovereign Gateway Hubs
+      // 4. Country Beacons & Sovereign Gateway Hubs (Tactile 3D Luminous Pins)
       this.cityNodes = [];
       this.ringMeshes = [];
-      const nodeGeo = new THREE.SphereGeometry(0.038, 16, 16);
+      const nodeGeo = new THREE.SphereGeometry(0.065, 16, 16);
+      const auraGeo = new THREE.SphereGeometry(0.11, 16, 16);
+      const stemGeo = new THREE.CylinderGeometry(0.010, 0.010, 0.16, 8);
+
       this.cities.forEach(city => {
-        const v = this.latLonToVector3(city.lat, city.lon, 2.035);
-        const nodeMat = new THREE.MeshStandardMaterial({
-          color: city.color,
-          emissive: city.color,
-          emissiveIntensity: 1.1,
-          roughness: 0.1
-        });
+        const surfPos = this.latLonToVector3(city.lat, city.lon, 2.00);
+        const pinPos = this.latLonToVector3(city.lat, city.lon, 2.085);
+
+        // Vertical pin stem (Cylinder pointing outward from Earth center)
+        const stemMat = new THREE.MeshBasicMaterial({ color: city.color });
+        const stemMesh = new THREE.Mesh(stemGeo, stemMat);
+        const midStem = surfPos.clone().add(pinPos).multiplyScalar(0.5);
+        stemMesh.position.copy(midStem);
+        stemMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), surfPos.clone().normalize());
+        this.globeGroup.add(stemMesh);
+
+        // Luminous Pin Head (Bright glowing sphere)
+        const nodeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
         const node = new THREE.Mesh(nodeGeo, nodeMat);
-        node.position.copy(v);
+        node.position.copy(pinPos);
         node.userData = city;
         this.globeGroup.add(node);
         this.cityNodes.push(node);
 
-        // Pulsing Wave Ring Beacon
-        const ringGeo = new THREE.RingGeometry(0.042, 0.078, 24);
+        // Glowing Color Aura
+        const auraMat = new THREE.MeshBasicMaterial({
+          color: city.color,
+          transparent: true,
+          opacity: 0.65,
+          blending: THREE.AdditiveBlending
+        });
+        const aura = new THREE.Mesh(auraGeo, auraMat);
+        aura.position.copy(pinPos);
+        this.globeGroup.add(aura);
+
+        // Pulsing Wave Ring Beacon on surface
+        const ringGeo = new THREE.RingGeometry(0.055, 0.13, 24);
         const ringMat = new THREE.MeshBasicMaterial({
           color: city.color,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.75
+          opacity: 0.85
         });
         const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.position.copy(v);
+        ring.position.copy(surfPos.clone().multiplyScalar(1.006));
         ring.lookAt(new THREE.Vector3(0, 0, 0));
         this.globeGroup.add(ring);
         this.ringMeshes.push(ring);
@@ -546,36 +569,59 @@
 
       connections.forEach(([c1, c2], idx) => {
         if (!this.cities[c1] || !this.cities[c2]) return;
-        const p1 = this.latLonToVector3(this.cities[c1].lat, this.cities[c1].lon, 2.035);
-        const p2 = this.latLonToVector3(this.cities[c2].lat, this.cities[c2].lon, 2.035);
+        const p1 = this.latLonToVector3(this.cities[c1].lat, this.cities[c1].lon, 2.085);
+        const p2 = this.latLonToVector3(this.cities[c2].lat, this.cities[c2].lon, 2.085);
 
         const mid = p1.clone().add(p2).multiplyScalar(0.5);
         const dist = p1.distanceTo(p2);
-        mid.normalize().multiplyScalar(2.035 + Math.min(dist * 0.26, 0.85));
+        mid.normalize().multiplyScalar(2.085 + Math.min(dist * 0.28, 0.95));
 
         const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
-        const curvePoints = curve.getPoints(42);
-        const arcGeo = new THREE.BufferGeometry().setFromPoints(curvePoints);
-        const arcMat = new THREE.LineBasicMaterial({
-          color: idx % 2 === 0 ? 0xd4af37 : 0x38bdf8,
-          transparent: true,
-          opacity: 0.52
-        });
-        const arcLine = new THREE.Line(arcGeo, arcMat);
-        this.globeGroup.add(arcLine);
+        const isGold = idx % 2 === 0;
 
-        // Live Photon Signal Packet traveling on the arc
-        const pulseGeo = new THREE.SphereGeometry(0.024, 8, 8);
-        const pulseMat = new THREE.MeshBasicMaterial({
-          color: idx % 2 === 0 ? 0xffffff : 0x38bdf8
+        // 1. 3D Volumetric Glowing Arc Cable (TubeGeometry ensures thick, clear visibility)
+        const tubeGeo = new THREE.TubeGeometry(curve, 44, 0.016, 6, false);
+        const tubeMat = new THREE.MeshBasicMaterial({
+          color: isGold ? 0xf59e0b : 0x06b6d4,
+          transparent: true,
+          opacity: 0.85
         });
+        const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
+        this.globeGroup.add(tubeMesh);
+
+        // 2. High-contrast luminous center spine
+        const curvePoints = curve.getPoints(42);
+        const coreGeo = new THREE.BufferGeometry().setFromPoints(curvePoints);
+        const coreMat = new THREE.LineBasicMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.95
+        });
+        const coreLine = new THREE.Line(coreGeo, coreMat);
+        this.globeGroup.add(coreLine);
+
+        // 3. Live High-Luminance Photon Signal Packet traveling on the arc
+        const pulseGeo = new THREE.SphereGeometry(0.065, 12, 12);
+        const pulseMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
         const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
         this.globeGroup.add(pulseMesh);
+
+        const pulseAuraGeo = new THREE.SphereGeometry(0.11, 12, 12);
+        const pulseAuraMat = new THREE.MeshBasicMaterial({
+          color: isGold ? 0xfbbf24 : 0x22d3ee,
+          transparent: true,
+          opacity: 0.7,
+          blending: THREE.AdditiveBlending
+        });
+        const pulseAuraMesh = new THREE.Mesh(pulseAuraGeo, pulseAuraMat);
+        this.globeGroup.add(pulseAuraMesh);
+
         this.arcPulses.push({
           mesh: pulseMesh,
+          auraMesh: pulseAuraMesh,
           curve: curve,
           progress: Math.random(),
-          speed: 0.003 + (idx % 5) * 0.001
+          speed: 0.0035 + (idx % 5) * 0.0012
         });
       });
     }
@@ -719,9 +765,9 @@
       if (this.ringMeshes && this.ringMeshes.length) {
         const time = Date.now() * 0.003;
         this.ringMeshes.forEach((ring, idx) => {
-          const s = 1.0 + Math.sin(time + idx * 0.4) * 0.28;
+          const s = 1.0 + Math.sin(time + idx * 0.4) * 0.35;
           ring.scale.set(s, s, s);
-          ring.material.opacity = 0.45 + Math.sin(time + idx * 0.4) * 0.35;
+          ring.material.opacity = Math.max(0.18, 0.85 - (s - 0.7) * 0.6);
         });
       }
 
@@ -732,6 +778,7 @@
           if (p.progress > 1.0) p.progress = 0;
           const pos = p.curve.getPoint(p.progress);
           p.mesh.position.copy(pos);
+          if (p.auraMesh) p.auraMesh.position.copy(pos);
         });
       }
 
