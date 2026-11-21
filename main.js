@@ -24,16 +24,19 @@ const SITE = {
 
 /* — EDIT ME: Trusted clients (marquee) ————————————————————————— */
 const CLIENTS = [
+  { name: 'ISO 9001:2015 Certified', icon: '🛡️', color: 'rgba(212,175,55,0.2)' },
+  { name: 'ISO/IEC 27001:2022 Certified', icon: '🔒', color: 'rgba(56,189,248,0.2)' },
+  { name: 'ISO 17100:2015 Compliant', icon: '🌐', color: 'rgba(16,185,129,0.2)' },
+  { name: 'SOC 2 Type II Audited', icon: '✨', color: 'rgba(212,175,55,0.2)' },
   { name: 'Northwind Outfitters', icon: '🧭', color: 'rgba(52,211,153,0.15)' },
-  { name: 'Cobalt Games', icon: '🎮', color: 'rgba(34,211,238,0.15)' },
+  { name: 'Cobalt Games', icon: '🎮', color: 'rgba(56,189,248,0.15)' },
   { name: 'Fennel Health', icon: '🏥', color: 'rgba(244,114,182,0.15)' },
-  { name: 'Atlas Robotics', icon: '🤖', color: 'rgba(167,139,250,0.15)' },
-  { name: 'Loom & Co.', icon: '🧵', color: 'rgba(34,211,238,0.15)' },
-  { name: 'Periwinkle Bank', icon: '🏦', color: 'rgba(167,139,250,0.15)' },
-  { name: 'Marrow Studio', icon: '🎨', color: 'rgba(244,114,182,0.15)' },
+  { name: 'Atlas Robotics', icon: '🤖', color: 'rgba(212,175,55,0.15)' },
+  { name: 'Loom & Co.', icon: '🧵', color: 'rgba(56,189,248,0.15)' },
+  { name: 'Periwinkle Bank', icon: '🏦', color: 'rgba(212,175,55,0.15)' },
   { name: 'Fathom Analytics', icon: '📊', color: 'rgba(52,211,153,0.15)' },
-  { name: 'Solace EdTech', icon: '🎓', color: 'rgba(34,211,238,0.15)' },
-  { name: 'Beacon Learning', icon: '💡', color: 'rgba(167,139,250,0.15)' },
+  { name: 'Solace EdTech', icon: '🎓', color: 'rgba(56,189,248,0.15)' },
+  { name: 'Beacon Learning', icon: '💡', color: 'rgba(212,175,55,0.15)' },
 ];
 
 const CONTENT = {
