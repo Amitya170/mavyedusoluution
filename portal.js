@@ -21,7 +21,13 @@
       role: 'admin',
       company: 'Mavy EduSolutions Global',
       title: 'Chief Operations Officer',
-      avatar: 'VM'
+      phone: '+1 (800) 582-9014',
+      location: 'Global Operations Hub · London / San Francisco',
+      speciality: 'Platform Governance, Enterprise Solutions Architecture & Global PM',
+      certifications: 'ISO 9001 Lead Auditor, PMP Certified, Scrum Master',
+      avatar: 'VM',
+      joinedDate: 'Jan 2024',
+      status: 'Active Executive'
     },
     {
       id: 'usr-client-1',
@@ -31,7 +37,33 @@
       role: 'client',
       company: 'NovaGlobal Enterprises Inc.',
       title: 'VP Product Localization',
-      avatar: 'SC'
+      phone: '+1 (415) 890-4421',
+      location: 'San Francisco, CA, USA',
+      speciality: 'FinTech Mobile Apps, Cross-Border Payments, iOS/Android String Extraction',
+      tier: 'Tier-1 Enterprise Corporate Client',
+      activeProjectsCount: 2,
+      totalVolume: '240,000 strings',
+      avatar: 'SC',
+      joinedDate: 'Mar 2024',
+      status: 'Active Corporate Client'
+    },
+    {
+      id: 'usr-client-2',
+      name: 'Dr. Jennifer Vance',
+      email: 'jennifer@apexhealth.com',
+      password: 'client123',
+      role: 'client',
+      company: 'Apex Health Technologies Ltd.',
+      title: 'Head of Regulatory Affairs & Clinical Documentation',
+      phone: '+44 20 7946 0912',
+      location: 'Cambridge, United Kingdom',
+      speciality: 'Life Sciences, CE-MDR Compliance, Clinical Evaluation Reports (CER)',
+      tier: 'Medical Device Enterprise Partner',
+      activeProjectsCount: 1,
+      totalVolume: '165,000 words',
+      avatar: 'JV',
+      joinedDate: 'May 2024',
+      status: 'Active Corporate Client'
     },
     {
       id: 'usr-free-1',
@@ -39,20 +71,102 @@
       email: 'mateo.silva@linguist.io',
       password: 'free123',
       role: 'freelancer',
-      company: 'Independent Senior Linguist',
-      title: 'ES/PT Neural Translation Specialist',
-      languages: 'EN, ES, PT-BR',
-      avatar: 'MS'
+      company: 'Independent Senior Linguist & Reviewer',
+      title: 'ES/PT Neural Translation & FinTech Specialist',
+      phone: '+34 91 582 3910',
+      location: 'Madrid, Spain (UTC+1)',
+      languages: 'English → Spanish (Castilian/LATAM), Portuguese (Brazil)',
+      speciality: 'FinTech Banking UI, Payment Rails, Smartling/Crowdin, Legal Contracts, Pluralization QA',
+      catTools: 'Trados Studio, Smartling, Crowdin, memoQ, Phrase',
+      certifications: 'ATA Certified (English-Spanish), ISO 17100 Verified, DipTrans CIOL',
+      experienceYears: '9+ Years Professional Enterprise Experience',
+      completedJobs: 48,
+      reliabilityScore: '99.4% On-Time Delivery',
+      avatar: 'MS',
+      joinedDate: 'Feb 2024',
+      status: 'Verified Native Linguist'
+    },
+    {
+      id: 'usr-free-2',
+      name: 'Aiko Tanaka',
+      email: 'aiko.tanaka@tokyoloc.jp',
+      password: 'free123',
+      role: 'freelancer',
+      company: 'Tokyo Localization Atelier',
+      title: 'Japanese & Korean E-Learning / Multimedia Lead',
+      phone: '+81 3 5555 0148',
+      location: 'Tokyo, Japan (JST / UTC+9)',
+      languages: 'English → Japanese (Native), Korean',
+      speciality: 'Articulate Storyline SCORM, Interactive STEM Modules, Subtitling/Dubbing QA, Gaming UI',
+      catTools: 'memoQ, Aegisub, Subtitle Edit, Lokalise, Figma',
+      certifications: 'JAT Certified Translator, JLPT N1 Examiner, ISO 17100 Verified',
+      experienceYears: '7+ Years In-Country Localization Specialist',
+      completedJobs: 34,
+      reliabilityScore: '98.8% First-Pass QC',
+      avatar: 'AT',
+      joinedDate: 'Apr 2024',
+      status: 'Verified Native Linguist'
+    },
+    {
+      id: 'usr-free-3',
+      name: 'Dr. Tariq Al-Mansoor',
+      email: 'tariq.mansoor@lingua-mena.ae',
+      password: 'free123',
+      role: 'freelancer',
+      company: 'MENA Medical & Technical Linguistics',
+      title: 'Arabic Medical Transcreation & IFU Specialist',
+      phone: '+971 4 391 2280',
+      location: 'Dubai, UAE (GST / UTC+4)',
+      languages: 'English, French → Modern Standard Arabic (Native)',
+      speciality: 'Surgical IFU, Clinical Trial Protocols, Healthcare LMS, BioPharma Regulatory Filings',
+      catTools: 'Trados Enterprise, XTM Cloud, Wordfast Pro',
+      certifications: 'MBBS Medical Degree, Arab Translators Association Fellow, ISO 17100',
+      experienceYears: '11+ Years Life Sciences Translation',
+      completedJobs: 62,
+      reliabilityScore: '99.8% Medical Accuracy Score',
+      avatar: 'TA',
+      joinedDate: 'Jan 2024',
+      status: 'Verified Subject Matter Expert'
     },
     {
       id: 'usr-vendor-1',
-      name: 'Polyglot Enterprises',
+      name: 'Polyglot Enterprises LLC',
       email: 'ops@polyglotenterprises.com',
       password: 'vendor123',
       role: 'vendor',
       company: 'Polyglot Global Language Partners LLC',
-      title: 'Director of Localization Operations',
-      avatar: 'PE'
+      title: 'Enterprise Language Agency Partner',
+      phone: '+49 30 8920 1140',
+      location: 'HQ: Berlin, Germany · Regional Hub: Tokyo',
+      languages: '40+ Global Language Pairs (Tier-1 Western & Eastern European, CJK)',
+      speciality: 'High-Volume Document Translation, CE-MDR Compliance, Continuous Repo Sync, Dual-Linguist QC',
+      dailyCapacity: '75,000 Words / Day',
+      certifications: 'ISO 9001:2015, ISO 17100:2015, ISO 13485:2016 (Medical Devices), SOC 2 Type II',
+      msaStatus: 'Master Service Agreement Active (Tier-1 Enterprise)',
+      keyContact: 'Helena Lindqvist · Senior Director of Operations',
+      avatar: 'PE',
+      joinedDate: 'Dec 2023',
+      status: 'Certified Tier-1 Vendor Agency'
+    },
+    {
+      id: 'usr-vendor-2',
+      name: 'AetherData Cognitive Systems',
+      email: 'partnerships@aetherdata.ai',
+      password: 'vendor123',
+      role: 'vendor',
+      company: 'AetherData Cognitive AI Labs Pvt Ltd',
+      title: 'Multimodal AI Training Data & Annotation Agency',
+      phone: '+91 80 4912 3000',
+      location: 'Bengaluru, India · Global Remote Annotator Network',
+      languages: 'Indic Dialects (Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati) + Southeast Asian',
+      speciality: 'Conversational Audio Recording, Phonetic Alignment, RLHF Model Preference Ranking, Safety QC',
+      dailyCapacity: '500+ Audio Hours / Month · 100k Multi-Turn Prompts',
+      certifications: 'ISO/IEC 27001:2022 (ISMS Enclave), GDPR Compliant Data Enclave, SOC 2 Type II',
+      msaStatus: 'Master Service Agreement Active (AI Data Services)',
+      keyContact: 'Rajesh K. Varma · VP of Global Annotator Operations',
+      avatar: 'AD',
+      joinedDate: 'Feb 2024',
+      status: 'Certified AI Data Partner'
     }
   ];
 
@@ -257,7 +371,18 @@
   ];
 
   function initDatabase() {
-    let users = localStorage.getItem('mavy_users') ? JSON.parse(localStorage.getItem('mavy_users')) : SEED_USERS;
+    let users = localStorage.getItem('mavy_users') ? JSON.parse(localStorage.getItem('mavy_users')) : [];
+    
+    // Merge seed profiles to ensure comprehensive directory metadata (speciality, contact, location)
+    SEED_USERS.forEach(seedUser => {
+      const existingIdx = users.findIndex(u => u.email.toLowerCase() === seedUser.email.toLowerCase());
+      if (existingIdx !== -1) {
+        users[existingIdx] = { ...seedUser, ...users[existingIdx] };
+      } else {
+        users.push(seedUser);
+      }
+    });
+
     const adminIdx = users.findIndex(u => u.role === 'admin');
     if (adminIdx !== -1) {
       users[adminIdx].email = 'admin@mavyedu.com';
@@ -515,8 +640,10 @@
     let items = [];
 
     if (user.role === 'admin') {
+      const allUsers = getUsers();
       items = [
         { id: 'dashboard', label: '📊 All Projects Pipeline', icon: '📁' },
+        { id: 'directory', label: '👥 Enclave Directory', icon: '👥', badge: allUsers.length },
         { id: 'inquiries', label: '📥 Inquiries Inbox', icon: '📬', badge: newInquiriesCount > 0 ? newInquiriesCount : null, badgeClass: 'badge-unread' },
         { id: 'proposals', label: '📑 Review All Bids', icon: '💼' },
         { id: 'chat', label: '💬 Integrated Live Chat', icon: '💬', badge: unreadMessagesCount, badgeClass: '' }
@@ -573,6 +700,8 @@
 
     if (sectionId === 'dashboard') {
       renderRoleDashboard(user, heading, subtitle, actionArea);
+    } else if (sectionId === 'directory') {
+      renderDirectoryView(user, heading, subtitle, actionArea);
     } else if (sectionId === 'inquiries') {
       renderInquiriesInbox(heading, subtitle, actionArea);
     } else if (sectionId === 'proposals' || sectionId === 'mybids') {
@@ -869,6 +998,340 @@
 
     container.innerHTML = html;
   }
+
+  // =========================================================================
+  // 5B. ENCLAVE MEMBERS & PARTNERS DIRECTORY (ADMIN FULL DOSSIER ROSTER)
+  // =========================================================================
+
+  let activeDirectoryCategory = 'all';
+  let activeDirectoryQuery = '';
+
+  window.filterDirectoryCategory = function (cat) {
+    activeDirectoryCategory = cat;
+    const user = getCurrentUser();
+    renderDirectoryView(user, document.getElementById('sectionHeading'), document.getElementById('sectionSubtitle'), document.getElementById('headerActionArea'));
+  };
+
+  window.handleDirectorySearch = function (q) {
+    activeDirectoryQuery = (q || '').toLowerCase().trim();
+    const user = getCurrentUser();
+    renderDirectoryGridOnly(user);
+  };
+
+  function renderDirectoryView(user, heading, subtitle, actionArea) {
+    if (user.role !== 'admin') {
+      alert('Access restricted to Platform Administrators.');
+      navigateTo('dashboard');
+      return;
+    }
+
+    heading.textContent = 'Enclave Members & Partner Directory';
+    subtitle.textContent = 'Complete roster of specialist freelancers, enterprise clients, certified vendors, and internal staff.';
+
+    actionArea.innerHTML = `
+      <button class="btn-portal btn-portal-primary" onclick="openModal('inviteMemberModal')">
+        ✉️ Invite Staff / Profile
+      </button>
+    `;
+
+    const allUsers = getUsers();
+    const freelancers = allUsers.filter(u => u.role === 'freelancer');
+    const clients = allUsers.filter(u => u.role === 'client');
+    const vendors = allUsers.filter(u => u.role === 'vendor');
+    const staff = allUsers.filter(u => u.role === 'admin');
+
+    const statsBanner = document.getElementById('statsBanner');
+    statsBanner.innerHTML = `
+      <div class="portal-stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-val" style="color:var(--gold);">${allUsers.length}</div>
+        <div class="stat-label">Total Verified Directory</div>
+      </div>
+      <div class="portal-stat-card">
+        <div class="stat-icon">✍️</div>
+        <div class="stat-val" style="color:var(--emerald);">${freelancers.length}</div>
+        <div class="stat-label">Specialist Freelancers</div>
+      </div>
+      <div class="portal-stat-card">
+        <div class="stat-icon">🏢</div>
+        <div class="stat-val" style="color:var(--sapphire);">${clients.length}</div>
+        <div class="stat-label">Enterprise Clients</div>
+      </div>
+      <div class="portal-stat-card">
+        <div class="stat-icon">🌐</div>
+        <div class="stat-val" style="color:#c084fc;">${vendors.length}</div>
+        <div class="stat-label">Certified Vendor Agencies</div>
+      </div>
+    `;
+
+    const container = document.getElementById('dynamicSectionContent');
+    container.innerHTML = `
+      <div class="directory-controls">
+        <div class="directory-filter-tabs">
+          <button class="dir-filter-btn ${activeDirectoryCategory === 'all' ? 'active' : ''}" onclick="filterDirectoryCategory('all')">
+            All Members (${allUsers.length})
+          </button>
+          <button class="dir-filter-btn ${activeDirectoryCategory === 'freelancer' ? 'active' : ''}" onclick="filterDirectoryCategory('freelancer')">
+            ✍️ Freelancers (${freelancers.length})
+          </button>
+          <button class="dir-filter-btn ${activeDirectoryCategory === 'client' ? 'active' : ''}" onclick="filterDirectoryCategory('client')">
+            🏢 Corporate Clients (${clients.length})
+          </button>
+          <button class="dir-filter-btn ${activeDirectoryCategory === 'vendor' ? 'active' : ''}" onclick="filterDirectoryCategory('vendor')">
+            🌐 Certified Vendors (${vendors.length})
+          </button>
+          <button class="dir-filter-btn ${activeDirectoryCategory === 'admin' ? 'active' : ''}" onclick="filterDirectoryCategory('admin')">
+            👑 Staff & Admins (${staff.length})
+          </button>
+        </div>
+        <div>
+          <input type="text" class="dir-search-input" placeholder="🔍 Search name, language, specialty, country, email..." value="${escapeHtml(activeDirectoryQuery)}" oninput="handleDirectorySearch(this.value)">
+        </div>
+      </div>
+      <div id="directoryGridContainer"></div>
+    `;
+
+    renderDirectoryGridOnly(user);
+  }
+
+  function renderDirectoryGridOnly(user) {
+    const gridContainer = document.getElementById('directoryGridContainer');
+    if (!gridContainer) return;
+
+    let users = getUsers();
+
+    // Filter by role
+    if (activeDirectoryCategory !== 'all') {
+      users = users.filter(u => u.role === activeDirectoryCategory);
+    }
+
+    // Filter by search query
+    if (activeDirectoryQuery) {
+      users = users.filter(u => {
+        const text = `${u.name} ${u.email} ${u.company || ''} ${u.title || ''} ${u.speciality || ''} ${u.languages || ''} ${u.location || ''} ${u.phone || ''}`.toLowerCase();
+        return text.includes(activeDirectoryQuery);
+      });
+    }
+
+    if (users.length === 0) {
+      gridContainer.innerHTML = `
+        <div style="background:var(--portal-card);border:1px solid var(--portal-border);border-radius:16px;padding:3rem;text-align:center;color:var(--text-muted);">
+          No directory members match the selected filter or search query.
+        </div>
+      `;
+      return;
+    }
+
+    let html = '<div class="directory-grid">';
+    users.forEach(m => {
+      const isClient = m.role === 'client';
+      const isFreelancer = m.role === 'freelancer';
+      const isVendor = m.role === 'vendor';
+      const isAdmin = m.role === 'admin';
+
+      let roleBadgeClass = 'badge-admin';
+      let roleDisplay = 'Platform Admin';
+      let avatarClass = '';
+
+      if (isClient) { roleBadgeClass = 'badge-client'; roleDisplay = 'Corporate Client'; avatarClass = 'avatar-client'; }
+      else if (isFreelancer) { roleBadgeClass = 'badge-freelancer'; roleDisplay = 'Freelancer Linguist'; avatarClass = 'avatar-freelancer'; }
+      else if (isVendor) { roleBadgeClass = 'badge-vendor'; roleDisplay = 'Vendor Agency'; avatarClass = 'avatar-vendor'; }
+
+      let specialitySection = '';
+      if (isFreelancer) {
+        specialitySection = `
+          <div class="dir-speciality-section">
+            <span class="dir-speciality-label">Certified Language Pairs & Speciality</span>
+            <div style="font-weight:600;font-size:0.85rem;color:var(--emerald);margin-bottom:0.25rem;">
+              ${escapeHtml(m.languages || 'English → Global Locales')}
+            </div>
+            <div class="dir-speciality-desc">${escapeHtml(m.speciality || 'Neural translation and terminology management.')}</div>
+            <div class="dir-pills-row">
+              ${m.certifications ? `<span class="dir-pill" style="color:var(--gold);border-color:var(--portal-border-gold);">${escapeHtml(m.certifications.split(',')[0])}</span>` : ''}
+              ${m.experienceYears ? `<span class="dir-pill">${escapeHtml(m.experienceYears)}</span>` : ''}
+              ${m.reliabilityScore ? `<span class="dir-pill" style="color:var(--emerald);">${escapeHtml(m.reliabilityScore)}</span>` : ''}
+            </div>
+          </div>
+        `;
+      } else if (isClient) {
+        specialitySection = `
+          <div class="dir-speciality-section">
+            <span class="dir-speciality-label" style="color:var(--sapphire);">Enterprise Localization Scope</span>
+            <div style="font-weight:600;font-size:0.85rem;color:#fff;margin-bottom:0.25rem;">
+              ${escapeHtml(m.company || m.name)}
+            </div>
+            <div class="dir-speciality-desc">${escapeHtml(m.speciality || 'Enterprise localization client with active continuous workflows.')}</div>
+            <div class="dir-pills-row">
+              <span class="dir-pill" style="color:var(--sapphire);border-color:rgba(56,189,248,0.3);">${escapeHtml(m.tier || 'Enterprise Account')}</span>
+              ${m.totalVolume ? `<span class="dir-pill">${escapeHtml(m.totalVolume)}</span>` : ''}
+              <span class="dir-pill" style="color:var(--emerald);">ISO Enclave Client</span>
+            </div>
+          </div>
+        `;
+      } else if (isVendor) {
+        specialitySection = `
+          <div class="dir-speciality-section">
+            <span class="dir-speciality-label" style="color:#c084fc;">Vendor Capabilities & Throughput</span>
+            <div style="font-weight:600;font-size:0.85rem;color:#c084fc;margin-bottom:0.25rem;">
+              ${escapeHtml(m.languages || '40+ Global Pairs')}
+            </div>
+            <div class="dir-speciality-desc">${escapeHtml(m.speciality || 'Full service multilingual agency partner.')}</div>
+            <div class="dir-pills-row">
+              <span class="dir-pill" style="color:#c084fc;border-color:rgba(192,132,252,0.3);">${escapeHtml(m.dailyCapacity || 'High Capacity')}</span>
+              <span class="dir-pill" style="color:var(--emerald);">MSA Active</span>
+              ${m.certifications ? `<span class="dir-pill">${escapeHtml(m.certifications.split(',')[0])}</span>` : ''}
+            </div>
+          </div>
+        `;
+      } else {
+        specialitySection = `
+          <div class="dir-speciality-section">
+            <span class="dir-speciality-label">Executive Leadership & Governance</span>
+            <div style="font-weight:600;font-size:0.85rem;color:#fff;margin-bottom:0.25rem;">
+              ${escapeHtml(m.title || 'Platform Superadmin')}
+            </div>
+            <div class="dir-speciality-desc">${escapeHtml(m.speciality || 'Global operations, platform governance, and quality management.')}</div>
+            <div class="dir-pills-row">
+              <span class="dir-pill" style="color:var(--gold);">Superadmin</span>
+              <span class="dir-pill">ISMS ISO 27001</span>
+            </div>
+          </div>
+        `;
+      }
+
+      html += `
+        <div class="directory-card">
+          <div>
+            <div class="dir-card-head">
+              <div class="dir-avatar ${avatarClass}">${escapeHtml(m.avatar || m.name[0])}</div>
+              <div class="dir-title-box" style="flex:1;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <h3>${escapeHtml(m.name)}</h3>
+                  <span class="portal-role-badge ${roleBadgeClass}">${roleDisplay}</span>
+                </div>
+                <p>${escapeHtml(m.company || m.title || 'Mavy Enclave')}</p>
+              </div>
+            </div>
+
+            <div class="dir-contact-list">
+              <div class="dir-contact-item">
+                <span>Email:</span>
+                <a href="mailto:${escapeHtml(m.email)}">${escapeHtml(m.email)}</a>
+              </div>
+              ${m.phone ? `
+                <div class="dir-contact-item">
+                  <span>Phone:</span>
+                  <a href="tel:${escapeHtml(m.phone)}" style="color:var(--text-main);">${escapeHtml(m.phone)}</a>
+                </div>
+              ` : ''}
+              ${m.location ? `
+                <div class="dir-contact-item">
+                  <span>Location:</span>
+                  <span style="color:var(--text-muted);">${escapeHtml(m.location)}</span>
+                </div>
+              ` : ''}
+            </div>
+
+            ${specialitySection}
+          </div>
+
+          <div class="dir-card-footer">
+            <button class="btn-portal btn-portal-outline" style="font-size:0.75rem;" onclick="openMemberDossierModal('${m.id}')">
+              📄 View Full Dossier
+            </button>
+            <button class="btn-portal btn-portal-primary" style="font-size:0.75rem;" onclick="openChatWithUser('${m.id}')">
+              💬 Direct Chat
+            </button>
+          </div>
+        </div>
+      `;
+    });
+    html += '</div>';
+
+    gridContainer.innerHTML = html;
+  }
+
+  window.openMemberDossierModal = function (userId) {
+    const users = getUsers();
+    const m = users.find(u => u.id === userId);
+    if (!m) return;
+
+    document.getElementById('dossierName').textContent = m.name;
+    document.getElementById('dossierTitle').textContent = `${m.title || m.role.toUpperCase()} · ${m.company || 'Mavy Enclave'}`;
+    const avatar = document.getElementById('dossierAvatar');
+    avatar.textContent = m.avatar || m.name[0];
+    avatar.className = 'dir-avatar ' + (m.role === 'client' ? 'avatar-client' : (m.role === 'freelancer' ? 'avatar-freelancer' : (m.role === 'vendor' ? 'avatar-vendor' : '')));
+
+    const body = document.getElementById('dossierBody');
+    body.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;background:rgba(0,0,0,0.3);padding:1.2rem;border-radius:14px;border:1px solid var(--portal-border);">
+        <div>
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Primary Contact Email</small>
+          <div style="font-family:var(--font-mono);font-size:0.88rem;color:var(--gold);margin-bottom:0.8rem;">
+            <a href="mailto:${escapeHtml(m.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(m.email)}</a>
+          </div>
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Direct Telephone / Hotline</small>
+          <div style="font-size:0.85rem;color:#fff;">${escapeHtml(m.phone || 'Available on project assignment')}</div>
+        </div>
+        <div>
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Operational Hub / Location</small>
+          <div style="font-size:0.85rem;color:#fff;margin-bottom:0.8rem;">${escapeHtml(m.location || 'Global Remote Enclave')}</div>
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Membership &amp; Verification Status</small>
+          <div style="font-size:0.85rem;color:var(--emerald);font-weight:600;">● ${escapeHtml(m.status || 'Verified Partner')}</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.03);padding:1.2rem;border-radius:14px;border:1px solid var(--portal-border);">
+        <small style="font-family:var(--font-mono);font-size:0.68rem;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:0.4rem;">
+          Speciality, Domain Expertise &amp; Technical Competencies
+        </small>
+        <div style="font-size:0.88rem;color:#fff;line-height:1.6;margin-bottom:0.8rem;">
+          ${escapeHtml(m.speciality || 'General enterprise localization and translation capabilities.')}
+        </div>
+        ${m.languages ? `
+          <div style="margin-bottom:0.6rem;">
+            <strong style="font-size:0.78rem;color:var(--text-muted);font-family:var(--font-mono);">Certified Language Pairs:</strong>
+            <span style="font-size:0.85rem;color:var(--emerald);font-weight:600;margin-left:0.4rem;">${escapeHtml(m.languages)}</span>
+          </div>
+        ` : ''}
+        ${m.catTools ? `
+          <div style="margin-bottom:0.6rem;">
+            <strong style="font-size:0.78rem;color:var(--text-muted);font-family:var(--font-mono);">Supported CAT / TMS Stack:</strong>
+            <span style="font-size:0.82rem;color:var(--text-main);margin-left:0.4rem;">${escapeHtml(m.catTools)}</span>
+          </div>
+        ` : ''}
+        ${m.certifications ? `
+          <div>
+            <strong style="font-size:0.78rem;color:var(--text-muted);font-family:var(--font-mono);">Audited Standards:</strong>
+            <span style="font-size:0.82rem;color:var(--gold);margin-left:0.4rem;">${escapeHtml(m.certifications)}</span>
+          </div>
+        ` : ''}
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:0.8rem;">
+        <div style="background:rgba(0,0,0,0.3);padding:0.9rem;border-radius:10px;text-align:center;">
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Reliability / Rating</small>
+          <div style="font-size:1.1rem;font-weight:700;color:var(--emerald);margin-top:0.2rem;">${m.reliabilityScore ? m.reliabilityScore.split(' ')[0] : '100%'}</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.3);padding:0.9rem;border-radius:10px;text-align:center;">
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Volume / Completed</small>
+          <div style="font-size:1.1rem;font-weight:700;color:#fff;margin-top:0.2rem;">${m.completedJobs ? m.completedJobs + ' Deliverables' : (m.dailyCapacity || 'Active')}</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.3);padding:0.9rem;border-radius:10px;text-align:center;">
+          <small style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;">Enclave Member Since</small>
+          <div style="font-size:0.95rem;font-weight:600;color:var(--gold);margin-top:0.3rem;">${m.joinedDate || '2024'}</div>
+        </div>
+      </div>
+    `;
+
+    const chatBtn = document.getElementById('dossierChatBtn');
+    chatBtn.onclick = () => {
+      closeModal('memberDossierModal');
+      openChatWithUser(m.id);
+    };
+
+    openModal('memberDossierModal');
+  };
 
   // =========================================================================
   // 6. INQUIRIES INBOX (WEBSITE CONTACT FORM LEADS — ADMIN ONLY)

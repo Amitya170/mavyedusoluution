@@ -382,6 +382,34 @@
     </div>
   </div>
 
+  <!-- Modal 7: Admin View Member Dossier Modal -->
+  <div class="portal-modal" id="memberDossierModal" style="display:none;">
+    <div class="modal-content" style="max-width:760px;">
+      <div class="modal-header">
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <div class="dir-avatar" id="dossierAvatar" style="width:44px;height:44px;font-size:0.95rem;">U</div>
+          <div>
+            <h3 style="color:#fff;font-size:1.2rem;" id="dossierName">Member Dossier</h3>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.15rem;" id="dossierTitle">Title &amp; Role</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModal('memberDossierModal')">&times;</button>
+      </div>
+      <div id="dossierBody" style="display:flex;flex-direction:column;gap:1.2rem;margin-bottom:1.5rem;max-height:65vh;overflow-y:auto;padding-right:0.4rem;">
+        <!-- Injected dynamically -->
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--portal-border);padding-top:1.2rem;">
+        <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--emerald);">
+          🔒 Identity &amp; ISO 27001 Verification Validated
+        </span>
+        <div style="display:flex;gap:0.8rem;">
+          <button type="button" class="btn-portal btn-portal-outline" onclick="closeModal('memberDossierModal')">Close Dossier</button>
+          <button type="button" class="btn-portal btn-portal-primary" id="dossierChatBtn">Open Direct Channel →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="portal.js"></script>
 </body>
 </html>
