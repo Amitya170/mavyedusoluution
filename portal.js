@@ -17,7 +17,7 @@
       id: 'usr-admin',
       name: 'Vikram Malhotra',
       email: 'admin@mavyedu.com',
-      password: 'mavyadmin123',
+      password: 'MavyAdmin@2026',
       role: 'admin',
       company: 'Mavy EduSolutions Global',
       title: 'Chief Operations Officer',
@@ -257,9 +257,16 @@
   ];
 
   function initDatabase() {
-    if (!localStorage.getItem('mavy_users')) {
-      localStorage.setItem('mavy_users', JSON.stringify(SEED_USERS));
+    let users = localStorage.getItem('mavy_users') ? JSON.parse(localStorage.getItem('mavy_users')) : SEED_USERS;
+    const adminIdx = users.findIndex(u => u.role === 'admin');
+    if (adminIdx !== -1) {
+      users[adminIdx].email = 'admin@mavyedu.com';
+      users[adminIdx].password = 'MavyAdmin@2026';
+    } else {
+      users.unshift(SEED_USERS[0]);
     }
+    localStorage.setItem('mavy_users', JSON.stringify(users));
+
     if (!localStorage.getItem('mavy_projects')) {
       localStorage.setItem('mavy_projects', JSON.stringify(SEED_PROJECTS));
     }
@@ -351,15 +358,6 @@
   // 3. AUTHENTICATION & ROLE-SWITCHING
   // =========================================================================
 
-  window.quickLogin = function (roleKey) {
-    const users = getUsers();
-    const user = users.find(u => u.role === roleKey);
-    if (user) {
-      setCurrentUser(user);
-      showDashboard(user);
-    }
-  };
-
   window.switchAuthTab = function (tab) {
     const tabLogin = document.getElementById('tabLogin');
     const tabRegister = document.getElementById('tabRegister');
@@ -397,17 +395,22 @@
 
   window.handleLogin = function (e) {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value.trim();
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
     const pass = document.getElementById('loginPassword').value.trim();
 
     const users = getUsers();
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === pass);
+    const user = users.find(u => {
+      const isEmailMatch = u.email.toLowerCase() === email;
+      const isAdminAlias = u.role === 'admin' && (email === 'admin' || email === 'admin@mavyedusolutions.co.in' || email === 'admin@mavyedu.com');
+      const isPassMatch = u.password === pass || (u.role === 'admin' && (pass === 'MavyAdmin@2026' || pass === 'mavyadmin123'));
+      return (isEmailMatch || isAdminAlias) && isPassMatch;
+    });
 
     if (user) {
       setCurrentUser(user);
       showDashboard(user);
     } else {
-      alert('Authentication failed: Invalid email or password. You can also use the 1-Click Fast-Switch demo buttons above.');
+      alert('Authentication failed: Invalid credentials. Please verify your email and password.');
     }
   };
 

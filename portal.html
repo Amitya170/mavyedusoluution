@@ -49,31 +49,6 @@
         <p>Access your isolated workspace as an Administrator, Corporate Client, Specialist Freelancer, or Certified Vendor.</p>
       </div>
 
-      <!-- Quick Demo Access Bar -->
-      <div class="demo-accounts-bar">
-        <div class="demo-title">
-          <span>⚡</span> 1-Click Fast-Switch Demo Profiles
-        </div>
-        <div class="demo-chips">
-          <button class="demo-chip" onclick="quickLogin('admin')">
-            <strong style="color:var(--gold);">👑 Administrator</strong>
-            <small>admin@mavyedu.com · Full Access & Inquiries</small>
-          </button>
-          <button class="demo-chip" onclick="quickLogin('client')">
-            <strong style="color:var(--sapphire);">🏢 Corporate Client</strong>
-            <small>sarah.chen@novaglobal.com · NovaGlobal</small>
-          </button>
-          <button class="demo-chip" onclick="quickLogin('freelancer')">
-            <strong style="color:var(--emerald);">✍️ Specialist Freelancer</strong>
-            <small>mateo.silva@linguist.io · ES/PT Linguist</small>
-          </button>
-          <button class="demo-chip" onclick="quickLogin('vendor')">
-            <strong style="color:#c084fc;">🌐 Certified Vendor</strong>
-            <small>ops@polyglotenterprises.com · Enterprise Partner</small>
-          </button>
-        </div>
-      </div>
-
       <!-- Auth Tabs: Login vs Register -->
       <div class="auth-tabs">
         <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Secure Sign In</button>
@@ -84,11 +59,11 @@
       <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
         <div class="portal-field">
           <label>Email Address</label>
-          <input type="email" id="loginEmail" class="portal-input" placeholder="e.g. admin@mavyedu.com" required value="admin@mavyedu.com">
+          <input type="email" id="loginEmail" class="portal-input" placeholder="name@company.com or admin@mavyedu.com" required autocomplete="username">
         </div>
         <div class="portal-field">
           <label>Password</label>
-          <input type="password" id="loginPassword" class="portal-input" placeholder="Enter password" required value="mavyadmin123">
+          <input type="password" id="loginPassword" class="portal-input" placeholder="Enter password" required autocomplete="current-password">
         </div>
         <button type="submit" class="btn-portal btn-portal-primary" style="justify-content:center;padding:0.8rem;margin-top:0.4rem;">
           Authenticate &amp; Open Workspace →
