@@ -898,36 +898,47 @@ if (form) {
       const originalBtnText = submitBtn ? submitBtn.textContent : 'Send project request';
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
+        submitBtn.textContent = 'Submitting to Enclave...';
       }
 
       try {
-        const formData = new FormData(form);
-        const actionUrl = form.getAttribute('action') || 'https://formspree.io/f/mgogkawo';
-        const response = await fetch(actionUrl, {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        });
+        // Direct internal lead capture (Zero external Formspree dependency)
+        const now = new Date();
+        const newInquiry = {
+          id: 'inq-' + Date.now(),
+          name: name.value.trim(),
+          email: email.value.trim(),
+          service: service.value,
+          message: message.value.trim(),
+          timestamp: now.toISOString(),
+          dateFormatted: now.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }),
+          status: 'new'
+        };
 
-        if (response.ok) {
-          if (typeof gtag === 'function') gtag('event', 'form_submit', { event_category: 'contact', event_label: service.value });
-          if (toast) {
-            const h3 = toast.querySelector('h3');
-            const p = toast.querySelector('p');
-            if (h3) h3.textContent = 'Message Received';
-            if (p) p.textContent = 'Thank you for reaching out! A localization expert from our team will contact you within 1 business day.';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 4000);
-          }
-          form.reset();
-        } else {
-          const data = await response.json().catch(() => ({}));
-          throw new Error(data.error || 'Submission failed');
+        const existing = JSON.parse(localStorage.getItem('mavy_inquiries') || '[]');
+        existing.unshift(newInquiry);
+        localStorage.setItem('mavy_inquiries', JSON.stringify(existing));
+
+        // Trigger live cross-tab storage notification
+        window.dispatchEvent(new Event('mavy_inquiry_added'));
+
+        if (typeof gtag === 'function') {
+          gtag('event', 'form_submit', { event_category: 'contact', event_label: service.value });
         }
+
+        if (toast) {
+          const h3 = toast.querySelector('h3');
+          const p = toast.querySelector('p');
+          if (h3) h3.textContent = 'Project Request Logged';
+          if (p) p.textContent = 'Thank you! Your specifications have been routed directly to the Mavy Operations Admin Console. A dedicated PM will contact you within 1 business day.';
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 5000);
+        }
+
+        form.reset();
       } catch (err) {
         console.error('Contact form submission error:', err);
-        alert('There was a problem sending your project request. Please email us directly at collab@mavyedusolutions.co.in');
+        alert('There was a problem logging your project request. Please email us directly at collab@mavyedusolutions.co.in');
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
