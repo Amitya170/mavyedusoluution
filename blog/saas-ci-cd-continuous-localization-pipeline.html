@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zero-Touch Continuous Localization: Automating Git-Driven Translation Webhooks | Mavy EduSolutions</title>
+<meta name="description" content="How high-velocity engineering teams integrate TMS APIs into GitHub Actions and GitLab CI to localize software strings without interrupting sprint velocity.">
+<meta name="keywords" content="continuous localization, CI/CD i18n, TMS API, GitHub Actions translation, pseudo-localization">
+<link rel="canonical" href="https://www.mavyedusolution.com/blog/saas-ci-cd-continuous-localization-pipeline.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zero-Touch Continuous Localization: Automating Git-Driven Translation Webhooks | Mavy EduSolutions">
+<meta property="og:description" content="How high-velocity engineering teams integrate TMS APIs into GitHub Actions and GitLab CI to localize software strings without interrupting sprint velocity.">
+<meta property="og:url" content="https://www.mavyedusolution.com/blog/saas-ci-cd-continuous-localization-pipeline.html">
+<meta property="og:site_name" content="Mavy EduSolutions">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Zero-Touch Continuous Localization: Automating Git-Driven Translation Webhooks | Mavy EduSolutions">
+<meta name="twitter:description" content="How high-velocity engineering teams integrate TMS APIs into GitHub Actions and GitLab CI to localize software strings without interrupting sprint velocity.">
+<link rel="icon" type="image/svg+xml" href="/logo.svg">
+<meta name="theme-color" content="#07090e">
+<link rel="stylesheet" href="../styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Zero-Touch Continuous Localization: Automating Git-Driven Translation Webhooks",
+  "description": "How high-velocity engineering teams integrate TMS APIs into GitHub Actions and GitLab CI to localize software strings without interrupting sprint velocity.",
+  "datePublished": "2026-11-26",
+  "dateModified": "2026-11-26T07:22:21.583Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.mavyedusolution.com/blog/saas-ci-cd-continuous-localization-pipeline.html"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Mavy EduSolutions",
+    "url": "https://www.mavyedusolution.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mavy EduSolutions",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.mavyedusolution.com/logo.svg"
+    }
+  }
+}
+</script>
+</head>
+<body>
+<nav>
+  <a href="../index.html" class="logo"><img src="../logo.svg" alt="Mavy EduSolutions" class="logo-icon" width="32" height="32" style="margin-right: 8px; vertical-align: middle;">Mavy EduSolutions</a>
+  <div class="nav-links">
+    <a href="../index.html#services">Services</a>
+    <a href="../index.html#ai-data">AI Data</a>
+    <a href="../index.html#edu-solutions">EduSolutions</a>
+    <a href="index.html" class="active">Blog</a>
+    <a href="../index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<main style="max-width: 840px; margin: 7rem auto 4rem; padding: 0 5%;">
+  <a href="index.html" style="display:inline-block; margin-bottom:1.8rem; font-family:'IBM Plex Mono',monospace; font-size:0.78rem; color:var(--champagne);">← Back to All Articles</a>
+  
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:var(--champagne); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.8rem;">
+    SaaS &amp; Tech &middot; 8 min read &middot; Published Daily Series
+  </div>
+  
+  <h1 style="font-family:'Fraunces',serif; font-size:clamp(2rem, 3.8vw, 2.9rem); line-height:1.15; margin-bottom:1.4rem; color:var(--text); font-weight:600;">
+    Zero-Touch Continuous Localization: Automating Git-Driven Translation Webhooks
+  </h1>
+  
+  <p style="font-size:1.15rem; color:var(--muted); line-height:1.6; margin-bottom:2.2rem; border-left:3px solid var(--champagne); padding-left:1.2rem;">
+    How high-velocity engineering teams integrate TMS APIs into GitHub Actions and GitLab CI to localize software strings without interrupting sprint velocity.
+  </p>
+  
+  <div class="article-content" style="color:var(--text); font-size:1.05rem; line-height:1.75;">
+    
+      <p>Modern engineering organizations ship code continuously. If software localization relies on manual file exports and spreadsheet handoffs, translation becomes a permanent sprint blocker. The solution is zero-touch continuous localization.</p>
+
+      <h2>The Automated Git-Webhook Flow</h2>
+      <p>When a developer opens a pull request that modifies an internationalization file (e.g. <code>en.json</code>, <code>strings.xml</code>, or <code>Localizable.strings</code>), automated CI webhooks push delta strings directly to the translation memory engine:</p>
+
+      <div class="code-block" style="background:#090d16; border:1px solid rgba(212,175,55,0.25); border-radius:10px; padding:1.2rem; margin:1.5rem 0; font-family:'IBM Plex Mono',monospace; font-size:0.85rem; color:#f8fafc;">
+        <span style="color:#38bdf8;">name:</span> Continuous Localization<br>
+        <span style="color:#38bdf8;">on:</span><br>
+        &nbsp;&nbsp;pull_request:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;paths: ['locales/en/*.json']<br>
+        <span style="color:#38bdf8;">jobs:</span><br>
+        &nbsp;&nbsp;sync:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;runs-on: ubuntu-latest<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;steps:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- uses: mavy-edusolutions/i18n-sync-action@v2<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;api_key: ${{ secrets.MAVY_API_KEY }}<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pseudo_loc_preview: true
+      </div>
+
+      <h2>Automated Bidirectional RTL Layout Testing</h2>
+      <p>Continuous pipelines run automated headless browser passes across Arabic, Hebrew, and Urdu viewports to verify that UI margins, icons, and flexbox layouts flip automatically (<code>dir="rtl"</code>) without horizontal clipping or broken flex-wrap.</p>
+    
+  </div>
+
+  <div style="margin-top:4rem; padding:2.2rem; background:var(--surface); border:1px solid var(--line); border-radius:16px; text-align:center;">
+    <h3 style="font-family:'Fraunces',serif; font-size:1.4rem; margin-bottom:0.6rem; color:var(--champagne);">Ready to Scale Your SaaS &amp; Tech Infrastructure?</h3>
+    <p style="color:var(--muted); font-size:0.95rem; margin-bottom:1.4rem;">Connect with native linguists, AI data curators, and e-learning engineers specialized in your vertical.</p>
+    <a href="../index.html#contact" class="btn btn-primary" style="display:inline-block; padding:0.85rem 2rem; border-radius:8px; font-weight:600;">Schedule Project Scope &rarr;</a>
+  </div>
+</main>
+</body>
+</html>
